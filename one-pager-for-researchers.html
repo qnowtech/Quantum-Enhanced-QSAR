@@ -923,7 +923,7 @@
     #slide3 .cand { height: 100%; }
     #slide3 .ad { flex: 1; display: flex; flex-direction: column; justify-content: center; min-height: 0; margin-top: 4px; }
     #slide3 .ad-scale, #slide3 .ad-row { display: grid; grid-template-columns: 168px 1fr 148px; gap: 14px; align-items: center; }
-    #slide3 .ad-scale { height: 22px; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+    #slide3 .ad-scale { height: 24px; font-size: 14px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
     #slide3 .ad-scale .axis { position: relative; height: 16px; }
     #slide3 .ad-scale .in { position: absolute; left: 0; }
     #slide3 .ad-scale .out { position: absolute; right: 0; }
@@ -931,14 +931,14 @@
     #slide3 .ad-row { margin-top: 8px; }
     #slide3 .ad .who { font-family: "Montserrat", sans-serif; font-weight: 800; font-size: 16px; letter-spacing: -0.03em; line-height: 1.15; }
     #slide3 .ad .who span { display: block; margin-top: 3px; font-family: "DM Sans", sans-serif; font-weight: 600; font-size: 13px; letter-spacing: 0; color: var(--muted); }
-    #slide3 .ad .ruler { position: relative; height: 64px; }
-    #slide3 .ad .rail { position: absolute; left: 0; right: 0; top: 22px; height: 14px; border-radius: 999px; background: #eef4f2; }
-    #slide3 .ad .near { position: absolute; left: 0; top: 0; bottom: 0; width: 64.5%; border-radius: 999px 0 0 999px; background: #c9e6e0; }
-    #slide3 .ad .tick { position: absolute; left: 64.5%; top: 12px; width: 2px; height: 34px; background: var(--ink); }
-    #slide3 .ad .tick b { position: absolute; top: 36px; left: 50%; transform: translateX(-50%); font-size: 13px; font-weight: 700; color: var(--ink); }
-    #slide3 .ad .dot { position: absolute; top: 19px; left: var(--end); width: 20px; height: 20px; border-radius: 50%; transform: translateX(-50%); }
+    #slide3 .ad .ruler { position: relative; height: 72px; }
+    #slide3 .ad .rail { position: absolute; left: 0; right: 0; top: 22px; height: 18px; border-radius: 999px; background: #d5e6e1; }
+    #slide3 .ad .near { position: absolute; left: 0; top: 0; bottom: 0; width: 64.5%; border-radius: 999px 0 0 999px; background: #9fd4cb; }
+    #slide3 .ad .tick { position: absolute; left: 64.5%; top: 10px; width: 4px; height: 42px; background: var(--ink); }
+    #slide3 .ad .tick b { position: absolute; top: 44px; left: 50%; transform: translateX(-50%); font-size: 15px; font-weight: 700; color: var(--ink); }
+    #slide3 .ad .dot { position: absolute; top: 18px; left: var(--end); width: 26px; height: 26px; border-radius: 50%; transform: translateX(-50%); }
     #slide3 .ad .dot.in { background: var(--ibm); border: 3px solid #fff; }
-    #slide3 .ad .dot.out { background: var(--paper); border: 2.5px solid #7f9c96; }
+    #slide3 .ad .dot.out { background: #fff; border: 3.5px solid #143844; }
     #slide3 .ad .verdict { font-family: "Montserrat", sans-serif; font-weight: 800; font-size: 22px; letter-spacing: -0.03em; line-height: 1; }
     #slide3 .ad .verdict small { display: block; margin-top: 5px; font-family: "DM Sans", sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 0; color: var(--muted); }
     #slide3 .ad .verdict.in { color: var(--ibm); }
@@ -969,15 +969,29 @@
     #slide-score .board h3 { margin: 0 0 6px; font-family: "Montserrat", sans-serif; font-size: 13px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; }
     #slide-score .board.table h3 { color: var(--classic); }
     #slide-score .board.quantum h3 { color: var(--teal-0); }
-    #slide-score .board .row { display: grid; grid-template-columns: 162px 1fr 52px; align-items: center; gap: 8px; min-height: 28px; padding: 0 6px; border-radius: 8px; }
+    #slide-score .board .row { display: grid; grid-template-columns: 168px 1fr 74px; align-items: center; gap: 8px; min-height: 32px; padding: 0 6px; border-radius: 8px; }
     #slide-score .board .row.pick { background: #e7f7f3; }
     #slide-score .board .name { font-size: 13px; font-weight: 700; color: var(--ink); white-space: nowrap; }
     #slide-score .board .row.pick .name { color: #0d5c56; }
     #slide-score .board .name em { margin-left: 6px; font-style: normal; font-weight: 800; font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--teal-0); }
-    #slide-score .board .track { height: 10px; border-radius: 999px; background: #e4eeea; overflow: hidden; }
-    #slide-score .board .track i { display: block; height: 100%; border-radius: 999px; background: var(--classic); }
+    #slide-score .board .track { height: 16px; border-radius: 999px; background: #e4eeea; overflow: hidden; }
+    #slide-score .board .track i { display: block; height: 100%; width: var(--end); border-radius: 999px; background: var(--classic); }
     #slide-score .board.quantum .track i { background: var(--teal-0); }
-    #slide-score .board .auc { font-family: "Montserrat", sans-serif; font-weight: 800; font-size: 15px; letter-spacing: -0.03em; text-align: right; color: var(--ink); }
+    #slide-score .board .auc { font-family: "Montserrat", sans-serif; font-weight: 800; font-size: 16px; letter-spacing: -0.03em; text-align: right; font-variant-numeric: tabular-nums; color: var(--ink); }
+    @keyframes auc-fill { from { width: 0%; } to { width: var(--end); } }
+    html.js-score #slide-score:not(.is-scoring) .board .track i { width: 0; animation: none; }
+    #slide-score.is-scoring .board .track i {
+      animation: auc-fill 1.05s cubic-bezier(0.22, 0.8, 0.28, 1) both;
+    }
+    #slide-score.is-scoring .board .row:nth-child(2) .track i { animation-delay: 0.02s; }
+    #slide-score.is-scoring .board .row:nth-child(3) .track i { animation-delay: 0.08s; }
+    #slide-score.is-scoring .board .row:nth-child(4) .track i { animation-delay: 0.14s; }
+    #slide-score.is-scoring .board .row:nth-child(5) .track i { animation-delay: 0.2s; }
+    #slide-score.is-scoring .board .row:nth-child(6) .track i { animation-delay: 0.26s; }
+    @media (prefers-reduced-motion: reduce) {
+      html.js-score #slide-score .board .track i,
+      #slide-score.is-scoring .board .track i { animation: none !important; width: var(--end) !important; }
+    }
     #slide-score .pool { grid-column: 2; grid-row: 1 / span 3; background: #0d5c56; border: none; border-radius: 16px; padding: 28px 18px 22px; display: flex; flex-direction: column; justify-content: center; gap: 8px; min-height: 0; color: #fff; }
     #slide-score .pool .tree { flex: 0 0 auto; display: flex; flex-direction: column; justify-content: center; min-height: 0; }
     #slide-score .pool .members { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0; }
@@ -1153,6 +1167,61 @@
     body.presenting #slide3.slide.is-current .ad .dot.in { animation: ad-dot 1.05s linear 0.2s both; }
     body.presenting #slide3.slide.is-current .ad .dot.out { animation: ad-dot 1.57s linear 0.2s both; }
 
+    @keyframes mark-in { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    html.js-motion #slide1:not(.is-revealing) .membership .vdots i { transform: scale(0); opacity: 0; }
+    #slide1.is-revealing .membership .vdots i {
+      animation: mark-in 1.05s cubic-bezier(0.22, 0.8, 0.28, 1) both;
+    }
+    #slide1.is-revealing .membership .vdots i:nth-child(2) { animation-delay: 0.06s; }
+    #slide1.is-revealing .membership .vdots i:nth-child(3) { animation-delay: 0.12s; }
+    #slide1.is-revealing .membership .vdots i:nth-child(4) { animation-delay: 0.18s; }
+    #slide1.is-revealing .membership .vdots i:nth-child(5) { animation-delay: 0.24s; }
+    #slide1.is-revealing .membership .vdots i:nth-child(6) { animation-delay: 0.3s; }
+    #slide1.is-revealing .membership .vdots i:nth-child(7) { animation-delay: 0.36s; }
+    #slide1.is-revealing .membership .vdots i:nth-child(8) { animation-delay: 0.42s; }
+    #slide1.is-revealing .membership .vdots i:nth-child(9) { animation-delay: 0.48s; }
+
+    .funnel-stages li.here .glyph circle { transform-box: fill-box; transform-origin: center; }
+    html.js-motion #slide-funnel:not(.is-revealing) li.here .glyph circle { transform: scale(0); opacity: 0; }
+    #slide-funnel.is-revealing li.here .glyph circle {
+      animation: mark-in 1.05s cubic-bezier(0.22, 0.8, 0.28, 1) both;
+    }
+    #slide-funnel.is-revealing li.here .glyph g:first-of-type circle:nth-child(2) { animation-delay: 0.04s; }
+    #slide-funnel.is-revealing li.here .glyph g:first-of-type circle:nth-child(3) { animation-delay: 0.08s; }
+    #slide-funnel.is-revealing li.here .glyph g:first-of-type circle:nth-child(4) { animation-delay: 0.12s; }
+    #slide-funnel.is-revealing li.here .glyph g:first-of-type circle:nth-child(5) { animation-delay: 0.16s; }
+    #slide-funnel.is-revealing li.here .glyph g:first-of-type circle:nth-child(6) { animation-delay: 0.2s; }
+    #slide-funnel.is-revealing li.here .glyph g:first-of-type circle:nth-child(7) { animation-delay: 0.24s; }
+    #slide-funnel.is-revealing li.here .glyph g:first-of-type circle:nth-child(8) { animation-delay: 0.28s; }
+    #slide-funnel.is-revealing li.here .glyph g:first-of-type circle:nth-child(9) { animation-delay: 0.32s; }
+    #slide-funnel.is-revealing li.here .glyph g:first-of-type circle:nth-child(10) { animation-delay: 0.36s; }
+    #slide-funnel.is-revealing li.here .glyph g:first-of-type circle:nth-child(11) { animation-delay: 0.4s; }
+    #slide-funnel.is-revealing li.here .glyph g:first-of-type circle:nth-child(12) { animation-delay: 0.44s; }
+    #slide-funnel.is-revealing li.here .glyph g:first-of-type circle:nth-child(13) { animation-delay: 0.48s; }
+    #slide-funnel.is-revealing li.here .glyph g:first-of-type circle:nth-child(14) { animation-delay: 0.52s; }
+    #slide-funnel.is-revealing li.here .glyph g:last-of-type circle:nth-child(1) { animation-delay: 0.28s; }
+    #slide-funnel.is-revealing li.here .glyph g:last-of-type circle:nth-child(2) { animation-delay: 0.36s; }
+    #slide-funnel.is-revealing li.here .glyph g:last-of-type circle:nth-child(3) { animation-delay: 0.44s; }
+    #slide-funnel.is-revealing li.here .glyph g:last-of-type circle:nth-child(4) { animation-delay: 0.52s; }
+    #slide-funnel.is-revealing li.here .glyph g:last-of-type circle:nth-child(5) { animation-delay: 0.6s; }
+
+    @keyframes orb-core { from { transform: scale(0.84); opacity: 0; } to { transform: scale(1); opacity: 0.25; } }
+    @keyframes orb-ring { from { transform: scale(0.92); opacity: 0; } to { transform: scale(1); opacity: 0.2; } }
+    #slide-thanks .orb circle { transform-box: fill-box; transform-origin: center; }
+    html.js-motion #slide-thanks:not(.is-revealing) .orb circle { opacity: 0; }
+    #slide-thanks.is-revealing .orb circle:last-child { animation: orb-core 1.05s cubic-bezier(0.22, 0.8, 0.28, 1) both; }
+    #slide-thanks.is-revealing .orb circle:first-child { animation: orb-ring 1.05s cubic-bezier(0.22, 0.8, 0.28, 1) 0.16s both; }
+    @media (prefers-reduced-motion: reduce) {
+      html.js-motion #slide1 .membership .vdots i,
+      #slide1.is-revealing .membership .vdots i,
+      html.js-motion #slide-funnel li.here .glyph circle,
+      #slide-funnel.is-revealing li.here .glyph circle { animation: none !important; transform: none !important; opacity: 1 !important; }
+      html.js-motion #slide-thanks .orb circle,
+      #slide-thanks.is-revealing .orb circle { animation: none !important; transform: none !important; }
+      #slide-thanks .orb circle:first-child { opacity: 0.2 !important; }
+      #slide-thanks .orb circle:last-child { opacity: 0.25 !important; }
+    }
+
     @media print {
       .present-toggle, .present-bar, .present-edge { display: none !important; }
       @page { size: 1920px 1080px; margin: 0; }
@@ -1162,6 +1231,12 @@
       .slide { page-break-after: always; overflow: visible; height: auto; min-height: 1080px; margin-bottom: 0; }
       .slide:last-child { page-break-after: avoid; }
       #slide3 .ad .dot { left: var(--end) !important; animation: none !important; }
+      #slide-score .board .track i { animation: none !important; width: var(--end) !important; }
+      #slide1 .membership .vdots i,
+      #slide-funnel li.here .glyph circle { animation: none !important; transform: none !important; opacity: 1 !important; }
+      #slide-thanks .orb circle { animation: none !important; transform: none !important; }
+      #slide-thanks .orb circle:first-child { opacity: 0.2 !important; }
+      #slide-thanks .orb circle:last-child { opacity: 0.25 !important; }
       .protein-card .viewer3d,
       .protein-card .drag-hint { display: none !important; }
       .protein-card.is-3d .img img { visibility: visible !important; }
@@ -1518,7 +1593,7 @@
           <article class="card q3">
             <div class="tag">Research question</div>
             <h3>Same molecules, same rule, same list?</h3>
-            <p>Same RBF-SVM. Do the classical descriptor table and the vector measured on the quantum processor <strong>propose the same compounds?</strong></p>
+            <p>Do the classical molecular descriptors and the vector measured on the quantum processor <strong>propose the same compounds?</strong></p>
           </article>
         </div>
       </section>
@@ -1691,7 +1766,7 @@
           <article>
             <div class="tag">The split</div>
             <h3>264 train, 90 test</h3>
-            <p>354 compounds with a prior binary label, ChEMBL2292 and ProtoQSAR. Active if IC50 ≤ 1 μM. This split is 264 train and 90 test.</p>
+            <p>354 compounds with a prior binary label. Active if IC50 ≤ 1 μM. This split is 264 train and 90 test.</p>
           </article>
           <article>
             <div class="tag">The model</div>
@@ -2160,19 +2235,19 @@
           <div class="boards">
             <div class="board table">
               <h3>Table</h3>
-              <div class="row pick"><span class="name">kNN <em>selected</em></span><span class="track"><i style="width:90.9%"></i></span><span class="auc">0.8908</span></div>
-              <div class="row"><span class="name">Random forest</span><span class="track"><i style="width:85.6%"></i></span><span class="auc">0.8798</span></div>
-              <div class="row"><span class="name">RBF-SVM</span><span class="track"><i style="width:85.2%"></i></span><span class="auc">0.8790</span></div>
-              <div class="row"><span class="name">Gradient boosting</span><span class="track"><i style="width:76.0%"></i></span><span class="auc">0.8595</span></div>
-              <div class="row"><span class="name">Logistic regression</span><span class="track"><i style="width:64.8%"></i></span><span class="auc">0.8360</span></div>
+              <div class="row pick"><span class="name">kNN <em>selected</em></span><span class="track"><i style="--end:90.9%"></i></span><span class="auc">0.8908</span></div>
+              <div class="row"><span class="name">Random forest</span><span class="track"><i style="--end:85.6%"></i></span><span class="auc">0.8798</span></div>
+              <div class="row"><span class="name">RBF-SVM</span><span class="track"><i style="--end:85.2%"></i></span><span class="auc">0.8790</span></div>
+              <div class="row"><span class="name">Gradient boosting</span><span class="track"><i style="--end:76.0%"></i></span><span class="auc">0.8595</span></div>
+              <div class="row"><span class="name">Logistic regression</span><span class="track"><i style="--end:64.8%"></i></span><span class="auc">0.8360</span></div>
             </div>
             <div class="board quantum">
               <h3>Quantum vector</h3>
-              <div class="row pick"><span class="name">kNN <em>selected</em></span><span class="track"><i style="width:75.4%"></i></span><span class="auc">0.8583</span></div>
-              <div class="row"><span class="name">RBF-SVM</span><span class="track"><i style="width:59.8%"></i></span><span class="auc">0.8255</span></div>
-              <div class="row"><span class="name">Random forest</span><span class="track"><i style="width:59.3%"></i></span><span class="auc">0.8245</span></div>
-              <div class="row"><span class="name">Logistic regression</span><span class="track"><i style="width:43.8%"></i></span><span class="auc">0.7920</span></div>
-              <div class="row"><span class="name">Gradient boosting</span><span class="track"><i style="width:13.1%"></i></span><span class="auc">0.7275</span></div>
+              <div class="row pick"><span class="name">kNN <em>selected</em></span><span class="track"><i style="--end:75.4%"></i></span><span class="auc">0.8583</span></div>
+              <div class="row"><span class="name">RBF-SVM</span><span class="track"><i style="--end:59.8%"></i></span><span class="auc">0.8255</span></div>
+              <div class="row"><span class="name">Random forest</span><span class="track"><i style="--end:59.3%"></i></span><span class="auc">0.8245</span></div>
+              <div class="row"><span class="name">Logistic regression</span><span class="track"><i style="--end:43.8%"></i></span><span class="auc">0.7920</span></div>
+              <div class="row"><span class="name">Gradient boosting</span><span class="track"><i style="--end:13.1%"></i></span><span class="auc">0.7275</span></div>
             </div>
           </div>
         </article>
@@ -2709,6 +2784,150 @@
       document.addEventListener("mousemove", () => { if (document.body.classList.contains("presenting")) wakeBar(); });
       document.addEventListener("keydown", () => { if (document.body.classList.contains("presenting")) wakeBar(); });
       document.addEventListener("click", () => { if (document.body.classList.contains("presenting")) wakeBar(); });
+    })();
+  </script>
+  <script>
+    (function scoreBars() {
+      var slide = document.getElementById("slide-score");
+      if (!slide) return;
+      var reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
+      document.documentElement.classList.add("js-score");
+
+      function rows() {
+        return Array.prototype.slice.call(slide.querySelectorAll(".board .row"));
+      }
+
+      rows().forEach(function (row) {
+        var auc = row.querySelector(".auc");
+        if (auc && !auc.getAttribute("data-auc")) auc.setAttribute("data-auc", (auc.textContent || "").trim());
+      });
+
+      function paint() {
+        rows().forEach(function (row) {
+          var bar = row.querySelector(".track i");
+          var auc = row.querySelector(".auc");
+          var track = row.querySelector(".track");
+          if (!bar || !auc || !track) return;
+          var target = parseFloat(auc.getAttribute("data-auc") || "");
+          if (!isFinite(target)) return;
+          if (reduce.matches) {
+            auc.textContent = target.toFixed(4);
+            return;
+          }
+          var end = parseFloat(getComputedStyle(bar).getPropertyValue("--end"));
+          var trackW = track.getBoundingClientRect().width;
+          var barW = bar.getBoundingClientRect().width;
+          var goal = trackW * (end / 100);
+          var p = 0;
+          if (goal > 0) p = Math.max(0, Math.min(1, barW / goal));
+          if (barW < 1.5) p = 0;
+          if (goal > 0 && barW >= goal - 1.5) p = 1;
+          auc.textContent = (target * p).toFixed(4);
+        });
+      }
+
+      function tick() {
+        paint();
+        var alive = false;
+        slide.querySelectorAll(".board .track i").forEach(function (bar) {
+          if (bar.getAnimations().some(function (anim) { return anim.playState === "running" || anim.playState === "pending"; })) alive = true;
+        });
+        if (alive) requestAnimationFrame(tick);
+        else paint();
+      }
+
+      var last = 0;
+      function replay() {
+        if (reduce.matches) {
+          paint();
+          return;
+        }
+        var now = performance.now();
+        if (now - last < 350) return;
+        last = now;
+        slide.classList.remove("is-scoring");
+        rows().forEach(function (row) {
+          var auc = row.querySelector(".auc");
+          if (auc) auc.textContent = "0.0000";
+        });
+        void slide.offsetWidth;
+        slide.classList.add("is-scoring");
+        requestAnimationFrame(tick);
+      }
+
+      window.__syncScoreReadout = paint;
+      window.__replayScoreBars = replay;
+      window.addEventListener("beforeprint", function () {
+        rows().forEach(function (row) {
+          var auc = row.querySelector(".auc");
+          var target = parseFloat(auc && auc.getAttribute("data-auc") || "");
+          if (auc && isFinite(target)) auc.textContent = target.toFixed(4);
+        });
+      });
+
+      if (reduce.matches) return;
+
+      rows().forEach(function (row) {
+        var auc = row.querySelector(".auc");
+        if (auc) auc.textContent = "0.0000";
+      });
+
+      if ("IntersectionObserver" in window) {
+        var seen = false;
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.intersectionRatio >= 0.25) {
+              if (!seen) replay();
+              seen = true;
+            } else if (entry.intersectionRatio === 0) {
+              seen = false;
+            }
+          });
+        }, { threshold: [0, 0.25] });
+        io.observe(slide);
+      }
+
+      new MutationObserver(function () {
+        if (slide.classList.contains("is-current")) replay();
+      }).observe(slide, { attributes: true, attributeFilter: ["class"] });
+    })();
+  </script>
+  <script>
+    (function reveals() {
+      var reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
+      document.documentElement.classList.add("js-motion");
+      var slides = ["slide-funnel", "slide1", "slide-thanks"].map(function (id) { return document.getElementById(id); }).filter(Boolean);
+
+      function replay(slide) {
+        if (reduce.matches) return;
+        var now = performance.now();
+        if (slide._revealAt && now - slide._revealAt < 350) return;
+        slide._revealAt = now;
+        slide.classList.remove("is-revealing");
+        void slide.offsetWidth;
+        slide.classList.add("is-revealing");
+      }
+
+      if (reduce.matches) return;
+
+      slides.forEach(function (slide) {
+        var seen = false;
+        if ("IntersectionObserver" in window) {
+          new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+              if (entry.intersectionRatio >= 0.25) {
+                if (!seen) replay(slide);
+                seen = true;
+              } else if (entry.intersectionRatio === 0) {
+                seen = false;
+              }
+            });
+          }, { threshold: [0, 0.25] }).observe(slide);
+        }
+        new MutationObserver(function () {
+          if (slide.classList.contains("is-current")) replay(slide);
+        }).observe(slide, { attributes: true, attributeFilter: ["class"] });
+      });
     })();
   </script>
   <script src="assets/3Dmol-min.js"></script>

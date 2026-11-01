@@ -1,0 +1,11 @@
+{
+  "name": "quantum-enhanced-qsar",
+  "private": true,
+  "scripts": {
+    "test": "playwright test",
+    "serve": "node tests/serve.mjs"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.56.1"
+  }
+}
