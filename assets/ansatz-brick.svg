@@ -1,0 +1,183 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 560" role="img" aria-label="Brickwork ansatz. Each pair is RY, RZ, then CX, twice. Even pairs, then odd pairs. Readout is the expectation of X, Y, and Z on every qubit.">
+  <g font-family="Segoe UI, sans-serif">
+    <!-- The block, defined once so the letters are large enough to read. -->
+    <rect x="12" y="10" width="976" height="248" rx="16" fill="#e7f4f1"/>
+    <text x="32" y="42" fill="#0f7a72" font-size="22" font-weight="700">Each pair, twice</text>
+    <text x="228" y="42" fill="#4f7380" font-size="16" font-weight="600">RY and RZ, then CX. The same pair gets that block again.</text>
+
+    <g fill="none" stroke="#8fbfb6" stroke-width="2.5">
+      <line x1="78" y1="118" x2="600" y2="118"/>
+      <line x1="78" y1="196" x2="600" y2="196"/>
+    </g>
+    <g fill="#143844" font-size="18" font-weight="700">
+      <text x="36" y="124">0</text>
+      <text x="36" y="202">1</text>
+    </g>
+
+    <!-- first copy -->
+    <g>
+      <rect x="92" y="94" width="64" height="48" rx="8" fill="#0f7a72"/>
+      <text x="124" y="125" text-anchor="middle" fill="#fff" font-size="20" font-weight="700">RY</text>
+      <rect x="168" y="94" width="64" height="48" rx="8" fill="#fbfefc" stroke="#0f7a72" stroke-width="2"/>
+      <text x="200" y="125" text-anchor="middle" fill="#0f7a72" font-size="20" font-weight="700">RZ</text>
+      <rect x="92" y="172" width="64" height="48" rx="8" fill="#0f7a72"/>
+      <text x="124" y="203" text-anchor="middle" fill="#fff" font-size="20" font-weight="700">RY</text>
+      <rect x="168" y="172" width="64" height="48" rx="8" fill="#fbfefc" stroke="#0f7a72" stroke-width="2"/>
+      <text x="200" y="203" text-anchor="middle" fill="#0f7a72" font-size="20" font-weight="700">RZ</text>
+      <line x1="292" y1="118" x2="292" y2="196" stroke="#143844" stroke-width="2.5"/>
+      <circle cx="292" cy="118" r="7" fill="#143844"/>
+      <circle cx="292" cy="196" r="12" fill="#fbfefc" stroke="#143844" stroke-width="2"/>
+      <path d="M292 188 v16 M284 196 h16" stroke="#143844" stroke-width="2" fill="none"/>
+      <text x="292" y="84" text-anchor="middle" fill="#143844" font-size="15" font-weight="700">CX</text>
+    </g>
+
+    <text x="348" y="164" text-anchor="middle" fill="#0f7a72" font-size="15" font-weight="700">again</text>
+
+    <!-- second copy, same pair -->
+    <g>
+      <rect x="392" y="94" width="64" height="48" rx="8" fill="#0f7a72"/>
+      <text x="424" y="125" text-anchor="middle" fill="#fff" font-size="20" font-weight="700">RY</text>
+      <rect x="468" y="94" width="64" height="48" rx="8" fill="#fbfefc" stroke="#0f7a72" stroke-width="2"/>
+      <text x="500" y="125" text-anchor="middle" fill="#0f7a72" font-size="20" font-weight="700">RZ</text>
+      <rect x="392" y="172" width="64" height="48" rx="8" fill="#0f7a72"/>
+      <text x="424" y="203" text-anchor="middle" fill="#fff" font-size="20" font-weight="700">RY</text>
+      <rect x="468" y="172" width="64" height="48" rx="8" fill="#fbfefc" stroke="#0f7a72" stroke-width="2"/>
+      <text x="500" y="203" text-anchor="middle" fill="#0f7a72" font-size="20" font-weight="700">RZ</text>
+      <line x1="572" y1="118" x2="572" y2="196" stroke="#143844" stroke-width="2.5"/>
+      <circle cx="572" cy="118" r="7" fill="#143844"/>
+      <circle cx="572" cy="196" r="12" fill="#fbfefc" stroke="#143844" stroke-width="2"/>
+      <path d="M572 188 v16 M564 196 h16" stroke="#143844" stroke-width="2" fill="none"/>
+      <text x="572" y="84" text-anchor="middle" fill="#143844" font-size="15" font-weight="700">CX</text>
+    </g>
+
+    <!-- legend, same symbols -->
+    <g font-size="16" font-weight="700" fill="#143844">
+      <rect x="660" y="78" width="44" height="32" rx="6" fill="#0f7a72"/>
+      <text x="682" y="99" text-anchor="middle" fill="#fff" font-size="13">RY</text>
+      <text x="716" y="100">rotation about Y</text>
+
+      <rect x="660" y="126" width="44" height="32" rx="6" fill="#fbfefc" stroke="#0f7a72" stroke-width="2"/>
+      <text x="682" y="147" text-anchor="middle" fill="#0f7a72" font-size="13">RZ</text>
+      <text x="716" y="148">rotation about Z</text>
+
+      <line x1="682" y1="176" x2="682" y2="214" stroke="#143844" stroke-width="2"/>
+      <circle cx="682" cy="176" r="5" fill="#143844"/>
+      <circle cx="682" cy="214" r="8" fill="#fbfefc" stroke="#143844" stroke-width="1.8"/>
+      <path d="M682 209 v10 M677 214 h10" stroke="#143844" stroke-width="1.6" fill="none"/>
+      <text x="716" y="200">CX · dot controls, plus is the target</text>
+    </g>
+
+    <!-- Where the blocks sit -->
+    <rect x="12" y="272" width="612" height="276" rx="16" fill="#fbfefc" stroke="#d5ebe6"/>
+    <text x="32" y="304" fill="#143844" font-size="20" font-weight="700">Even pairs, then odd pairs</text>
+    <text x="32" y="328" fill="#4f7380" font-size="15" font-weight="600">Five wires stand for 71. Each link is the block above, twice.</text>
+
+    <g fill="none" stroke="#c5ddd7" stroke-width="2">
+      <line x1="70" y1="368" x2="560" y2="368"/>
+      <line x1="70" y1="404" x2="560" y2="404"/>
+      <line x1="70" y1="440" x2="560" y2="440"/>
+      <line x1="70" y1="476" x2="560" y2="476"/>
+      <line x1="70" y1="512" x2="560" y2="512"/>
+    </g>
+    <g fill="#143844" font-size="15" font-weight="700">
+      <text x="36" y="373">0</text>
+      <text x="36" y="409">1</text>
+      <text x="36" y="445">2</text>
+      <text x="36" y="481">3</text>
+      <text x="36" y="517">4</text>
+    </g>
+
+    <g fill="#4f7380" font-size="13" font-weight="700">
+      <text x="168" y="354" text-anchor="middle">Even</text>
+      <text x="300" y="354" text-anchor="middle">Odd</text>
+      <text x="470" y="354" text-anchor="middle">then RY, RZ</text>
+    </g>
+
+    <!-- even: 0-1 and 2-3. Wire 4 waits. -->
+    <g stroke="#143844" fill="none" stroke-width="2">
+      <line x1="168" y1="368" x2="168" y2="404"/>
+      <line x1="168" y1="440" x2="168" y2="476"/>
+    </g>
+    <g fill="#143844">
+      <circle cx="168" cy="368" r="5.5"/>
+      <circle cx="168" cy="440" r="5.5"/>
+    </g>
+    <g fill="#fbfefc" stroke="#143844" stroke-width="1.8">
+      <circle cx="168" cy="404" r="9"/>
+      <circle cx="168" cy="476" r="9"/>
+    </g>
+    <g stroke="#143844" stroke-width="1.6">
+      <path d="M168 398 v12 M162 404 h12"/>
+      <path d="M168 470 v12 M162 476 h12"/>
+    </g>
+
+    <!-- odd: 1-2 and 3-4. Wire 0 waits. -->
+    <g stroke="#143844" fill="none" stroke-width="2">
+      <line x1="300" y1="404" x2="300" y2="440"/>
+      <line x1="300" y1="476" x2="300" y2="512"/>
+    </g>
+    <g fill="#143844">
+      <circle cx="300" cy="404" r="5.5"/>
+      <circle cx="300" cy="476" r="5.5"/>
+    </g>
+    <g fill="#fbfefc" stroke="#143844" stroke-width="1.8">
+      <circle cx="300" cy="440" r="9"/>
+      <circle cx="300" cy="512" r="9"/>
+    </g>
+    <g stroke="#143844" stroke-width="1.6">
+      <path d="M300 434 v12 M294 440 h12"/>
+      <path d="M300 506 v12 M294 512 h12"/>
+    </g>
+
+    <!-- closing RY RZ on every wire -->
+    <g>
+      <rect x="430" y="354" width="36" height="28" rx="6" fill="#0f7a72"/>
+      <rect x="430" y="390" width="36" height="28" rx="6" fill="#0f7a72"/>
+      <rect x="430" y="426" width="36" height="28" rx="6" fill="#0f7a72"/>
+      <rect x="430" y="462" width="36" height="28" rx="6" fill="#0f7a72"/>
+      <rect x="430" y="498" width="36" height="28" rx="6" fill="#0f7a72"/>
+      <rect x="472" y="354" width="36" height="28" rx="6" fill="#fbfefc" stroke="#0f7a72" stroke-width="1.8"/>
+      <rect x="472" y="390" width="36" height="28" rx="6" fill="#fbfefc" stroke="#0f7a72" stroke-width="1.8"/>
+      <rect x="472" y="426" width="36" height="28" rx="6" fill="#fbfefc" stroke="#0f7a72" stroke-width="1.8"/>
+      <rect x="472" y="462" width="36" height="28" rx="6" fill="#fbfefc" stroke="#0f7a72" stroke-width="1.8"/>
+      <rect x="472" y="498" width="36" height="28" rx="6" fill="#fbfefc" stroke="#0f7a72" stroke-width="1.8"/>
+    </g>
+    <g fill="#fff" font-size="11" font-weight="700">
+      <text x="448" y="373" text-anchor="middle">RY</text>
+      <text x="448" y="409" text-anchor="middle">RY</text>
+      <text x="448" y="445" text-anchor="middle">RY</text>
+      <text x="448" y="481" text-anchor="middle">RY</text>
+      <text x="448" y="517" text-anchor="middle">RY</text>
+    </g>
+    <g fill="#0f7a72" font-size="11" font-weight="700">
+      <text x="490" y="373" text-anchor="middle">RZ</text>
+      <text x="490" y="409" text-anchor="middle">RZ</text>
+      <text x="490" y="445" text-anchor="middle">RZ</text>
+      <text x="490" y="481" text-anchor="middle">RZ</text>
+      <text x="490" y="517" text-anchor="middle">RZ</text>
+    </g>
+
+    <!-- Readout: three expectations, not a meter -->
+    <rect x="640" y="272" width="348" height="276" rx="16" fill="#143844"/>
+    <text x="664" y="306" fill="#fff" font-size="20" font-weight="700">Readout</text>
+    <text x="664" y="330" fill="#9fd9cf" font-size="14" font-weight="600">Three numbers from each qubit</text>
+
+    <g>
+      <rect x="664" y="352" width="56" height="40" rx="8" fill="#5ee6c9"/>
+      <text x="692" y="378" text-anchor="middle" fill="#143844" font-size="20" font-weight="700">X</text>
+      <text x="736" y="370" fill="#fff" font-size="16" font-weight="700">expectation of X</text>
+      <text x="736" y="388" fill="#9fd9cf" font-size="13" font-weight="600">one number, ⟨X⟩</text>
+
+      <rect x="664" y="408" width="56" height="40" rx="8" fill="#5ee6c9"/>
+      <text x="692" y="434" text-anchor="middle" fill="#143844" font-size="20" font-weight="700">Y</text>
+      <text x="736" y="426" fill="#fff" font-size="16" font-weight="700">expectation of Y</text>
+      <text x="736" y="444" fill="#9fd9cf" font-size="13" font-weight="600">one number, ⟨Y⟩</text>
+
+      <rect x="664" y="464" width="56" height="40" rx="8" fill="#5ee6c9"/>
+      <text x="692" y="490" text-anchor="middle" fill="#143844" font-size="20" font-weight="700">Z</text>
+      <text x="736" y="482" fill="#fff" font-size="16" font-weight="700">expectation of Z</text>
+      <text x="736" y="500" fill="#9fd9cf" font-size="13" font-weight="600">one number, ⟨Z⟩</text>
+    </g>
+    <text x="664" y="532" fill="#5ee6c9" font-size="15" font-weight="700">71 × 3 = 213. Not a single 0 or 1.</text>
+  </g>
+</svg>

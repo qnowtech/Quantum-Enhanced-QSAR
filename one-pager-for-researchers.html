@@ -1,0 +1,2838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Quantum-Enhanced QSAR for DYRK1A</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,500&family=IBM+Plex+Mono:wght@500;600&family=Montserrat:ital,wght@0,600;0,700;0,800;1,600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css" />
+  <style>
+    /* TEMPLATE: Drug discovery / CADD — four pages, same design system.
+       Page 1 = verbatim reproduction of poc-dyrk1a-cadd.html.
+       Pages 2-4 = source is Quantum QSAR/Arxiv/_current (curated 2026-10-20/21),
+       NOT the QSAR-hits repo (superseded). Page 1's Pair-1/QMKL/PCA-4 figures are
+       explicitly out of scope of the current paper — flagged, not deleted.
+       Canvas: 1920×1080 per page. Chrome → Print → Save as PDF, margins 0, bg graphics ON. */
+    :root {
+      --teal-0: #0e9e9a;
+      --teal-1: #1ec8b4;
+      --teal-2: #5ee6c9;
+      --cream: #e9f2f0;
+      --paper: #fbfefc;
+      --ink: #143844;
+      --muted: #4f7380;
+      --ibm: #0f7a72;
+      --classic: #0d5c56;
+      --hit: #0f7a5a;
+      --vain: #2a9a86;
+      --line: #d5ebe6;
+      --copy: 17px;
+      --copy-lh: 1.4;
+      --label: 13px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { background: #d7efea; color: var(--ink); font-family: "DM Sans", "Segoe UI", sans-serif; height: auto; min-height: 100%; }
+    body { min-height: 100vh; overflow-x: hidden; overflow-y: auto; }
+    html { overflow-y: auto; }
+    ::-webkit-scrollbar { width: 12px; height: 12px; }
+    ::-webkit-scrollbar-track { background: #cfeae4; }
+    ::-webkit-scrollbar-thumb { background: #5eb8ad; border-radius: 8px; border: 2px solid #cfeae4; }
+    .stage { width: 1920px; margin: 20px auto 48px; transform-origin: top left; }
+    .slide {
+      width: 1920px;
+      min-height: 1080px;
+      height: auto;
+      background: var(--cream);
+      display: grid;
+      grid-template-rows: auto auto;
+      overflow: visible;
+      position: relative;
+      margin-bottom: 28px;
+    }
+    .pg {
+      position: absolute;
+      right: 48px;
+      bottom: 18px;
+      z-index: 5;
+      margin: 0;
+      pointer-events: none;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+    }
+    .slide:has(.cover) .pg { color: rgba(255,255,255,0.92); }
+
+    .hero {
+      position: relative;
+      color: #fff;
+      padding: 32px 56px 26px;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse 90% 120% at 88% 110%, rgba(255,255,255,0.22) 0%, transparent 55%),
+        radial-gradient(ellipse 70% 90% at 100% 0%, #7af0d0 0%, transparent 50%),
+        radial-gradient(ellipse 80% 100% at 8% 80%, #12b8a8 0%, transparent 55%),
+        linear-gradient(118deg, #14b8a6 0%, #1fccc0 42%, #3ad4c4 70%, #6eebc8 100%);
+    }
+    .hero.alt {
+      background:
+        radial-gradient(ellipse 90% 120% at 88% 110%, rgba(255,255,255,0.22) 0%, transparent 55%),
+        radial-gradient(ellipse 70% 90% at 100% 0%, #9ef6e0 0%, transparent 50%),
+        radial-gradient(ellipse 80% 100% at 8% 80%, #0e8e86 0%, transparent 55%),
+        linear-gradient(118deg, #0d6e68 0%, #14a497 42%, #1fccc0 70%, #6eebc8 100%);
+    }
+    .hero.dark2 {
+      background:
+        radial-gradient(ellipse 90% 120% at 88% 110%, rgba(255,255,255,0.18) 0%, transparent 55%),
+        radial-gradient(ellipse 70% 90% at 100% 0%, #6ad9c6 0%, transparent 50%),
+        radial-gradient(ellipse 80% 100% at 8% 80%, #0a5f59 0%, transparent 55%),
+        linear-gradient(118deg, #0a4a46 0%, #0d6e68 42%, #14a497 70%, #5ee6c9 100%);
+    }
+    /* Decorative orb + waves reserved for full-bleed cover/bridge/conclusion pages (.cover, below) — hidden on content-page headers so the data carries the attention. */
+    .hero svg.orb, .hero svg.waves { display: none; }
+    .hero-top { position: relative; z-index: 1; display: flex; justify-content: space-between; align-items: flex-start; }
+    .lockup { font-family: "Montserrat", sans-serif; font-weight: 700; font-size: var(--copy); display: flex; align-items: center; flex-wrap: wrap; gap: 8px; row-gap: 8px; }
+    /* Where the corner arcs are drawn, each name sits in its own ring.
+       Radii at 420px: 108, 198, 294, 390. Text line at y=32. */
+    .pre .hero-top,
+    .cover .hero-top { position: static; }
+    .cover .hero-top { min-height: 56px; }
+    .pre .hero .lockup,
+    .cover .lockup {
+      position: absolute;
+      left: 0;
+      top: 0;
+      z-index: 2;
+      display: block;
+      width: 420px;
+      height: 56px;
+      margin: 0;
+      font-size: 15px;
+    }
+    .pre .hero .lockup .haiqu,
+    .cover .lockup .haiqu { letter-spacing: 0.04em; gap: 4px; }
+    .pre .hero .lockup .qnow,
+    .cover .lockup .qnow { gap: 4px; }
+    .pre .hero .lockup .haiqu-mark,
+    .pre .hero .lockup .qnow-mark,
+    .cover .lockup .haiqu-mark,
+    .cover .lockup .qnow-mark { width: 16px; height: 16px; flex-basis: 16px; }
+    .pre .hero .lockup > *,
+    .cover .lockup > * {
+      position: absolute;
+      top: 21px;
+      margin: 0;
+      white-space: nowrap;
+    }
+    .pre .hero .lockup .plus,
+    .cover .lockup .plus { display: none; }
+    .pre .hero .lockup > .globant,
+    .cover .lockup > .globant { left: 10px; }
+    .pre .hero .lockup .globant-play,
+    .cover .lockup .globant-play { height: 16px; }
+    .pre .hero .lockup > .haiqu,
+    .cover .lockup > .haiqu { left: 112px; }
+    .pre .hero .lockup > .ibm-mark,
+    .cover .lockup > .ibm-mark { left: 225px; top: 25px; }
+    .pre .hero .lockup > .qnow,
+    .cover .lockup > .qnow { left: 305px; }
+    .play { width: 0; height: 0; border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-left: 9px solid #fff; display: inline-block; margin-left: 2px; vertical-align: 1px; }
+    .plus { opacity: 0.8; font-weight: 600; font-size: var(--copy); }
+    .haiqu { display: inline-flex; align-items: center; gap: 6px; font-family: "IBM Plex Mono", ui-monospace, monospace; font-weight: 600; font-size: var(--copy); letter-spacing: 0.08em; text-transform: lowercase; }
+    .haiqu-mark { width: 20px; height: 20px; flex: 0 0 20px; display: block; object-fit: contain; }
+    .qnow { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; font-size: var(--copy); letter-spacing: -0.02em; }
+    .qnow-mark { width: 20px; height: 20px; flex: 0 0 20px; display: block; object-fit: contain; }
+    .brand-mark { display: block; object-fit: contain; flex: 0 0 auto; }
+    .globant { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; }
+    .globant-play { height: 20px; width: auto; flex: 0 0 auto; display: block; object-fit: contain; filter: brightness(0) invert(1); }
+    .ibm-mark { height: 14px; width: auto; filter: brightness(0) invert(1); }
+    .partners { font-size: var(--copy); opacity: 0.88; margin-top: 6px; }
+    .meta { text-align: right; font-size: var(--copy); line-height: var(--copy-lh); opacity: 0.9; }
+    .cover .hero-top .meta { max-width: 640px; }
+    .pill { position: relative; z-index: 1; margin-top: 18px; display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.16); border: 1px solid rgba(255,255,255,0.28); border-radius: 999px; padding: 5px 14px; font-size: var(--label); font-weight: 600; letter-spacing: 0.01em; }
+    .pill i { width: 28px; height: 12px; border-radius: 999px; background: linear-gradient(90deg, #fff 0 45%, rgba(255,255,255,0.45) 45% 100%); display: inline-block; }
+    .hero h1 { position: relative; z-index: 1; font-family: "Montserrat", sans-serif; font-weight: 800; font-size: 50px; letter-spacing: -0.035em; line-height: 1; margin-top: 8px; }
+    .hero h1 span { display: block; font-size: 24px; font-style: italic; font-weight: 600; margin-top: 8px; color: rgba(255,255,255,0.92); letter-spacing: -0.02em; }
+    .ficha { position: relative; z-index: 1; margin-top: 14px; display: grid; grid-template-columns: repeat(2, minmax(0, max-content)); gap: 10px; }
+    .ficha div { background: rgba(255,255,255,0.16); border: 1px solid rgba(255,255,255,0.28); border-radius: 10px; padding: 8px 14px; }
+    .ficha b { display: block; font-family: "Montserrat", sans-serif; font-weight: 800; font-size: 18px; letter-spacing: -0.03em; line-height: 1.15; }
+    .ficha span { display: block; margin-top: 4px; font-size: var(--copy); line-height: var(--copy-lh); opacity: 0.92; }
+
+    .body { padding: 16px 48px 36px; display: grid; grid-template-columns: 1.08fr 0.92fr; gap: 22px; min-height: 0; }
+
+    .left { display: grid; grid-template-rows: auto auto auto 1fr; gap: 10px; min-height: 0; }
+    .ctx { background: var(--paper); border-radius: 14px; padding: 12px 16px 12px; border: 1px solid var(--line); }
+    .ctx h3 { font-size: var(--label); letter-spacing: 0.01em; color: var(--muted); font-weight: 700; margin-bottom: 4px; }
+    .ctx p { font-size: var(--copy); line-height: var(--copy-lh); color: #2d5a5c; }
+    .ctx p + p { margin-top: 6px; }
+    .ctx strong { color: var(--ink); }
+    table.lab { width: 100%; border-collapse: collapse; background: var(--paper); border-radius: 14px; overflow: hidden; }
+    table.lab th, table.lab td { padding: 8px 14px; text-align: right; }
+    table.lab th { background: #e7f4f1; color: var(--muted); font-size: var(--copy); letter-spacing: 0.04em; text-transform: uppercase; font-weight: 700; }
+    table.lab td.label, table.lab th.label { text-align: left; font-weight: 700; }
+    table.lab th.label { font-size: var(--copy); text-transform: none; letter-spacing: -0.01em; color: var(--ink); }
+    table.lab td { font-family: "Montserrat", sans-serif; font-size: 22px; font-weight: 800; letter-spacing: -0.03em; }
+    table.lab tr.classic td.label { color: var(--classic); }
+    table.lab tr.ibm td.label { color: var(--ibm); }
+    table.lab tbody tr + tr td { border-top: 1px solid var(--line); }
+
+    .queues { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .q { background: var(--paper); border-radius: 12px; padding: 10px 12px; border: 1px solid var(--line); }
+    .q.a { background: #e8f8f4; border-color: #b7e6dc; }
+    .q.b { background: #fff; border-color: #d5ebe6; }
+    .q-tag { font-size: var(--label); font-weight: 700; letter-spacing: 0.01em; }
+    .q.a .q-tag { color: var(--ibm); }
+    .q.b .q-tag { color: var(--classic); }
+    .q h3 { font-family: "Montserrat", sans-serif; font-size: 18px; margin: 2px 0 4px; letter-spacing: -0.02em; }
+    .q p { font-size: var(--copy); line-height: var(--copy-lh); color: #2d5a5c; }
+    .q .stats { margin-top: 6px; font-family: "Montserrat", sans-serif; font-weight: 800; font-size: var(--copy); }
+    .q.a .stats { color: var(--ibm); }
+    .q.b .stats { color: var(--classic); }
+
+    .hits { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; min-height: 0; }
+    .hit { background: var(--paper); border-radius: 3px; clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 0 100%); padding: 10px 12px 10px; border: 1px solid var(--line); border-left: 6px solid var(--hit); display: grid; grid-template-rows: auto auto 1fr auto; min-height: 0; height: 100%; }
+    .hit.far { border-left-color: var(--classic); }
+    .hit .k { font-size: var(--copy); font-weight: 700; letter-spacing: 0.04em; text-transform: none; color: var(--hit); }
+    .hit.far .k { color: var(--classic); }
+    .hit h4 { font-family: "Montserrat", sans-serif; font-size: 18px; margin: 2px 0 6px; letter-spacing: -0.02em; }
+    .hit .mol { background: #fff; border-radius: 10px; min-height: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; margin-bottom: 6px; }
+    .hit .mol img { width: 100%; height: 100%; object-fit: contain; display: block; }
+    .hit p { font-size: var(--copy); line-height: var(--copy-lh); color: #2d5a5c; }
+
+    .right { display: grid; grid-template-rows: auto 1fr auto; gap: 10px; min-height: 0; }
+    .strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .kpi { background: var(--paper); border-radius: 14px; padding: 10px 14px 10px; }
+    .kpi .n { font-family: "Montserrat", sans-serif; font-size: 30px; font-weight: 800; letter-spacing: -0.04em; line-height: 1; }
+    .kpi .n.lime { color: #14806a; }
+    .kpi .n.warn { color: var(--vain); }
+    .kpi span { display: block; margin-top: 4px; font-size: var(--copy); color: var(--muted); line-height: var(--copy-lh); }
+
+    .chart { background: var(--paper); border-radius: 16px; padding: 12px 14px 12px; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
+    .chart h4 { font-size: var(--copy); letter-spacing: 0.01em; color: var(--muted); font-weight: 700; }
+    .chart p.sub { font-size: var(--copy); color: var(--muted); margin: 2px 0 8px; line-height: var(--copy-lh); }
+    table.annex7 { width: 100%; border-collapse: collapse; font-size: var(--copy); table-layout: fixed; flex: 1; }
+    table.annex7 th, table.annex7 td { padding: 5px 7px; text-align: center; border-bottom: 1px solid var(--line); font-variant-numeric: tabular-nums; vertical-align: middle; }
+    table.annex7 thead th { background: #e7f4f1; color: var(--muted); font-size: var(--copy); font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; text-align: center; }
+    table.annex7 thead th.label, table.annex7 td:first-child { text-align: left; width: 15%; font-weight: 650; color: var(--ink); }
+    table.annex7 thead th.delta, table.annex7 td.delta { width: 14%; }
+    table.annex7 td.q { color: var(--ibm); font-weight: 700; }
+    table.annex7 tbody tr:last-child td { border-bottom: none; }
+    table.annex7 thead th.p1 { background: #eef3f1; color: #8aa0a6; }
+    table.annex7 thead th.p2 { background: #d4eee8; color: #0c5c56; }
+    table.annex7 thead tr:first-child th.p1,
+    table.annex7 thead tr:first-child th.p2 { text-transform: none; letter-spacing: -0.02em; line-height: 1.15; padding-top: 7px; padding-bottom: 7px; }
+    table.annex7 thead tr:first-child th.p1 span,
+    table.annex7 thead tr:first-child th.p2 span,
+    table.annex7 thead tr:first-child th.delta span { display: block; margin-top: 2px; font-family: "Montserrat", sans-serif; font-size: 15px; font-weight: 800; letter-spacing: -0.03em; }
+    table.annex7 thead th.delta { background: #0e7a72; color: #fff; text-transform: none; letter-spacing: -0.02em; line-height: 1.15; }
+    table.annex7 thead th.delta span { white-space: nowrap; }
+    table.annex7 td.delta { background: #0e7a72; color: #fff; font-weight: 800; border-bottom-color: rgba(255,255,255,0.28); }
+    table.annex7 thead tr:nth-child(2) th:nth-child(odd) { background: #f4f7f6; }
+    table.annex7 thead tr:nth-child(2) th:nth-child(even) { background: #e4f3ef; }
+    table.annex7 td.p1,
+    table.annex7 td.p2 { background: #f4f7f6; color: #5d787f; font-weight: 650; }
+    table.annex7 td.p1.q,
+    table.annex7 td.p2.q { background: #e4f3ef; }
+    table.annex7 td.p1.q { color: #6a9a93; font-weight: 700; }
+    table.annex7 td.p2,
+    table.annex7 td.p2.q { color: var(--ink); font-weight: 650; }
+    table.annex7 td.p2.q { color: var(--ibm); font-weight: 800; }
+    table.annex7 tbody tr.focus td {
+      background: #d4eee8;
+      border-top: 2px solid #143844;
+      border-bottom: 2px solid #143844;
+    }
+    table.annex7 tbody tr.focus td:first-child { border-left: 2px solid #143844; font-weight: 800; }
+    table.annex7 tbody tr.focus td:last-child { border-right: 2px solid #143844; }
+    table.annex7 tbody tr.focus td.delta {
+      background: #0e7a72;
+      color: #fff;
+      border-bottom-color: #143844;
+    }
+
+    .foot { display: block; margin-top: 2px; }
+    .cta { background: linear-gradient(118deg, #14b8a6 0%, #1fccc0 55%, #5ee6c9 100%); color: #fff; border-radius: 14px; padding: 12px 16px; }
+    .cta.dark { background: linear-gradient(118deg, #0d5c56 0%, #0f7a72 55%, #14a497 100%); }
+    .cta .label-s { font-size: var(--label); letter-spacing: 0.01em; color: rgba(255,255,255,0.9); font-weight: 700; margin-bottom: 4px; }
+    .cta p { font-family: "Montserrat", sans-serif; font-weight: 800; font-size: 18px; letter-spacing: -0.02em; }
+    .cta small { display: block; margin-top: 4px; opacity: 0.9; font-size: var(--copy); line-height: var(--copy-lh); }
+
+    .metrics2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    table.compact { width: 100%; border-collapse: collapse; background: var(--paper); border-radius: 14px; overflow: hidden; }
+    table.compact th, table.compact td { padding: 6px 12px; text-align: right; font-size: var(--copy); }
+    table.compact th { background: #e7f4f1; color: var(--muted); font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; }
+    table.compact td:first-child, table.compact th:first-child { text-align: left; font-weight: 650; color: var(--ink); }
+    table.compact tbody tr + tr td { border-top: 1px solid var(--line); }
+    table.compact td.q { color: var(--ibm); font-weight: 700; }
+    table.compact td.warn { color: var(--vain); font-weight: 700; }
+    .note { background: var(--paper); border: 1px solid var(--line); border-left: 4px solid var(--muted); border-radius: 12px; padding: 9px 14px; font-size: var(--copy); line-height: var(--copy-lh); color: #2d5a5c; }
+    .note strong { color: var(--ink); }
+    .note.warnline { border-left-color: var(--vain); }
+
+    .planes { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .plane { background: var(--paper); border-radius: 3px; clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%); border: 1px solid var(--line); border-left: 6px solid var(--classic); padding: 8px 10px; display: grid; grid-template-rows: auto auto 1fr auto; min-height: 0; }
+    .plane.q { border-left-color: var(--ibm); }
+    .plane .k { font-size: 14px; font-weight: 700; color: var(--classic); }
+    .plane.q .k { color: var(--ibm); }
+    .plane h4 { font-family: "Montserrat", sans-serif; font-size: 15px; margin: 2px 0 4px; letter-spacing: -0.01em; }
+    .plane .img { background: #fff; border-radius: 10px; min-height: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; margin-bottom: 4px; }
+    .plane .img img { width: 100%; height: 100%; object-fit: contain; display: block; }
+    .plane p { font-size: 14px; line-height: 1.35; color: #2d5a5c; }
+
+    .cost { background: var(--paper); border-radius: 14px; border: 1px solid var(--line); border-left: 4px solid var(--vain); padding: 8px 10px; }
+    .cost .k { font-size: 11px; font-weight: 700; letter-spacing: 0.01em; color: var(--vain); }
+    .cost h4 { font-family: "Montserrat", sans-serif; font-size: 14px; margin: 2px 0 4px; letter-spacing: -0.01em; }
+    .cost code { display: block; font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 11px; line-height: 1.4; background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 5px 7px; word-break: break-all; color: var(--ink); margin-bottom: 4px; }
+    .cost p { font-size: 13px; line-height: 1.35; color: #2d5a5c; }
+    #slide4 .pull { display: grid; grid-template-columns: 1fr auto 1fr; gap: 14px; align-items: center; margin: 10px 0 8px; }
+    #slide4 .pull .k { font-size: 13px; font-weight: 700; letter-spacing: 0.01em; color: var(--muted); }
+    #slide4 .pull svg { display: block; width: 88px; height: auto; margin: 8px 0 4px; }
+    #slide4 .pull p { font-size: 16px; line-height: 1.35; color: #2d5a5c; }
+    #slide4 .gain { font-family: "Montserrat", sans-serif; font-weight: 800; font-size: 26px; letter-spacing: -0.03em; color: var(--vain); }
+
+    .flagnote { position: relative; z-index: 1; margin-top: 10px; display: inline-flex; align-items: center; gap: 8px; background: rgba(0,0,0,0.18); border: 1px solid rgba(255,255,255,0.3); border-radius: 10px; padding: 6px 12px; font-size: 13px; font-weight: 600; color: #fff; }
+
+    .candidates { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .cand { background: var(--paper); border-radius: 3px; clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 0 100%); padding: 12px 14px; border: 1px solid var(--line); border-left: 6px solid var(--ibm); display: grid; grid-template-rows: auto auto 1fr auto; min-height: 0; }
+    .cand .k { font-size: var(--label); font-weight: 700; letter-spacing: 0.01em; color: var(--ibm); }
+    .cand h4 { font-family: "Montserrat", sans-serif; font-size: 22px; margin: 2px 0 8px; letter-spacing: -0.02em; }
+    .cand .mol { background: #fff; border-radius: 12px; min-height: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; margin-bottom: 8px; }
+    .cand .mol img { width: 100%; height: 100%; object-fit: contain; display: block; }
+    .cand p { font-size: var(--copy); line-height: var(--copy-lh); color: #2d5a5c; }
+    .cand .stat { margin-top: 6px; font-family: "Montserrat", sans-serif; font-weight: 800; font-size: 17px; color: var(--ibm); }
+
+    /* Page 0 — cover / intro, full-bleed green, minimal copy */
+    .cover {
+      position: relative;
+      width: 100%;
+      height: 1080px;
+      color: #fff;
+      overflow: hidden;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      padding: 48px 72px 56px;
+      background:
+        radial-gradient(ellipse 90% 120% at 88% 110%, rgba(255,255,255,0.20) 0%, transparent 55%),
+        radial-gradient(ellipse 70% 90% at 100% 0%, #7af0d0 0%, transparent 50%),
+        radial-gradient(ellipse 80% 100% at 8% 80%, #12b8a8 0%, transparent 55%),
+        linear-gradient(118deg, #0e9e9a 0%, #14b8a6 35%, #1fccc0 65%, #6eebc8 100%);
+    }
+    .cover svg.orb { position: absolute; right: -160px; bottom: -200px; width: 720px; height: 720px; opacity: 0.5; }
+    .cover svg.waves,
+    .pre .hero svg.waves {
+      display: block;
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 420px;
+      height: 420px;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .cover-mid { position: relative; z-index: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; gap: 14px; }
+    .cover-mid h1 { font-family: "Montserrat", sans-serif; font-weight: 800; font-size: 60px; letter-spacing: -0.03em; line-height: 1.05; }
+    .cover-mid p.lede { max-width: 980px; font-size: 20px; line-height: 1.5; opacity: 0.95; }
+    .cover-mid p.lede strong { font-weight: 700; }
+    #slide0 .cover,
+    #slide-thanks .cover { grid-template-rows: 1fr auto; }
+    #slide0 .cover-mid { align-items: stretch; gap: 18px; }
+    #slide0 .cover-mid h1,
+    #slide0 .cover-mid p.lede { text-align: center; }
+    #slide0 .cover-mid p.lede { margin-left: auto; margin-right: auto; max-width: 1500px; }
+    #slide0 .cover-band {
+      display: grid;
+      grid-template-columns: 1fr;
+      align-items: stretch;
+      width: 100%;
+      margin-top: 8px;
+      flex: 1;
+      min-height: 0;
+    }
+    #slide0 .cover-services {
+      display: block;
+      width: auto;
+      margin-top: 0;
+      height: 100%;
+      background: #fff;
+      color: var(--ink);
+      border-radius: 20px;
+      overflow: hidden;
+      text-align: left;
+    }
+    #slide0 .by-industry {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      --gutter: 12px;
+      gap: var(--gutter);
+      align-items: stretch;
+      height: 100%;
+      padding: 22px;
+    }
+    #slide0 .pie-wrap {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      z-index: 2;
+      width: 280px;
+      height: 280px;
+      margin: 0;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+    #slide0 .pie-wrap::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 164px;
+      height: 164px;
+      border-radius: 50%;
+      background: #fff;
+      transform: translate(-50%, -50%);
+    }
+    #slide0 .pie-wrap::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background:
+        linear-gradient(#fff, #fff) center / var(--gutter) 100% no-repeat,
+        linear-gradient(#fff, #fff) center / 100% var(--gutter) no-repeat;
+    }
+    #slide0 .pie {
+      position: relative;
+      z-index: 1;
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      background: conic-gradient(
+        #14968c 0% 25%,
+        #0e7a72 25% 50%,
+        #2a9a86 50% 75%,
+        #0d5c56 75% 100%
+      );
+      -webkit-mask: radial-gradient(circle at center, transparent 82px, #000 83px);
+      mask: radial-gradient(circle at center, transparent 82px, #000 83px);
+    }
+    #slide0 .pie-wrap span {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: "Montserrat", sans-serif;
+      font-weight: 800;
+      font-size: 18px;
+      letter-spacing: -0.02em;
+      color: var(--classic);
+    }
+    #slide0 .industry-legend { display: contents; list-style: none; margin: 0; padding: 0; }
+    #slide0 .industry-legend li:nth-child(1) { grid-column: 1; grid-row: 1; justify-content: flex-end; text-align: right; padding-right: 168px; }
+    #slide0 .industry-legend li:nth-child(2) { grid-column: 2; grid-row: 1; justify-content: flex-start; padding-left: 168px; }
+    #slide0 .industry-legend li:nth-child(3) { grid-column: 1; grid-row: 2; justify-content: flex-end; text-align: right; padding-right: 168px; }
+    #slide0 .industry-legend li:nth-child(4) { grid-column: 2; grid-row: 2; justify-content: flex-start; padding-left: 168px; }
+    #slide0 .industry-legend li { display: flex; flex-direction: row; align-items: center; gap: 12px; margin: 0; padding: 14px 16px; background: #d7eee8; border-radius: 14px; }
+    #slide0 .industry-legend .ico { width: 56px; height: 56px; border-radius: 14px; flex: 0 0 auto; display: flex; align-items: center; justify-content: center; color: #fff; }
+    #slide0 .industry-legend .ico svg { width: 30px; height: 30px; display: block; }
+    #slide0 .industry-legend .ico.c1 { background: #0d5c56; }
+    #slide0 .industry-legend .ico.c2 { background: #14968c; }
+    #slide0 .industry-legend .ico.c3 { background: #2a9a86; }
+    #slide0 .industry-legend .ico.c4 { background: #0e7a72; color: #fff; }
+    #slide0 .industry-legend b { display: block; font-family: "Montserrat", sans-serif; font-weight: 800; font-size: 28px; letter-spacing: -0.02em; line-height: 1.15; }
+    #slide0 .industry-legend span { display: block; margin-top: 6px; font-size: 18px; line-height: 1.35; color: #2d5a5c; }
+    #slide-joint {
+      height: 1080px;
+      min-height: 1080px;
+      overflow: hidden;
+      grid-template-rows: auto 1fr;
+    }
+    #slide-joint .joint-body {
+      min-height: 0;
+      padding: 20px 56px 44px;
+      display: flex;
+    }
+    #slide-joint ol {
+      flex: 1;
+      min-height: 0;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      grid-template-rows: repeat(6, minmax(0, 1fr));
+      gap: 10px;
+    }
+    #slide-joint li {
+      display: grid;
+      grid-template-columns: 460px 1fr;
+      align-items: center;
+      gap: 36px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 0 32px;
+      min-height: 0;
+    }
+    #slide-joint .id {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      min-width: 0;
+      color: var(--ink);
+    }
+    #slide-joint .id b {
+      font-family: "Montserrat", sans-serif;
+      font-weight: 800;
+      font-size: 32px;
+      letter-spacing: -0.03em;
+      line-height: 1;
+    }
+    #slide-joint .id.haiqu b {
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+      font-weight: 600;
+      font-size: 30px;
+      letter-spacing: 0.08em;
+      text-transform: lowercase;
+    }
+    #slide-joint .globant-word { height: 36px; width: auto; display: block; }
+    #slide-joint .haiqu-lockup { height: 42px; width: auto; display: block; }
+    #slide-joint .ibm-quantum { height: 46px; width: auto; display: block; }
+    #slide-joint .qnow-word { height: 48px; width: auto; display: block; }
+    #slide-joint .chip {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: #0d5c56;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+    }
+    #slide-joint .chip img { width: 30px; height: 30px; object-fit: contain; filter: none; }
+    #slide-joint .ibm-logo { height: 32px; width: auto; display: block; filter: none; }
+    #slide-joint .unir { height: 40px; width: auto; display: block; }
+    #slide-joint .role {
+      display: block;
+      font-family: "Montserrat", sans-serif;
+      font-weight: 800;
+      font-size: 22px;
+      letter-spacing: -0.02em;
+      color: var(--classic);
+    }
+    #slide-joint .why {
+      display: block;
+      margin-top: 4px;
+      font-size: 18px;
+      line-height: 1.35;
+      color: #2d5a5c;
+    }
+    .cover-partners { position: relative; z-index: 1; display: grid; grid-template-columns: 1fr; gap: 32px; margin-top: 12px; }
+    .pgroup { background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.28); border-radius: 20px; padding: 26px 30px; }
+    .pgroup h3 { font-size: 16px; letter-spacing: 0.01em; font-weight: 700; opacity: 0.85; margin-bottom: 16px; }
+    .pcards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .pcard { display: flex; align-items: center; gap: 16px; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.22); border-radius: 14px; padding: 16px 20px; min-width: 0; }
+    .pcard img { height: 34px; width: auto; max-width: 110px; object-fit: contain; filter: brightness(0) invert(1); }
+    .pcard .txt b { display: block; font-family: "Montserrat", sans-serif; font-weight: 800; font-size: 20px; letter-spacing: -0.01em; }
+    .pcard .txt span { display: block; font-size: 15px; opacity: 0.88; line-height: 1.3; margin-top: 2px; }
+
+    /* Funnel — drug discovery, before the target */
+    #slide-funnel { height: 1080px; min-height: 1080px; grid-template-rows: auto 1fr; overflow: hidden; }
+    #slide-studio,
+    #slide-joint,
+    #slide-target,
+    #slide1,
+    #slide3,
+    #slide4 {
+      height: 1080px;
+      min-height: 1080px;
+      overflow: hidden;
+      grid-template-rows: auto 1fr;
+    }
+    #slide-studio > .studio-body,
+    #slide-target > .target-body,
+    #slide1 > .body,
+    #slide3 > .body,
+    #slide4 > .body { min-height: 0; }
+    #slide4.slide > header.hero { min-height: 0; padding-bottom: 18px; }
+    #slide4 .right { display: flex; flex-direction: column; gap: 10px; min-height: 0; }
+    #slide4 .left { display: flex; flex-direction: column; gap: 10px; min-height: 0; }
+    #slide4 .planes { flex: 1 1 auto; min-height: 0; align-items: stretch; grid-template-rows: minmax(0, 1fr); }
+    #slide4 .plane { height: auto; min-height: 0; }
+    #slide4 .plane .img { height: auto; min-height: 0; align-self: stretch; }
+    #slide4 .plane .img img { width: 100%; height: 100%; object-fit: cover; object-position: 4% center; }
+    #slide4 .plane.q .img img { object-position: 16% center; }
+    #slide4 .note { margin-top: 0; }
+    #slide4 .verdicts {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      flex: 1;
+      min-height: 0;
+      display: grid;
+      grid-template-rows: 1fr 1fr;
+      gap: 14px;
+    }
+    #slide4 .verdicts li {
+      display: grid;
+      grid-template-columns: 64px 1fr;
+      align-items: center;
+      column-gap: 12px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-left: 8px solid var(--classic);
+      border-radius: 16px;
+      padding: 22px 22px 22px 18px;
+      min-height: 0;
+    }
+    #slide4 .verdicts li:nth-child(2) { border-left-color: var(--ibm); }
+    #slide4 .verdicts .n {
+      font-family: "Montserrat", sans-serif;
+      font-weight: 800;
+      font-size: 52px;
+      letter-spacing: -0.045em;
+      line-height: 1;
+      color: var(--classic);
+    }
+    #slide4 .verdicts li:nth-child(2) .n { color: var(--ibm); }
+    #slide4 .verdicts h3 {
+      font-family: "Montserrat", sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      margin: 0 0 8px;
+      color: var(--ink);
+    }
+    #slide4 .verdicts .say {
+      margin: 0;
+      font-family: "Montserrat", sans-serif;
+      font-weight: 800;
+      font-size: 26px;
+      letter-spacing: -0.03em;
+      line-height: 1.2;
+      color: var(--ink);
+    }
+    #slide4 .verdicts .fine {
+      margin: 10px 0 0;
+      font-size: 18px;
+      line-height: 1.4;
+      color: #2d5a5c;
+    }
+    #slide4 .verdicts .pull { margin: 8px 0 0; }
+    #slide4 .ctx h3 {
+      font-family: "Montserrat", sans-serif;
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      margin-bottom: 2px;
+    }
+    article.slide:not(.pre) > header.hero { min-height: 239px; box-sizing: border-box; }
+    article.slide:not(.pre) > header.hero h1 span { white-space: nowrap; }
+    #slide3 .hero h1 span { font-size: 21px; }
+    .funnel-body { padding: 20px 64px 52px; display: flex; flex-direction: column; justify-content: center; gap: 22px; min-height: 0; }
+    .funnel { position: relative; height: 500px; }
+    .funnel-shape { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+    .funnel-stages { position: absolute; inset: 0; display: grid; grid-template-columns: repeat(5, 1fr); list-style: none; margin: 0; padding: 0; }
+    .funnel-stages li { display: flex; flex-direction: column; justify-content: center; padding: 0 26px 0 34px; min-width: 0; }
+    .funnel-stages .k { font-size: 13px; font-weight: 700; letter-spacing: 0.01em; color: var(--muted); margin-bottom: 10px; }
+    .funnel-stages h3 { font-family: "Montserrat", sans-serif; font-size: 30px; letter-spacing: -0.03em; line-height: 1.05; margin-bottom: 8px; color: var(--ink); }
+    .funnel-stages p { font-size: 18px; line-height: 1.35; color: #2d5a5c; }
+    .funnel-stages li.here h3,
+    .funnel-stages li.here { color: #fff; }
+    .funnel-stages li.here .k,
+    .funnel-stages li.here p { color: rgba(255,255,255,0.92); }
+    .funnel-stages .mark { margin-top: 16px; align-self: flex-start; font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; border: 1px solid rgba(255,255,255,0.6); border-radius: 999px; padding: 5px 12px; }
+    .funnel-stages li.here p.sit { margin-top: 12px; font-size: 15px; line-height: 1.3; }
+    .funnel-stages .glyph { display: block; margin-bottom: 14px; }
+    .funnel-caption { font-size: 32px; line-height: 1.35; color: #2d5a5c; max-width: none; width: 100%; margin-left: 0; align-self: stretch; list-style: none; display: grid; gap: 12px; }
+    .funnel-caption li { padding-left: 28px; position: relative; }
+    .funnel-caption li::before { content: ""; position: absolute; left: 0; top: 0.55em; width: 10px; height: 10px; border-radius: 50%; background: var(--teal-0); }
+    .funnel-caption strong { color: var(--ink); }
+
+    /* Page — target & research question */
+    .target-body { padding: 24px 56px 40px; display: grid; grid-template-columns: 0.95fr 1.05fr; gap: 28px; align-items: stretch; }
+    .protein-card { background: var(--paper); border-radius: 20px; border: 1px solid var(--line); padding: 14px; display: grid; grid-template-rows: 1fr auto; min-height: 0; }
+    .protein-card .img { position: relative; background: #fff; border-radius: 14px; overflow: hidden; display: flex; align-items: center; justify-content: center; min-height: 0; }
+    .protein-card .img img { position: relative; z-index: 2; width: 100%; height: 100%; object-fit: contain; display: block; }
+    .protein-card .viewer3d { position: absolute; inset: 0; z-index: 1; touch-action: none; }
+    .protein-card .viewer3d canvas { display: block; cursor: grab; }
+    .protein-card .viewer3d canvas:active { cursor: grabbing; }
+    .protein-card.is-3d .img img { visibility: hidden; }
+    .protein-card.is-fallback .viewer3d { visibility: hidden; }
+    .protein-card .drag-hint {
+      position: absolute; z-index: 2; left: 12px; bottom: 10px; margin: 0;
+      font-size: var(--label); font-weight: 600; letter-spacing: 0.04em; color: var(--muted);
+      background: rgba(255,252,246,0.9); border-radius: 999px; padding: 4px 10px;
+      pointer-events: none; opacity: 0;
+    }
+    .protein-card.is-3d .drag-hint { opacity: 1; }
+    .protein-card .cap { padding: 10px 6px 2px; font-size: var(--copy); color: var(--muted); line-height: var(--copy-lh); }
+    .protein-card .cap strong { color: var(--ink); }
+    .qwhy { display: grid; grid-template-rows: repeat(3, 1fr); gap: 16px; }
+    .qwhy .card { background: var(--paper); border-radius: 16px; border: 1px solid var(--line); border-left: 6px solid var(--classic); padding: 18px 22px; display: flex; flex-direction: column; justify-content: center; }
+    .qwhy .card.q2 { border-left-color: var(--ibm); }
+    .qwhy .card.q3 { border-left-color: var(--vain); }
+    .qwhy .tag { font-size: var(--label); font-weight: 700; letter-spacing: 0.01em; color: var(--muted); margin-bottom: 6px; }
+    .qwhy h3 { font-family: "Montserrat", sans-serif; font-size: 24px; letter-spacing: -0.02em; margin-bottom: 8px; color: var(--ink); }
+    .qwhy p { font-size: 19px; line-height: 1.45; color: #2d5a5c; }
+    .qwhy strong { color: var(--ink); font-weight: 700; }
+
+    /* Pre-slide — green description | cream setup, classic beside quantum */
+    .pre { height: 1080px; min-height: 1080px; grid-template-rows: 1fr; }
+    .setup-split { display: grid; grid-template-columns: 1fr 1fr; height: 1080px; }
+    .pre .hero { height: 100%; display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start; padding: 40px 56px 72px; }
+    .pre .setup-copy { align-self: stretch; width: 100%; position: relative; z-index: 1; }
+    .pre .hero-top { align-self: stretch; width: 100%; }
+    .pre .setup-copy { margin-top: auto; margin-bottom: auto; }
+    .pre .hero svg.orb { right: -260px; bottom: -300px; width: 460px; height: 460px; }
+    .pre .setup-lede { max-width: none; margin-top: 28px; font-size: 22px; line-height: 1.45; color: rgba(255,255,255,0.95); }
+    .pre .setup-body { height: 100%; padding: 48px 48px 72px; display: flex; flex-direction: column; gap: 18px; background: var(--cream); }
+    .pre .setup-fixed { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .pre .setup-fixed article,
+    .pre .setup-pair article { background: var(--paper); border-radius: 16px; border: 1px solid var(--line); padding: 22px 22px; }
+    .pre .setup-pair { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; min-height: 0; }
+    .pre .setup-pair article { display: flex; flex-direction: column; justify-content: center; border-left: 8px solid var(--classic); }
+    #slide-setup .setup-pair article { justify-content: flex-start; padding-top: 28px; }
+    .pre .setup-pair article.quantum { border-left-color: var(--teal-0); background: #e7f7f3; }
+    .pre .tag { font-size: var(--label); font-weight: 700; letter-spacing: 0.01em; color: var(--muted); margin-bottom: 8px; }
+    .pre .setup-pair article.classic .tag { color: var(--classic); }
+    .pre .setup-pair article.quantum .tag { color: var(--teal-0); }
+    .pre h3 { font-family: "Montserrat", sans-serif; font-size: 26px; letter-spacing: -0.02em; margin-bottom: 8px; color: var(--ink); }
+    .pre .setup-body p { font-size: 18px; line-height: 1.45; color: #2d5a5c; }
+    .pre .big { font-family: "Montserrat", sans-serif; font-weight: 800; font-size: 72px; letter-spacing: -0.04em; line-height: 1; margin: 10px 0 12px; }
+    .pre .setup-pair article.classic .big { color: var(--classic); }
+    .pre .setup-pair article.quantum .big { color: var(--teal-0); }
+    .pre .globant-impact { justify-content: center; }
+    .pre .globant-impact .model,
+    .pre .globant-impact .sectors { background: var(--paper); border-radius: 16px; border: 1px solid var(--line); padding: 20px 22px; }
+    .pre .logo-wall { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .pre .logo-wall span { background: #fff; border: 1px solid var(--line); border-radius: 12px; min-height: 78px; display: flex; align-items: center; justify-content: center; padding: 10px 14px; }
+    .pre .logo-wall img { max-width: 100%; max-height: 42px; width: auto; height: auto; object-fit: contain; display: block; }
+    .pre .impact-note { font-size: 15px; line-height: 1.4; color: var(--muted); }
+
+    /* Page after the cover — team | what Globant does */
+    .studio-body { padding: 22px 56px 36px; display: grid; grid-template-columns: 0.88fr 1.12fr; gap: 28px; align-items: stretch; }
+    .studio-col { display: flex; flex-direction: column; min-height: 0; }
+    .col-kicker { font-family: "Montserrat", sans-serif; font-weight: 800; font-size: 13px; letter-spacing: 0.01em; color: var(--muted); margin-bottom: 12px; }
+    .studio-body .qwhy { flex: 1; }
+    .studio-body .qwhy.team { grid-template-rows: repeat(7, 1fr); gap: 8px; }
+    #slide-studio .studio-body { grid-template-columns: 1fr; grid-template-rows: 1fr; padding: 16px 56px 52px; }
+    #slide-studio .qwhy.team { grid-template-columns: repeat(8, 1fr); grid-template-rows: 1fr 1fr; gap: 16px; }
+    #slide-studio .team .card {
+      grid-column: span 2;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 0;
+      padding: 20px 20px 16px;
+    }
+    #slide-studio .team .foot {
+      margin-top: 10px;
+      min-height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    #slide-studio .team .li {
+      display: block;
+      width: 32px;
+      height: 32px;
+      flex: 0 0 auto;
+      line-height: 0;
+      border-radius: 6px;
+    }
+    #slide-studio .team .li svg { width: 32px; height: 32px; display: block; }
+    #slide-studio .team .li:hover { filter: brightness(1.08); }
+    #slide-studio .team .li:focus-visible { outline: 2px solid var(--ibm); outline-offset: 3px; }
+    #slide-studio .team .card:nth-child(5) { grid-column: 2 / span 2; }
+    #slide-studio .team .card:nth-child(6) { grid-column: 4 / span 2; }
+    #slide-studio .team .card:nth-child(7) { grid-column: 6 / span 2; }
+    #slide-studio .team .mark {
+      width: 148px;
+      height: 148px;
+      margin-bottom: 14px;
+      border-radius: 50%;
+      flex: 0 0 auto;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 3px solid transparent;
+      background: #e7f4f1;
+      color: var(--ibm);
+    }
+    #slide-studio .team .mark img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    #slide-studio .team .card.speaker {
+      background: var(--paper);
+      border-color: var(--line);
+      border-left-color: var(--classic);
+    }
+    #slide-studio .team .card.speaker .mark { border-color: var(--ibm); }
+    #slide-studio .team .tag { font-size: 16px; line-height: 1.35; min-height: 2.7em; margin-bottom: 8px; }
+    #slide-studio .team h3 { font-size: 28px; line-height: 1.12; margin-bottom: 0; }
+    #slide-studio .team .card.speaker .tag,
+    #slide-studio .team .card.speaker h3,
+    #slide-studio .team .card.speaker h3 a { color: var(--ink); }
+    #slide-studio .team .card.speaker .tag { color: var(--muted); font-size: 16px; line-height: 1.35; }
+    #slide-studio .team .card.speaker h3 { font-size: 28px; line-height: 1.12; }
+    #slide-studio .team .card.speaker .speaker-note {
+      margin-top: 0;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      line-height: 1.2;
+      color: var(--ibm);
+      background: #e7f4f1;
+      border-radius: 999px;
+      padding: 5px 12px;
+    }
+    .studio-body .qwhy.offer { grid-template-rows: repeat(3, 1fr); gap: 14px; }
+    .studio-body .offer .card { justify-content: center; }
+    .studio-body .offer .tag { font-size: 15px; margin-bottom: 8px; }
+    .studio-body .offer h3 { font-size: 32px; margin-bottom: 10px; }
+    .studio-body .offer p { font-size: 22px; line-height: 1.35; }
+    .studio-body .offer .industries span { font-size: 16px; padding: 6px 14px; }
+    .studio-body .team .card { padding: 8px 14px; }
+    .studio-body .team .tag { margin-bottom: 2px; }
+    .studio-body .team h3 { font-size: 20px; margin-bottom: 0; }
+    .studio-body .team h3 a { color: inherit; text-decoration: none; }
+    .studio-body .team .card.speaker { background: linear-gradient(118deg, #0d5c56 0%, #0f7a72 55%, #14a497 100%); border-color: transparent; }
+    .studio-body .team .card.speaker .tag,
+    .studio-body .team .card.speaker h3,
+    .studio-body .team .card.speaker h3 a { color: #fff; }
+    .industries { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .industries span { font-size: 13px; font-weight: 700; letter-spacing: 0.03em; color: var(--ibm); background: #e7f4f1; border-radius: 999px; padding: 4px 10px; }
+
+    /* Bridge pages — full-bleed green, one line, breathing room between technical slides */
+    .bridge { position: relative; width: 100%; height: 1080px; color: #fff; overflow: hidden; display: flex; align-items: center; justify-content: center; text-align: center; }
+    .bridge .meta { position: absolute; top: 28px; right: 40px; z-index: 1; }
+    .bridge h2 { position: relative; z-index: 1; max-width: 1500px; padding: 0 80px; font-family: "Montserrat", sans-serif; font-weight: 800; font-size: 56px; letter-spacing: -0.03em; line-height: 1.3; }
+
+    /* Last page — conclusions, full-bleed green */
+    .concl-grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .concl-card { background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.28); border-radius: 18px; padding: 20px 24px; text-align: left; }
+    .concl-card .n { font-family: "Montserrat", sans-serif; font-weight: 800; font-size: 34px; letter-spacing: -0.03em; line-height: 1; }
+    .concl-card p { margin-top: 8px; font-size: 18px; line-height: 1.45; opacity: 0.95; }
+    .concl-scope { position: relative; z-index: 1; margin-top: 6px; font-size: 15px; line-height: 1.5; opacity: 0.82; max-width: 1100px; font-style: italic; }
+
+    /* Closing slide — thanks, contact card, QR */
+    .thanks-card { position: relative; z-index: 1; display: flex; align-items: center; gap: 28px; background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.28); border-radius: 20px; padding: 28px 40px; }
+    .avatar { width: 128px; height: 128px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.4); flex: 0 0 auto; display: block; }
+    .thanks-info { text-align: left; }
+    .thanks-info h2 { font-family: "Montserrat", sans-serif; font-weight: 800; font-size: 30px; letter-spacing: -0.02em; }
+    .thanks-roles { margin: 6px 0 0; padding: 0 0 0 1.15em; list-style: disc; }
+    .thanks-roles li { font-size: 17px; line-height: 1.45; opacity: 0.92; }
+    .thanks-roles b { font-weight: 700; }
+    .thanks-roles a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+    .thanks-roles li + li { margin-top: 2px; }
+    .thanks-roles li::marker { color: #fff; }
+    .thanks-divider { width: 1px; align-self: stretch; background: rgba(255,255,255,0.28); }
+    .thanks-qr { display: flex; flex-direction: column; align-items: center; gap: 8px; flex: 0 0 auto; }
+    .thanks-qr img { width: 132px; height: 132px; border-radius: 10px; background: #fff; padding: 8px; display: block; }
+    .thanks-qr span { font-size: 13px; opacity: 0.88; max-width: 150px; text-align: center; line-height: 1.3; }
+    #slide-thanks .cover-mid { gap: 22px; width: 100%; }
+    #slide-thanks .cover-mid h1 { font-size: 72px; }
+    #slide-thanks .cover-mid h1 .katex { font-size: 1em; color: inherit; }
+    #slide-thanks .cover-mid h1 .katex .text,
+    #slide-thanks .cover-mid h1 .katex .textbf {
+      font-family: "Montserrat", sans-serif;
+      font-weight: 800;
+      font-style: normal;
+      letter-spacing: -0.03em;
+    }
+    #slide-thanks .cover-mid p.lede { font-size: 26px; max-width: 1400px; }
+    #slide-thanks .thanks-card { width: min(1680px, 100%); gap: 44px; padding: 40px 48px; border-radius: 28px; }
+    #slide-thanks .avatar { width: 240px; height: 240px; border-width: 3px; }
+    #slide-thanks .thanks-info { flex: 1; min-width: 0; }
+    #slide-thanks .thanks-info h2 { font-size: 52px; }
+    #slide-thanks .thanks-roles { margin-top: 14px; padding-left: 1.25em; }
+    #slide-thanks .thanks-roles li { font-size: 28px; line-height: 1.35; }
+    #slide-thanks .thanks-roles li + li { margin-top: 12px; }
+    #slide-thanks .thanks-qr { gap: 14px; }
+    #slide-thanks .thanks-qr img { width: 340px; height: 340px; padding: 16px; border-radius: 16px; image-rendering: pixelated; }
+    #slide-thanks .thanks-qr span { font-size: 20px; max-width: 340px; line-height: 1.35; }
+
+    #slide-globant .setup-split {
+      background: linear-gradient(90deg,
+        #e9f2f0 0%,
+        #e9f2f0 12%,
+        #c9efe8 28%,
+        #7edfd0 46%,
+        #2ec9b8 64%,
+        #14b8a6 80%,
+        #0e8f88 100%);
+    }
+    #slide-globant .hero,
+    #slide-globant .setup-body { background: transparent; }
+    #slide-globant .hero { color: var(--ink); }
+    #slide-globant .setup-body { padding-top: 76px; }
+    #slide-globant .pill { background: #e7f4f1; border-color: #b7ddd6; color: var(--classic); }
+    #slide-globant .pill i { background: linear-gradient(90deg, var(--classic) 0 45%, rgba(13,92,86,0.35) 45% 100%); }
+    #slide-globant .meta {
+      position: absolute;
+      top: 36px;
+      right: 48px;
+      z-index: 3;
+      margin: 0;
+      color: #fff;
+      opacity: 1;
+      text-align: right;
+    }
+    #slide-globant .pg { color: rgba(255,255,255,0.92); }
+    #slide-globant .globant-intro { height: 156px; width: auto; display: block; margin: 0 0 22px; }
+    #slide-globant .setup-lede { font-size: 32px; line-height: 1.4; margin-top: 28px; color: var(--ink); }
+    #slide-globant .sectors .logo-wall { margin-top: 16px; }
+    #slide-globant .logo-wall span { flex-direction: column; gap: 8px; min-height: 108px; }
+    #slide-globant .logo-wall b { font-size: 12px; font-weight: 700; letter-spacing: 0.03em; color: var(--ibm); background: #e7f4f1; border-radius: 999px; padding: 4px 10px; text-align: center; line-height: 1.25; }
+    #slide-title .cover { grid-template-rows: 1fr; }
+    #slide-title .cover-mid h1 { font-size: 64px; max-width: 1500px; }
+    #slide-title .cover-mid p.lede { max-width: 1280px; font-size: 32px; font-style: italic; font-weight: 600; line-height: 1.35; }
+    #slide-title .cover-mid p.doi { margin: 6px 0 0; font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 22px; font-weight: 600; letter-spacing: 0.04em; opacity: 0.88; }
+
+    .same-mol { display: flex; align-items: center; gap: 14px; color: var(--ink); font-family: "Montserrat", sans-serif; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; font-size: 26px; }
+    .same-mol svg { width: 124px; height: auto; flex: 0 0 auto; }
+    .writing { display: block; width: 100%; height: auto; margin: 18px 0 8px; }
+    #slide-setup .writing { width: 100%; height: auto; flex: 0 0 auto; }
+    #slide1 .slide1-head,
+    #slide3 .slide1-head,
+    #slide4 .slide1-head,
+    #slide-score .slide1-head { position: relative; z-index: 1; display: flex; align-items: flex-end; justify-content: space-between; gap: 32px; }
+    #slide1 .ficha,
+    #slide4 .ficha,
+    #slide-score .ficha { margin-top: 0; margin-left: auto; justify-content: end; flex: 0 0 auto; }
+    #slide1 .hero,
+    #slide3 .hero,
+    #slide4 .hero,
+    #slide-score .hero { padding-bottom: 20px; }
+    #slide1 .hero h1 span { white-space: normal; max-width: 1180px; font-size: 22px; line-height: 1.25; }
+    #slide-score .hero h1 span { white-space: normal; max-width: 1560px; font-size: 22px; line-height: 1.25; }
+    #slide4 .slide1-head > div:first-child { min-width: 0; }
+    #slide3 .slide1-head > div:first-child { min-width: 0; }
+    #slide3 .strip { grid-template-columns: 1fr; }
+    #slide3 .strip .kpi { display: flex; align-items: center; gap: 18px; }
+    #slide3 .strip .kpi span { margin-top: 0; }
+    #slide3 .left { grid-template-rows: 1fr; }
+    #slide3 .candidates { height: 100%; }
+    #slide3 .cand { height: 100%; }
+    #slide3 .ad { flex: 1; display: flex; flex-direction: column; justify-content: center; min-height: 0; margin-top: 4px; }
+    #slide3 .ad-scale, #slide3 .ad-row { display: grid; grid-template-columns: 168px 1fr 148px; gap: 14px; align-items: center; }
+    #slide3 .ad-scale { height: 22px; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+    #slide3 .ad-scale .axis { position: relative; height: 16px; }
+    #slide3 .ad-scale .in { position: absolute; left: 0; }
+    #slide3 .ad-scale .out { position: absolute; right: 0; }
+    #slide3 .ad-scale .th { position: absolute; left: 64.5%; transform: translateX(-50%); color: var(--ink); }
+    #slide3 .ad-row { margin-top: 8px; }
+    #slide3 .ad .who { font-family: "Montserrat", sans-serif; font-weight: 800; font-size: 16px; letter-spacing: -0.03em; line-height: 1.15; }
+    #slide3 .ad .who span { display: block; margin-top: 3px; font-family: "DM Sans", sans-serif; font-weight: 600; font-size: 13px; letter-spacing: 0; color: var(--muted); }
+    #slide3 .ad .ruler { position: relative; height: 64px; }
+    #slide3 .ad .rail { position: absolute; left: 0; right: 0; top: 22px; height: 14px; border-radius: 999px; background: #eef4f2; }
+    #slide3 .ad .near { position: absolute; left: 0; top: 0; bottom: 0; width: 64.5%; border-radius: 999px 0 0 999px; background: #c9e6e0; }
+    #slide3 .ad .tick { position: absolute; left: 64.5%; top: 12px; width: 2px; height: 34px; background: var(--ink); }
+    #slide3 .ad .tick b { position: absolute; top: 36px; left: 50%; transform: translateX(-50%); font-size: 13px; font-weight: 700; color: var(--ink); }
+    #slide3 .ad .dot { position: absolute; top: 19px; left: var(--end); width: 20px; height: 20px; border-radius: 50%; transform: translateX(-50%); }
+    #slide3 .ad .dot.in { background: var(--ibm); border: 3px solid #fff; }
+    #slide3 .ad .dot.out { background: var(--paper); border: 2.5px solid #7f9c96; }
+    #slide3 .ad .verdict { font-family: "Montserrat", sans-serif; font-weight: 800; font-size: 22px; letter-spacing: -0.03em; line-height: 1; }
+    #slide3 .ad .verdict small { display: block; margin-top: 5px; font-family: "DM Sans", sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 0; color: var(--muted); }
+    #slide3 .ad .verdict.in { color: var(--ibm); }
+    #slide3 .ad .verdict.out { color: var(--classic); }
+    #slide3 .ad-mean { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
+    #slide3 .ad-mean p { margin: 0; padding: 10px 12px; border-radius: 12px; background: #f3faf8; font-size: 15px; line-height: 1.35; color: #24564f; }
+    #slide3 .ad-mean b { font-family: "Montserrat", sans-serif; letter-spacing: -0.02em; color: var(--ink); }
+    #slide-flow { height: 1080px; min-height: 1080px; overflow: hidden; grid-template-rows: auto 1fr; }
+    #slide-flow .body { grid-template-columns: 1fr; grid-template-rows: auto 1fr; padding: 16px 48px 48px; gap: 14px; min-height: 0; }
+    #slide-flow .pipe { list-style: none; display: grid; grid-template-columns: repeat(5, 1fr); gap: 22px; margin: 0; padding: 0; }
+    #slide-flow .pipe li { position: relative; background: var(--paper); border: 1px solid var(--line); border-radius: 16px; padding: 12px 14px 14px; min-width: 0; }
+    #slide-flow .pipe li:not(:last-child)::after { content: ""; position: absolute; right: -16px; top: 50%; width: 8px; height: 8px; border-right: 2px solid var(--ibm); border-top: 2px solid var(--ibm); transform: translateY(-50%) rotate(45deg); }
+    #slide-flow .pipe .k { font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ibm); }
+    #slide-flow .pipe h3 { font-family: "Montserrat", sans-serif; font-size: 20px; letter-spacing: -0.03em; margin: 4px 0 6px; color: var(--ink); }
+    #slide-flow .pipe p { font-size: 15px; line-height: 1.35; color: #2d5a5c; }
+    #slide-flow .figs { display: grid; grid-template-columns: 1fr; gap: 16px; min-height: 0; }
+    #slide-flow .fig { background: var(--paper); border: 1px solid var(--line); border-radius: 16px; padding: 14px 16px 12px; display: flex; flex-direction: column; min-height: 0; min-width: 0; }
+    #slide-flow .fig h3 { font-family: "Montserrat", sans-serif; font-size: 18px; letter-spacing: -0.02em; margin: 0 0 4px; color: var(--ink); }
+    #slide-flow .fig .sub { font-size: 14px; line-height: 1.35; color: var(--muted); margin: 0 0 8px; }
+    #slide-flow .fig img,
+    #slide-flow .fig svg.ansatz { flex: 1; min-height: 0; width: 100%; height: 100%; object-fit: contain; object-position: center; display: block; }
+    #slide-score { height: 1080px; min-height: 1080px; overflow: hidden; grid-template-rows: auto 1fr; }
+    #slide-score .body { grid-template-columns: 1.42fr 0.58fr; grid-template-rows: auto auto 1fr; gap: 14px; align-items: stretch; padding-bottom: 48px; }
+    #slide-score .families { grid-column: 1; grid-row: 1; background: var(--paper); border: 1px solid var(--line); border-radius: 16px; padding: 14px 18px 12px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+    #slide-score .fam-head { display: flex; align-items: baseline; gap: 16px; }
+    #slide-score .fam-head p:last-child { margin: 0; font-size: 16px; line-height: 1.35; color: #2d5a5c; }
+    #slide-score .boards { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    #slide-score .board h3 { margin: 0 0 6px; font-family: "Montserrat", sans-serif; font-size: 13px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; }
+    #slide-score .board.table h3 { color: var(--classic); }
+    #slide-score .board.quantum h3 { color: var(--teal-0); }
+    #slide-score .board .row { display: grid; grid-template-columns: 162px 1fr 52px; align-items: center; gap: 8px; min-height: 28px; padding: 0 6px; border-radius: 8px; }
+    #slide-score .board .row.pick { background: #e7f7f3; }
+    #slide-score .board .name { font-size: 13px; font-weight: 700; color: var(--ink); white-space: nowrap; }
+    #slide-score .board .row.pick .name { color: #0d5c56; }
+    #slide-score .board .name em { margin-left: 6px; font-style: normal; font-weight: 800; font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--teal-0); }
+    #slide-score .board .track { height: 10px; border-radius: 999px; background: #e4eeea; overflow: hidden; }
+    #slide-score .board .track i { display: block; height: 100%; border-radius: 999px; background: var(--classic); }
+    #slide-score .board.quantum .track i { background: var(--teal-0); }
+    #slide-score .board .auc { font-family: "Montserrat", sans-serif; font-weight: 800; font-size: 15px; letter-spacing: -0.03em; text-align: right; color: var(--ink); }
+    #slide-score .pool { grid-column: 2; grid-row: 1 / span 3; background: #0d5c56; border: none; border-radius: 16px; padding: 28px 18px 22px; display: flex; flex-direction: column; justify-content: center; gap: 8px; min-height: 0; color: #fff; }
+    #slide-score .pool .tree { flex: 0 0 auto; display: flex; flex-direction: column; justify-content: center; min-height: 0; }
+    #slide-score .pool .members { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0; }
+    #slide-score .pool .members span { display: flex; align-items: center; justify-content: center; min-height: 36px; margin: 0 4px; padding: 6px 8px; border: 2px solid rgba(255,255,255,0.85); border-radius: 999px; color: #fff; font-family: "Montserrat", sans-serif; font-weight: 700; font-size: 14px; letter-spacing: -0.02em; line-height: 1.15; text-align: center; }
+    #slide-score .pool .members span.studied { background: #5ee6c9; border-color: #5ee6c9; color: #0d5c56; }
+    #slide-score .pool .stem { width: 100%; height: 48px; display: block; margin: -2px 0 -14px; flex: none; }
+    #slide-score .pool .stem path { fill: none; stroke: #fff; stroke-width: 2; vector-effect: non-scaling-stroke; }
+    #slide-score .pool .tally { text-align: center; background: none; padding: 0; overflow: visible; position: static; }
+    #slide-score .pool .n { font-family: "Montserrat", sans-serif; font-weight: 800; font-size: 64px; letter-spacing: -0.04em; line-height: 0.9; margin: 0; color: #fff; }
+    #slide-score .pool .unit { font-family: "Montserrat", sans-serif; font-weight: 700; font-size: 18px; letter-spacing: -0.02em; color: #fff; }
+    #slide-score .pool .base { margin: 18px 0 0; padding: 18px 8px 2px; border-top: 2px solid rgba(255,255,255,0.75); text-align: center; font-family: "Montserrat", sans-serif; font-size: 20px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.3; color: #fff; }
+    #slide-score .qask, #slide4 .qask { margin: 0; font-family: "Montserrat", sans-serif; font-weight: 700; font-size: 22px; letter-spacing: -0.02em; color: var(--teal-0); }
+    #slide-score .trio { grid-column: 1; grid-row: 2; display: grid; grid-template-columns: 1fr 1fr 1.25fr; gap: 14px; align-items: stretch; }
+    #slide-score .trio article { background: var(--paper); border: 1px solid var(--line); border-radius: 16px; padding: 16px 18px 14px; border-left: 8px solid var(--classic); display: flex; flex-direction: column; gap: 12px; min-height: 0; }
+    #slide-score .trio article.quantum { border-left-color: var(--teal-0); }
+    #slide-score .trio article.both { background: #e7f7f3; border-left-color: var(--teal-0); }
+    #slide-score .trio .head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+    #slide-score .trio .tag { font-size: 15px; font-weight: 700; letter-spacing: 0.01em; color: var(--muted); }
+    #slide-score .trio article.quantum .tag,
+    #slide-score .trio article.both .tag { color: var(--teal-0); }
+    #slide-score .trio .n { font-family: "Montserrat", sans-serif; font-weight: 800; font-size: 40px; letter-spacing: -0.04em; line-height: 1; margin: 0; color: var(--ink); }
+    #slide-score .trio article.both .n { color: var(--teal-0); }
+    #slide-score .mols, #slide-score .joins { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+    #slide-score .mols li, #slide-score .join { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 36px; padding: 4px 10px; border-radius: 10px; background: rgba(255,255,255,0.72); }
+    #slide-score .mols b, #slide-score .join > b { font-family: "Montserrat", sans-serif; font-size: 16px; letter-spacing: -0.02em; font-weight: 800; }
+    #slide-score .state { display: inline-flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 700; color: #2d5a5c; }
+    #slide-score .state i { width: 16px; height: 16px; border-radius: 50%; display: inline-block; flex: 0 0 auto; }
+    #slide-score .state.on i { background: #0e7a72; }
+    #slide-score .state.off i { background: transparent; border: 2.5px solid #8fafa9; }
+    #slide-score .join .pair-states { display: flex; gap: 14px; }
+    #slide-score .trio article.both p { margin: 0; font-size: 16px; line-height: 1.35; color: #2d5a5c; }
+    #slide-score .carry { grid-column: 1; grid-row: 3; background: var(--paper); border: 1px solid var(--line); border-radius: 16px; padding: 18px 22px; display: flex; flex-direction: column; justify-content: space-between; gap: 12px; min-height: 0; }
+    #slide-score .carry .qask { font-size: 24px; line-height: 1.25; }
+    #slide-score .carry .pair { flex: 1; display: grid; grid-template-columns: 54fr 46fr; gap: 12px; min-height: 96px; }
+    #slide-score .carry .pair > div { border-radius: 14px; display: flex; flex-direction: column; justify-content: center; padding: 14px 20px; color: #fff; }
+    #slide-score .carry .pair .c { background: var(--classic); }
+    #slide-score .carry .pair .qv { background: var(--teal-0); }
+    #slide-score .carry .pair b { font-family: "Montserrat", sans-serif; font-weight: 800; font-size: 64px; letter-spacing: -0.04em; line-height: 1; }
+    #slide-score .carry .pair span { margin-top: 6px; font-size: 18px; font-weight: 600; }
+    #slide-score .carry > p:last-child { margin: 0; font-size: 18px; line-height: 1.35; color: #2d5a5c; }
+    #slide1 .body { grid-template-rows: auto 1fr; row-gap: 10px; }
+    #slide1 .body > .strip { grid-column: 2; grid-row: 1; align-items: stretch; }
+    #slide1 .strip .kpi {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      text-align: center;
+      height: 100%;
+      padding-top: 16px;
+    }
+    #slide1 .strip .kpi .n { white-space: nowrap; }
+    #slide1 .left { grid-column: 1; grid-row: 1 / span 2; grid-template-rows: auto 1fr; }
+    #slide1 .right { grid-column: 2; grid-row: 2; grid-template-rows: 1fr auto; }
+
+    .membership { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; align-items: stretch; }
+    .membership .mol-key { grid-column: 1 / -1; margin: 0; font-size: 14px; font-weight: 650; color: #2d5a5c; }
+    .membership article { display: flex; flex-direction: column; align-items: flex-start; background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px 12px; min-height: 0; }
+    .membership article.qpu { background: #e7f7f3; border-color: #b7e6dc; }
+    #slide1 .hit,
+    #slide1 .hit.far {
+      background: #e7f7f3;
+      border-color: #b7e6dc;
+      border-left-color: var(--teal-0);
+    }
+    #slide1 .hit .k,
+    #slide1 .hit.far .k { color: var(--teal-0); }
+    .membership .k { font-size: 13px; font-weight: 700; letter-spacing: 0.01em; color: var(--muted); line-height: 1.25; }
+    .membership .mol-key b { font-weight: 800; color: var(--ink); margin-right: 6px; }
+    .membership .k em { display: block; margin-top: 1px; font-style: normal; font-weight: 700; letter-spacing: -0.02em; color: var(--muted); }
+    .membership article.qpu .k { color: var(--teal-0); }
+    .membership h3 { font-family: "Montserrat", sans-serif; font-size: 40px; font-weight: 800; letter-spacing: -0.04em; margin: 0; line-height: 0.95; color: var(--ink); white-space: nowrap; }
+    .membership h3 span { font-size: 18px; font-weight: 700; letter-spacing: -0.02em; color: #3d6a66; }
+    .membership .lenses { grid-column: 1 / -1; position: relative; height: 150px; margin-top: 8px; }
+    .membership .lens { position: absolute; top: 16px; height: 118px; border-radius: 59px; display: flex; align-items: center; }
+    .membership .lens.q { left: 0; width: 62%; background: rgba(14,122,114,0.16); border: 2px solid #0e7a72; }
+    .membership .lens.t { right: 0; width: 62%; background: rgba(20,56,68,0.08); border: 2px solid var(--ink); justify-content: flex-end; }
+    .membership .lens .cap { width: 38%; text-align: center; padding: 0 8px; }
+    .membership .lens .name, .membership .overlap .name { font-size: 12px; font-weight: 800; line-height: 1.2; }
+    .membership .lens.q .name { color: #0e7a72; }
+    .membership .lens.t .name { color: var(--ink); }
+    .membership .vdots { display: flex; flex-wrap: nowrap; gap: 4px; justify-content: center; margin-top: 6px; }
+    .membership .vdots i { width: 12px; height: 12px; border-radius: 50%; background: #0e7a72; display: block; flex: 0 0 auto; }
+    .membership .vdots i.off { background: #fff; box-shadow: inset 0 0 0 1.6px #8fafa9; }
+    .membership .lens.t .vdots i { background: var(--ink); }
+    .membership .lens.t .vdots i.off { background: #fff; box-shadow: inset 0 0 0 1.6px var(--ink); }
+    .membership .lens .eq { display: block; margin-top: 5px; font-size: 12px; font-weight: 800; line-height: 1.2; color: #2d5a5c; white-space: nowrap; }
+    .membership .overlap { position: absolute; left: 50%; top: 38px; transform: translateX(-50%); width: 168px; text-align: center; }
+    .membership .overlap .name { color: var(--ink); }
+    .membership .overlap b { display: block; font-family: "Montserrat", sans-serif; font-size: 28px; font-weight: 800; letter-spacing: -0.04em; line-height: 1; color: var(--ink); }
+    .membership .overlap .eq { display: block; margin-top: 3px; font-size: 12px; font-weight: 800; color: #2d5a5c; white-space: nowrap; }
+    #slide1 .hits { grid-template-rows: auto 1fr; }
+    #slide1 .hits .sample { grid-column: 1 / -1; margin: 0; font-size: 14px; font-weight: 700; line-height: 1.3; color: var(--ink); }
+
+    .ticks { display: block; width: 100%; height: auto; margin-top: 10px; }
+    .rerun-strips { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .rerun-strips article { background: var(--paper); border-radius: 14px; padding: 10px 12px 12px; }
+    .rerun-strips b { font-family: "Montserrat", sans-serif; font-size: 16px; letter-spacing: -0.02em; }
+    .rerun-strips span { display: block; margin: 2px 0 4px; font-size: 14px; line-height: 1.3; color: var(--muted); }
+    .share { display: flex; height: 32px; border-radius: 8px; overflow: hidden; margin-top: 10px; font-family: "Montserrat", sans-serif; font-weight: 800; font-size: 14px; color: #fff; }
+    .share span { display: flex; align-items: center; justify-content: center; }
+    .share .c { background: var(--classic); }
+    .share .q { background: var(--teal-0); }
+
+    #slide-conclusions .cover-mid { width: 100%; align-items: stretch; justify-content: flex-start; gap: 18px; min-height: 0; }
+    #slide-conclusions .cover-mid h1 { font-size: 48px; text-align: left; }
+    #slide-conclusions .concl-body { flex: 1; min-height: 0; display: grid; grid-template-columns: 1fr 340px; gap: 20px; align-items: stretch; }
+    #slide-conclusions .concl-mols { display: grid; grid-template-rows: repeat(4, minmax(0, 1fr)); gap: 10px; min-height: 0; }
+    #slide-conclusions .concl-mols figure { margin: 0; min-height: 0; display: flex; flex-direction: column; background: #fff; border-radius: 14px; padding: 8px 10px 6px; }
+    #slide-conclusions .concl-mols img { width: 100%; flex: 1; min-height: 0; object-fit: contain; display: block; }
+    #slide-conclusions .concl-mols figcaption { margin-top: 2px; flex: 0 0 auto; text-align: center; font-family: "Montserrat", sans-serif; font-weight: 800; font-size: 15px; line-height: 1.2; color: var(--ink); }
+    #slide-conclusions .concl-list { list-style: none; margin: 0; padding: 0; min-height: 0; display: flex; flex-direction: column; gap: 10px; text-align: left; }
+    #slide-conclusions .concl-list li { flex: 1; display: grid; grid-template-columns: 52px 1fr; column-gap: 16px; align-items: center; background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.28); border-radius: 16px; padding: 16px 24px; }
+    #slide-conclusions .concl-list .n { font-family: "Montserrat", sans-serif; font-weight: 800; font-size: 36px; line-height: 1; }
+    #slide-conclusions .concl-list h2 { font-family: "Montserrat", sans-serif; font-weight: 800; font-size: 32px; letter-spacing: -0.02em; line-height: 1.15; }
+    #slide-conclusions .concl-list p { margin-top: 8px; font-size: 24px; line-height: 1.4; opacity: 0.95; }
+
+    /* Presentation mode — slide-by-slide navigation, toggle with the floating button, "P", or Escape to exit. */
+    .present-toggle {
+      position: fixed; right: 22px; bottom: 22px; z-index: 110;
+      background: var(--classic); color: #fff; border: none; border-radius: 999px;
+      padding: 10px 20px; font-family: "DM Sans", sans-serif; font-weight: 700; font-size: 14px;
+      letter-spacing: -0.01em; cursor: pointer; box-shadow: 0 8px 22px rgba(10,40,48,0.28);
+    }
+    .present-toggle:hover { background: var(--ibm); }
+    body.presenting .present-toggle { display: none; }
+    .present-bar {
+      position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%); z-index: 110;
+      display: none; align-items: center; gap: 10px;
+      background: rgba(20,56,68,0.92); border-radius: 999px; padding: 8px 10px 8px 16px;
+      opacity: 1; transition: opacity 0.3s ease;
+    }
+    body.presenting .present-bar { display: flex; }
+    body.presenting .present-bar.idle { opacity: 0; pointer-events: none; }
+    .present-btn {
+      background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.25); color: #fff;
+      border-radius: 999px; padding: 7px 16px; font-family: "DM Sans", sans-serif; font-size: 14px;
+      font-weight: 600; cursor: pointer;
+    }
+    .present-btn:hover { background: rgba(255,255,255,0.28); }
+    .present-counter { color: #fff; font-size: 13px; font-weight: 600; min-width: 54px; text-align: center; font-variant-numeric: tabular-nums; }
+    .present-edge { position: fixed; top: 0; bottom: 0; width: 72px; z-index: 90; cursor: pointer; display: none; }
+    .present-edge.left { left: 0; }
+    .present-edge.right { right: 0; }
+    body.presenting .present-edge { display: block; }
+
+    body.presenting { overflow: hidden; background: #0b1f24; }
+    body.presenting .stage {
+      position: fixed; top: 50%; left: 50%; width: 1920px; height: 1080px; margin: 0;
+      transform-origin: center center;
+    }
+    body.presenting .slide {
+      display: none; position: absolute; top: 0; left: 0; margin: 0;
+      width: 1920px; height: 1080px; min-height: 1080px; overflow: hidden;
+    }
+    body.presenting .slide.is-current { display: grid; }
+
+    /* Presentation-mode reveals — tied to what the content means, replayed each time the slide becomes current. */
+    @keyframes bridge-in { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+    body.presenting .bridge h2 { opacity: 0; }
+    body.presenting .slide.is-current .bridge h2 { animation: bridge-in 0.45s ease-out forwards; }
+
+    @keyframes share-in { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+    body.presenting #slide-score .share span { transform: scaleX(0); transform-origin: left; }
+    body.presenting #slide-score.slide.is-current .share span { animation: share-in 0.5s ease-out forwards; }
+
+    /* One continuous move at constant speed. Durations scale with distance, so the inside dot stops first and the outside dot keeps going. */
+    @keyframes ad-dot {
+      from { left: 0%; }
+      to { left: var(--end); }
+    }
+    body.presenting #slide3 .ad .dot { left: 0%; animation: none; }
+    body.presenting #slide3.slide.is-current .ad .dot.in { animation: ad-dot 1.05s linear 0.2s both; }
+    body.presenting #slide3.slide.is-current .ad .dot.out { animation: ad-dot 1.57s linear 0.2s both; }
+
+    @media print {
+      .present-toggle, .present-bar, .present-edge { display: none !important; }
+      @page { size: 1920px 1080px; margin: 0; }
+      html, body { background: #fff; width: 1920px; height: auto; overflow: visible; }
+      body { display: block; place-items: unset; }
+      .stage { width: 1920px !important; height: auto !important; margin: 0 !important; transform: none !important; }
+      .slide { page-break-after: always; overflow: visible; height: auto; min-height: 1080px; margin-bottom: 0; }
+      .slide:last-child { page-break-after: avoid; }
+      #slide3 .ad .dot { left: var(--end) !important; animation: none !important; }
+      .protein-card .viewer3d,
+      .protein-card .drag-hint { display: none !important; }
+      .protein-card.is-3d .img img { visibility: visible !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="stage" id="stage">
+
+    <!-- ============ Globant — global impact, business model, industries, clients ============ -->
+    <article class="slide pre" id="slide-globant">
+      <div class="setup-split">
+      <header class="hero">
+        <svg class="waves" viewBox="0 0 280 280" aria-hidden="true">
+          <g fill="none" stroke="#fff">
+            <path d="M0 260 A260 260 0 0 0 260 0" stroke-width="1.25" opacity="0.4"/>
+            <path d="M0 196 A196 196 0 0 0 196 0" stroke-width="1.25" opacity="0.3"/>
+            <path d="M0 132 A132 132 0 0 0 132 0" stroke-width="1.25" opacity="0.22"/>
+            <path d="M0 72 A72 72 0 0 0 72 0" stroke-width="1.25" opacity="0.14"/>
+          </g>
+        </svg>
+        <svg class="orb" viewBox="0 0 640 640" aria-hidden="true">
+          <circle cx="320" cy="320" r="250" fill="none" stroke="#fff" stroke-width="56" opacity="0.22"/>
+          <circle cx="320" cy="320" r="176" fill="#b8ffe8" opacity="0.28"/>
+        </svg>
+        <div class="setup-copy">
+          <img class="globant-intro" src="assets/globant-logo.png?v=wordmark" alt="Globant" />
+          <div class="pill"><i></i> global impact</div>
+          <p class="setup-lede">More than 30 countries, five continents. The company's own line names Google, Electronic Arts, and Santander, among others. LTM revenue was $2.5B at Q2 2026.</p>
+        </div>
+      </header>
+      <section class="setup-body globant-impact">
+        <article class="model">
+          <div class="tag">The model · Glob.AI, August 2026</div>
+          <h3>AI Pods, supervised by experts</h3>
+          <p>You pay for the output, not for a seat or an hour. AI agents do the work. A Globant expert supervises each pod. You choose the models, and your data is not used to train them.</p>
+        </article>
+        <article class="sectors">
+          <div class="tag">Industries</div>
+          <h3>Where the work lands</h3>
+          <div class="logo-wall" aria-label="Clients Globant names in public">
+            <span><img src="assets/clients/google.svg" alt="Google" /><b>Technology</b></span>
+            <span><img src="assets/clients/ea.svg" alt="Electronic Arts" /><b>Games</b></span>
+            <span><img src="assets/clients/santander.svg" alt="Santander" /><b>Financial services</b></span>
+            <span><img src="assets/clients/disney.svg" alt="Disney" /><b>Entertainment</b></span>
+            <span><img src="assets/clients/fifa.svg" alt="FIFA" /><b>Sports</b></span>
+            <span><img src="assets/clients/f1.svg" alt="Formula 1" /><b>Motorsport</b></span>
+            <span><img src="assets/clients/royal.svg" alt="Royal Caribbean" /><b>Travel</b></span>
+            <span><img src="assets/clients/ypf.svg" alt="YPF" /><b>Energy</b></span>
+            <span><img src="assets/clients/pharmamar.svg" alt="PharmaMar" /><b>Healthcare &amp; life sciences</b></span>
+          </div>
+        </article>
+      </section>
+      </div>
+      <p class="pg">page 1 of 19</p>
+    </article>
+
+    
+<!-- ============ PAGE 0 — cover / intro: who's behind this ============ -->
+    <article class="slide" id="slide0">
+      <div class="cover">
+        <svg class="waves" viewBox="0 0 280 280" aria-hidden="true">
+          <g fill="none" stroke="#fff">
+            <path d="M0 260 A260 260 0 0 0 260 0" stroke-width="1.25" opacity="0.4"/>
+            <path d="M0 196 A196 196 0 0 0 196 0" stroke-width="1.25" opacity="0.3"/>
+            <path d="M0 132 A132 132 0 0 0 132 0" stroke-width="1.25" opacity="0.22"/>
+            <path d="M0 72 A72 72 0 0 0 72 0" stroke-width="1.25" opacity="0.14"/>
+          </g>
+        </svg>
+        <svg class="orb" viewBox="0 0 640 640" aria-hidden="true">
+          <circle cx="320" cy="320" r="250" fill="none" stroke="#fff" stroke-width="56" opacity="0.2"/>
+          <circle cx="320" cy="320" r="176" fill="#b8ffe8" opacity="0.25"/>
+        </svg>
+
+        <div class="cover-mid">
+          <h1>Quantum Computing Studio</h1>
+          <p class="lede"><strong>Globant</strong> — digital &amp; AI transformation, worldwide. <strong>Quantum Computing Studio</strong> puts quantum on real hardware now: pilots where AI and the processor meet, and post-quantum security before classical encryption runs out.</p>
+          <div class="cover-band">
+          <div class="cover-services">
+            <div class="by-industry">
+              <div class="pie-wrap">
+                <div class="pie" role="img" aria-label="Four services, shown as equal slices. No share is measured."></div>
+                <span>Services</span>
+              </div>
+              <ul class="industry-legend">
+                <li>
+                  <span class="ico c1" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M4 10h16M6 10v7M10 10v7M14 10v7M18 10v7M3 19h18M12 4 3 9h18L12 4z"/></svg></span>
+                  <div>
+                    <b>Banking</b>
+                    <span>Portfolio optimization · Fraud detection, already public</span>
+                  </div>
+                </li>
+                <li>
+                  <span class="ico c2" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="8" cy="15" r="2.2"/><circle cx="16" cy="8" r="2.2"/><circle cx="16" cy="16" r="2.2"/><path d="M10 14.2 14.2 9.6M10 15.6h4.2"/></svg></span>
+                  <div>
+                    <b>Life Sciences</b>
+                    <span>Drug discovery — Quantum QSAR, the question in this talk</span>
+                  </div>
+                </li>
+                <li>
+                  <span class="ico c3" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="6.5" height="6.5" rx="1"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1"/></svg></span>
+                  <div>
+                    <b>Materials science &amp; design</b>
+                    <span>Many Body Research</span>
+                  </div>
+                </li>
+                <li>
+                  <span class="ico c4" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3.5 19 6.2v5.6c0 4.2-2.8 6.6-7 8.7-4.2-2.1-7-4.5-7-8.7V6.2L12 3.5z"/></svg></span>
+                  <div>
+                    <b>Post-quantum</b>
+                    <span>Cybersecurity assessment</span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+          </div>
+        </div>
+      </div>
+      <p class="pg">page 2 of 19</p>
+    </article>
+
+    <!-- ============ PAGE 2 — team | the quantum practice ============ -->
+    <article class="slide" id="slide-studio">
+      <header class="hero">
+        <svg class="waves" viewBox="0 0 280 280" aria-hidden="true">
+          <g fill="none" stroke="#fff">
+            <path d="M0 260 A260 260 0 0 0 260 0" stroke-width="1.25" opacity="0.4"/>
+            <path d="M0 196 A196 196 0 0 0 196 0" stroke-width="1.25" opacity="0.3"/>
+            <path d="M0 132 A132 132 0 0 0 132 0" stroke-width="1.25" opacity="0.22"/>
+            <path d="M0 72 A72 72 0 0 0 72 0" stroke-width="1.25" opacity="0.14"/>
+          </g>
+        </svg>
+        <svg class="orb" viewBox="0 0 640 640" aria-hidden="true">
+          <circle cx="320" cy="320" r="250" fill="none" stroke="#fff" stroke-width="56" opacity="0.22"/>
+          <circle cx="320" cy="320" r="176" fill="#b8ffe8" opacity="0.28"/>
+        </svg>
+        <div class="pill"><i></i> the practice</div>
+        <h1>The studio<span>Who runs the quantum work</span></h1>
+      </header>
+
+      <section class="studio-body">
+        <div class="studio-col">
+          <p class="col-kicker">Team</p>
+          <svg width="0" height="0" aria-hidden="true" style="position:absolute">
+            <symbol id="li-mark" viewBox="0 0 24 24">
+              <path fill="#0A66C2" d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+            </symbol>
+          </svg>
+          <div class="qwhy team">
+            <article class="card q1">
+              <span class="mark"><img src="assets/team-dario.jpg" alt="" /></span>
+              <div class="tag">CTO at Financial Services AI Studio / Head of Quantum Computing</div>
+              <h3><a href="https://www.linkedin.com/in/drobak/" target="_blank" rel="noopener noreferrer">Darío Robak</a></h3>
+              <div class="foot"><a class="li" href="https://www.linkedin.com/in/drobak/" target="_blank" rel="noopener noreferrer" aria-label="Darío Robak on LinkedIn"><svg aria-hidden="true"><use href="#li-mark"/></svg></a></div>
+            </article>
+            <article class="card q2">
+              <span class="mark"><img src="assets/team-steiner.jpg" alt="" /></span>
+              <div class="tag">Delivery Director, Financial Services · Electronic Engineer</div>
+              <h3><a href="https://www.linkedin.com/in/federicosteiner/" target="_blank" rel="noopener noreferrer">Federico Steiner</a></h3>
+              <div class="foot"><a class="li" href="https://www.linkedin.com/in/federicosteiner/" target="_blank" rel="noopener noreferrer" aria-label="Federico Steiner on LinkedIn"><svg aria-hidden="true"><use href="#li-mark"/></svg></a></div>
+            </article>
+            <article class="card q3">
+              <span class="mark"><img src="assets/team-antonioli.jpg" alt="" /></span>
+              <div class="tag">Physical and Virtual Datacenter Manager</div>
+              <h3><a href="https://www.linkedin.com/in/alejandroantonioli/" target="_blank" rel="noopener noreferrer">Alejandro Antonioli</a></h3>
+              <div class="foot"><a class="li" href="https://www.linkedin.com/in/alejandroantonioli/" target="_blank" rel="noopener noreferrer" aria-label="Alejandro Antonioli on LinkedIn"><svg aria-hidden="true"><use href="#li-mark"/></svg></a></div>
+            </article>
+            <article class="card q1">
+              <span class="mark"><img src="assets/team-mahecha.jpg" alt="" /></span>
+              <div class="tag">Quantum Engineer &amp; Researcher · Data Scientist</div>
+              <h3><a href="https://www.linkedin.com/in/lamahechag/" target="_blank" rel="noopener noreferrer">Alejandro Mahecha</a></h3>
+              <div class="foot"><a class="li" href="https://www.linkedin.com/in/lamahechag/" target="_blank" rel="noopener noreferrer" aria-label="Alejandro Mahecha on LinkedIn"><svg aria-hidden="true"><use href="#li-mark"/></svg></a></div>
+            </article>
+            <article class="card q2">
+              <span class="mark"><img src="assets/team-ayelen.jpg" alt="" /></span>
+              <div class="tag">Quantum Researcher · QC Engineer</div>
+              <h3><a href="https://www.linkedin.com/in/ayelen-perez-ar/" target="_blank" rel="noopener noreferrer">Ayelen Perez</a></h3>
+              <div class="foot"><a class="li" href="https://www.linkedin.com/in/ayelen-perez-ar/" target="_blank" rel="noopener noreferrer" aria-label="Ayelen Perez on LinkedIn"><svg aria-hidden="true"><use href="#li-mark"/></svg></a></div>
+            </article>
+            <article class="card q1 speaker">
+              <span class="mark"><img src="assets/team-giraldo.jpg" alt="" /></span>
+              <div class="tag">Quantum Engineer &amp; Researcher · Chemist · Data Architect</div>
+              <h3><a href="https://www.linkedin.com/in/alejandrosin/" target="_blank" rel="noopener noreferrer">Alejandro Giraldo</a></h3>
+              <div class="foot">
+                <p class="speaker-note">Speaking today</p>
+                <a class="li" href="https://www.linkedin.com/in/alejandrosin/" target="_blank" rel="noopener noreferrer" aria-label="Alejandro Giraldo on LinkedIn"><svg aria-hidden="true"><use href="#li-mark"/></svg></a>
+              </div>
+            </article>
+            <article class="card q3">
+              <span class="mark"><img src="assets/team-franco.jpg" alt="" /></span>
+              <div class="tag">Quantum Researcher · Software Engineer</div>
+              <h3><a href="https://www.linkedin.com/in/franco-raineri-sys-eng/" target="_blank" rel="noopener noreferrer">Franco Raineri</a></h3>
+              <div class="foot"><a class="li" href="https://www.linkedin.com/in/franco-raineri-sys-eng/" target="_blank" rel="noopener noreferrer" aria-label="Franco Raineri on LinkedIn"><svg aria-hidden="true"><use href="#li-mark"/></svg></a></div>
+            </article>
+          </div>
+        </div>
+      </section>
+      <p class="pg">page 3 of 19</p>
+    </article>
+
+    <!-- ============ Title — the paper, after the team ============ -->
+    <article class="slide" id="slide-title">
+      <div class="cover">
+        <svg class="waves" viewBox="0 0 280 280" aria-hidden="true">
+          <g fill="none" stroke="#fff">
+            <path d="M0 260 A260 260 0 0 0 260 0" stroke-width="1.25" opacity="0.4"/>
+            <path d="M0 196 A196 196 0 0 0 196 0" stroke-width="1.25" opacity="0.3"/>
+            <path d="M0 132 A132 132 0 0 0 132 0" stroke-width="1.25" opacity="0.22"/>
+            <path d="M0 72 A72 72 0 0 0 72 0" stroke-width="1.25" opacity="0.14"/>
+          </g>
+        </svg>
+        <svg class="orb" viewBox="0 0 640 640" aria-hidden="true">
+          <circle cx="320" cy="320" r="250" fill="none" stroke="#fff" stroke-width="56" opacity="0.2"/>
+          <circle cx="320" cy="320" r="176" fill="#b8ffe8" opacity="0.25"/>
+        </svg>
+        <div class="cover-mid">
+          <h1>Quantum-Enhanced QSAR for DYRK1A</h1>
+          <p class="lede">Evaluating Complementary and Utility QPU-Derived Molecular Representations</p>
+          <p class="doi">Arxiv DOI #####</p>
+        </div>
+      </div>
+      <p class="pg">page 4 of 19</p>
+    </article>
+
+    <!-- ============ Joint research — who holds which part ============ -->
+    <article class="slide" id="slide-joint">
+      <header class="hero">
+        <svg class="waves" viewBox="0 0 280 280" aria-hidden="true">
+          <g fill="none" stroke="#fff">
+            <path d="M0 260 A260 260 0 0 0 260 0" stroke-width="1.25" opacity="0.4"/>
+            <path d="M0 196 A196 196 0 0 0 196 0" stroke-width="1.25" opacity="0.3"/>
+            <path d="M0 132 A132 132 0 0 0 132 0" stroke-width="1.25" opacity="0.22"/>
+            <path d="M0 72 A72 72 0 0 0 72 0" stroke-width="1.25" opacity="0.14"/>
+          </g>
+        </svg>
+        <svg class="orb" viewBox="0 0 640 640" aria-hidden="true">
+          <circle cx="320" cy="320" r="250" fill="none" stroke="#fff" stroke-width="56" opacity="0.22"/>
+          <circle cx="320" cy="320" r="176" fill="#b8ffe8" opacity="0.28"/>
+        </svg>
+        <div class="hero-top">
+          <div class="lockup">
+            <span class="globant">Globant<img class="globant-play" src="assets/globant-play.png" alt="" /></span>
+            <span class="plus">+</span>
+            <span class="haiqu"><img class="haiqu-mark" src="assets/haiqu-mark.png" alt="" />haiqu</span>
+            <span class="plus">+</span>
+            <img class="brand-mark ibm-mark" src="assets/ibm-logo.svg" alt="IBM" />
+            <span class="plus">+</span>
+            <span class="qnow"><img class="qnow-mark" src="assets/qnow-mark.png" alt="" />Qnow</span>
+          </div>
+        </div>
+        <div class="pill"><i></i> joint research</div>
+        <h1>Who holds which part<span>Six seats. One study.</span></h1>
+      </header>
+      <section class="joint-body">
+        <ol>
+          <li>
+            <div class="id"><img class="globant-word" src="assets/globant-logo.png" alt="Globant" /></div>
+            <div>
+              <span class="role">Quantum Computing Studio</span>
+              <span class="why">Globant's Quantum Computing Studio team did this work.</span>
+            </div>
+          </li>
+          <li>
+            <div class="id"><img class="haiqu-lockup" src="assets/haiqu-lockup.svg" alt="haiqu" /></div>
+            <div>
+              <span class="role">Platform and technology</span>
+              <span class="why">Haiqu's platform, its technology, and their guidance in the research.</span>
+            </div>
+          </li>
+          <li>
+            <div class="id"><img class="ibm-quantum" src="assets/ibm-quantum.png" alt="IBM Quantum" /></div>
+            <div>
+              <span class="role">Infrastructure</span>
+              <span class="why">The infrastructure, and guidance through the research and its details.</span>
+            </div>
+          </li>
+          <li>
+            <div class="id"><img class="qnow-word" src="assets/qnow-word.png" alt="Qnow" /></div>
+            <div>
+              <span class="role">The study</span>
+              <span class="why">The research, the runs, and the checks on this study.</span>
+            </div>
+          </li>
+          <li>
+            <div class="id"><img class="unir" src="assets/unir-logo.svg" alt="UNIR" /></div>
+            <div>
+              <span class="role">Academic guidance</span>
+              <span class="why">Academic support and advice on the research.</span>
+            </div>
+          </li>
+          <li>
+            <div class="id"><b>ProtoQSAR</b></div>
+            <div>
+              <span class="role">The curated set</span>
+              <span class="why">The curated dataset, and advice on the research.</span>
+            </div>
+          </li>
+        </ol>
+      </section>
+      <p class="pg">page 5 of 19</p>
+    </article>
+
+    <!-- ============ target & research question ============ -->
+    <article class="slide" id="slide-target">
+      <header class="hero">
+        <svg class="waves" viewBox="0 0 280 280" aria-hidden="true">
+          <g fill="none" stroke="#fff">
+            <path d="M0 260 A260 260 0 0 0 260 0" stroke-width="1.25" opacity="0.4"/>
+            <path d="M0 196 A196 196 0 0 0 196 0" stroke-width="1.25" opacity="0.3"/>
+            <path d="M0 132 A132 132 0 0 0 132 0" stroke-width="1.25" opacity="0.22"/>
+            <path d="M0 72 A72 72 0 0 0 72 0" stroke-width="1.25" opacity="0.14"/>
+          </g>
+        </svg>
+        <svg class="orb" viewBox="0 0 640 640" aria-hidden="true">
+          <circle cx="320" cy="320" r="250" fill="none" stroke="#fff" stroke-width="56" opacity="0.22"/>
+          <circle cx="320" cy="320" r="176" fill="#b8ffe8" opacity="0.28"/>
+        </svg>
+        <div class="hero-top">
+          <div class="lockup">
+            <span class="globant">Globant<img class="globant-play" src="assets/globant-play.png" alt="" /></span>
+            <span class="plus">+</span>
+            <span class="haiqu"><img class="haiqu-mark" src="assets/haiqu-mark.png" alt="" />haiqu</span>
+            <span class="plus">+</span>
+            <img class="brand-mark ibm-mark" src="assets/ibm-logo.svg" alt="IBM" />
+            <span class="plus">+</span>
+            <span class="qnow"><img class="qnow-mark" src="assets/qnow-mark.png" alt="" />Qnow</span>
+          </div>
+        </div>
+        <div class="pill"><i></i> the target, the bottleneck, the question</div>
+        <h1>DYRK1A<span>One protein, one bottleneck, one question</span></h1>
+      </header>
+
+      <section class="target-body">
+        <div class="protein-card" id="protein-card">
+          <div class="img">
+            <div id="dyrk-viewer" class="viewer3d" aria-hidden="true"></div>
+            <img src="assets/pdb-6eiq-dyrk1a.jpeg" alt="DYRK1A crystal structure, PDB 6EIQ" />
+            <p class="drag-hint">Drag to rotate · scroll to zoom · right-drag to move</p>
+          </div>
+          <div class="cap"><strong>PDB 6EIQ.</strong> DYRK1A, the kinase in this assay. The ligand in the structure is XMD14-124. Shown here as the target.</div>
+        </div>
+        <div class="qwhy">
+          <article class="card q1">
+            <div class="tag">What — the target</div>
+            <h3>DYRK1A, a kinase</h3>
+            <p>Its gene sits in the Down syndrome critical region, and the kinase is tied to Tau and amyloid pathology in early-onset Alzheimer's. That is why this assay exists.</p>
+          </article>
+          <article class="card q2">
+            <div class="tag">Why — the bottleneck</div>
+            <h3>Lab capacity, not accuracy</h3>
+            <p>An assay spends one well. An active left off the list never opens its series.</p>
+          </article>
+          <article class="card q3">
+            <div class="tag">Research question</div>
+            <h3>Same molecules, same rule, same list?</h3>
+            <p>Same RBF-SVM. Do the classical descriptor table and the vector measured on the quantum processor <strong>propose the same compounds?</strong></p>
+          </article>
+        </div>
+      </section>
+      <p class="pg">page 6 of 19</p>
+    </article>
+
+
+    <!-- ============ funnel — the method, after the target ============ -->
+    <article class="slide" id="slide-funnel">
+      <header class="hero">
+        <svg class="waves" viewBox="0 0 280 280" aria-hidden="true">
+          <g fill="none" stroke="#fff">
+            <path d="M0 260 A260 260 0 0 0 260 0" stroke-width="1.25" opacity="0.4"/>
+            <path d="M0 196 A196 196 0 0 0 196 0" stroke-width="1.25" opacity="0.3"/>
+            <path d="M0 132 A132 132 0 0 0 132 0" stroke-width="1.25" opacity="0.22"/>
+            <path d="M0 72 A72 72 0 0 0 72 0" stroke-width="1.25" opacity="0.14"/>
+          </g>
+        </svg>
+        <svg class="orb" viewBox="0 0 640 640" aria-hidden="true">
+          <circle cx="320" cy="320" r="250" fill="none" stroke="#fff" stroke-width="56" opacity="0.22"/>
+          <circle cx="320" cy="320" r="176" fill="#b8ffe8" opacity="0.28"/>
+        </svg>
+        <div class="hero-top">
+          <div class="lockup">
+            <span class="globant">Globant<img class="globant-play" src="assets/globant-play.png" alt="" /></span>
+            <span class="plus">+</span>
+            <span class="haiqu"><img class="haiqu-mark" src="assets/haiqu-mark.png" alt="" />haiqu</span>
+            <span class="plus">+</span>
+            <img class="brand-mark ibm-mark" src="assets/ibm-logo.svg" alt="IBM" />
+            <span class="plus">+</span>
+            <span class="qnow"><img class="qnow-mark" src="assets/qnow-mark.png" alt="" />Qnow</span>
+          </div>
+        </div>
+        <div class="pill"><i></i> drug discovery</div>
+        <h1>The funnel<span>Many structures in. A short list out.</span></h1>
+      </header>
+      <section class="funnel-body">
+        <div class="funnel">
+          <svg class="funnel-shape" viewBox="0 0 1800 520" preserveAspectRatio="none" aria-hidden="true">
+            <polygon points="0,16 1800,168 1800,352 0,504" fill="#fbfefc" stroke="#c5e0da" stroke-width="2"/>
+            <polygon points="360,46 720,77 720,443 360,474" fill="#0e7a72"/>
+            <line x1="720" y1="77" x2="720" y2="443" stroke="#fbfefc" stroke-width="3"/>
+            <line x1="1080" y1="107" x2="1080" y2="413" stroke="#e4f3ef" stroke-width="3"/>
+            <line x1="1440" y1="138" x2="1440" y2="382" stroke="#e4f3ef" stroke-width="3"/>
+          </svg>
+          <ol class="funnel-stages">
+            <li>
+              <svg class="glyph" viewBox="0 0 132 36" width="132" height="36" aria-hidden="true">
+                <g fill="#0e7a72" opacity="0.45">
+                  <circle cx="8" cy="8" r="3.2"/><circle cx="26" cy="6" r="3.2"/><circle cx="44" cy="10" r="3.2"/><circle cx="62" cy="5" r="3.2"/><circle cx="80" cy="9" r="3.2"/><circle cx="98" cy="6" r="3.2"/><circle cx="116" cy="10" r="3.2"/>
+                  <circle cx="14" cy="24" r="3.2"/><circle cx="32" cy="28" r="3.2"/><circle cx="50" cy="22" r="3.2"/><circle cx="68" cy="27" r="3.2"/><circle cx="86" cy="23" r="3.2"/><circle cx="104" cy="28" r="3.2"/><circle cx="122" cy="22" r="3.2"/>
+                </g>
+              </svg>
+              <div class="k">Library</div>
+              <h3>Many structures</h3>
+              <p>The whole library cannot be assayed.</p>
+            </li>
+            <li class="here">
+              <svg class="glyph" viewBox="0 0 132 36" width="132" height="36" aria-hidden="true">
+                <g fill="#ffffff" opacity="0.35">
+                  <circle cx="8" cy="8" r="3.2"/><circle cx="26" cy="6" r="3.2"/><circle cx="44" cy="10" r="3.2"/><circle cx="62" cy="5" r="3.2"/><circle cx="80" cy="9" r="3.2"/><circle cx="98" cy="6" r="3.2"/><circle cx="116" cy="10" r="3.2"/>
+                  <circle cx="14" cy="24" r="3.2"/><circle cx="32" cy="28" r="3.2"/><circle cx="50" cy="22" r="3.2"/><circle cx="68" cy="27" r="3.2"/><circle cx="86" cy="23" r="3.2"/><circle cx="104" cy="28" r="3.2"/><circle cx="122" cy="22" r="3.2"/>
+                </g>
+                <g fill="#ffffff">
+                  <circle cx="26" cy="6" r="4.2"/><circle cx="62" cy="5" r="4.2"/><circle cx="98" cy="6" r="4.2"/>
+                  <circle cx="32" cy="28" r="4.2"/><circle cx="86" cy="23" r="4.2"/>
+                </g>
+              </svg>
+              <div class="k">The list</div>
+              <h3>QSAR</h3>
+              <p>It proposes who is worth a well.</p>
+              <p class="sit">The question sits at the list. Two writings of an already-labeled set. Not a screen of a library.</p>
+            </li>
+            <li>
+              <svg class="glyph" viewBox="0 0 92 40" width="92" height="40" aria-hidden="true">
+                <rect x="1" y="1" width="90" height="38" rx="6" fill="#fff" stroke="#0e7a72" stroke-width="1.5"/>
+                <g fill="#0e7a72">
+                  <circle cx="14" cy="12" r="3"/><circle cx="30" cy="12" r="3"/><circle cx="46" cy="12" r="3"/><circle cx="62" cy="12" r="3"/><circle cx="78" cy="12" r="3"/>
+                  <circle cx="14" cy="28" r="3"/><circle cx="30" cy="28" r="3"/><circle cx="46" cy="28" r="3"/><circle cx="62" cy="28" r="3"/><circle cx="78" cy="28" r="3"/>
+                </g>
+              </svg>
+              <div class="k">Assay</div>
+              <h3>The lab</h3>
+              <p>Hit in lab is the first <strong>yes</strong>.</p>
+            </li>
+            <li>
+              <svg class="glyph" viewBox="0 0 56 28" width="56" height="28" aria-hidden="true">
+                <circle cx="12" cy="14" r="7" fill="none" stroke="#0e7a72" stroke-width="2"/>
+                <circle cx="32" cy="14" r="7" fill="none" stroke="#0e7a72" stroke-width="2"/>
+                <circle cx="48" cy="14" r="5" fill="none" stroke="#0e7a72" stroke-width="1.6" opacity="0.55"/>
+              </svg>
+              <div class="k">Confirmation</div>
+              <h3>The series</h3>
+              <p>A hit that holds opens analog chemistry.</p>
+            </li>
+            <li>
+              <svg class="glyph" viewBox="0 0 28 28" width="28" height="28" aria-hidden="true">
+                <circle cx="14" cy="14" r="8" fill="#0e7a72"/>
+              </svg>
+              <div class="k">Later</div>
+              <h3>A small fraction</h3>
+              <p>The rest of the funnel follows that chemistry.</p>
+            </li>
+          </ol>
+        </div>
+        <ul class="funnel-caption">
+          <li><strong>QSAR</strong> links structure to a measured property, and proposes who goes to assay.</li>
+          <li><strong>Active</strong> (IC50 ≤ 1 μM) advances; <strong>inactive</strong> does not. Those are the labels.</li>
+          <li>A false positive burns a well. A false negative drops a series. The target is DYRK1A.</li>
+        </ul>
+      </section>
+      <p class="pg">page 7 of 19</p>
+    </article>
+
+    <!-- ============ BRIDGE 1 ============ -->
+    <article class="slide" id="bridge1">
+      <div class="cover bridge">
+        <svg class="waves" viewBox="0 0 280 280" aria-hidden="true">
+          <g fill="none" stroke="#fff">
+            <path d="M0 260 A260 260 0 0 0 260 0" stroke-width="1.25" opacity="0.4"/>
+            <path d="M0 196 A196 196 0 0 0 196 0" stroke-width="1.25" opacity="0.3"/>
+            <path d="M0 132 A132 132 0 0 0 132 0" stroke-width="1.25" opacity="0.22"/>
+            <path d="M0 72 A72 72 0 0 0 72 0" stroke-width="1.25" opacity="0.14"/>
+          </g>
+        </svg>
+        <svg class="orb" viewBox="0 0 640 640" aria-hidden="true">
+          <circle cx="320" cy="320" r="250" fill="none" stroke="#fff" stroke-width="56" opacity="0.2"/>
+          <circle cx="320" cy="320" r="176" fill="#b8ffe8" opacity="0.25"/>
+        </svg>
+        <h2>First, one split: 90 molecules, one pair of models.</h2>
+      </div>
+      <p class="pg">page 8 of 19</p>
+    </article>
+
+    <!-- ============ SETUP — one split, the model, the two inputs ============ -->
+    <article class="slide pre" id="slide-setup">
+      <div class="setup-split">
+      <header class="hero">
+        <svg class="waves" viewBox="0 0 280 280" aria-hidden="true">
+          <g fill="none" stroke="#fff">
+            <path d="M0 260 A260 260 0 0 0 260 0" stroke-width="1.25" opacity="0.4"/>
+            <path d="M0 196 A196 196 0 0 0 196 0" stroke-width="1.25" opacity="0.3"/>
+            <path d="M0 132 A132 132 0 0 0 132 0" stroke-width="1.25" opacity="0.22"/>
+            <path d="M0 72 A72 72 0 0 0 72 0" stroke-width="1.25" opacity="0.14"/>
+          </g>
+        </svg>
+        <svg class="orb" viewBox="0 0 640 640" aria-hidden="true">
+          <circle cx="320" cy="320" r="250" fill="none" stroke="#fff" stroke-width="56" opacity="0.22"/>
+          <circle cx="320" cy="320" r="176" fill="#b8ffe8" opacity="0.28"/>
+        </svg>
+        <div class="hero-top">
+          <div class="lockup">
+            <span class="globant">Globant<img class="globant-play" src="assets/globant-play.png" alt="" /></span>
+            <span class="plus">+</span>
+            <span class="haiqu"><img class="haiqu-mark" src="assets/haiqu-mark.png" alt="" />haiqu</span>
+            <span class="plus">+</span>
+            <img class="brand-mark ibm-mark" src="assets/ibm-logo.svg" alt="IBM" />
+            <span class="plus">+</span>
+            <span class="qnow"><img class="qnow-mark" src="assets/qnow-mark.png" alt="" />Qnow</span>
+          </div>
+        </div>
+        <div class="setup-copy">
+          <div class="pill"><i></i> one model, one split</div>
+          <h1>The experiment<span>Same molecules. Same rule. Two ways to write them.</span></h1>
+          <p class="setup-lede">Same classifier. One molecule, written twice.</p>
+        </div>
+      </header>
+      <section class="setup-body">
+        <div class="setup-fixed">
+          <article>
+            <div class="tag">The split</div>
+            <h3>264 train, 90 test</h3>
+            <p>354 compounds with a prior binary label, ChEMBL2292 and ProtoQSAR. Active if IC50 ≤ 1 μM. This split is 264 train and 90 test.</p>
+          </article>
+          <article>
+            <div class="tag">The model</div>
+            <h3>One RBF-SVM, twice</h3>
+            <p>Same kernel, same decision rule, both sides.</p>
+          </article>
+        </div>
+        <div class="same-mol">
+          <svg viewBox="0 0 86 44" width="86" height="44" aria-hidden="true">
+            <g fill="none" stroke="#0e7a72" stroke-width="2">
+              <polygon points="22,6 36,14 36,30 22,38 8,30 8,14"/>
+              <polygon points="50,6 64,14 64,30 50,38 36,30 36,14"/>
+            </g>
+          </svg>
+          <span>One molecule, written twice</span>
+        </div>
+        <div class="setup-pair">
+          <article class="classic">
+            <div class="tag">Classic</div>
+            <h3>A table</h3>
+            <svg class="writing" viewBox="0 0 148 118" preserveAspectRatio="xMidYMax meet" aria-hidden="true">
+              <g fill="#0d5c56" transform="translate(6 14)">
+                <rect x="0" y="0" width="10" height="8" rx="1"/><rect x="14" y="0" width="10" height="8" rx="1"/><rect x="28" y="0" width="10" height="8" rx="1"/><rect x="42" y="0" width="10" height="8" rx="1"/><rect x="56" y="0" width="10" height="8" rx="1"/><rect x="70" y="0" width="10" height="8" rx="1"/><rect x="84" y="0" width="10" height="8" rx="1"/><rect x="98" y="0" width="10" height="8" rx="1"/><rect x="112" y="0" width="10" height="8" rx="1"/><rect x="126" y="0" width="10" height="8" rx="1"/>
+                <rect x="0" y="16" width="10" height="8" rx="1"/><rect x="14" y="16" width="10" height="8" rx="1"/><rect x="28" y="16" width="10" height="8" rx="1"/><rect x="42" y="16" width="10" height="8" rx="1"/><rect x="56" y="16" width="10" height="8" rx="1"/><rect x="70" y="16" width="10" height="8" rx="1"/><rect x="84" y="16" width="10" height="8" rx="1"/><rect x="98" y="16" width="10" height="8" rx="1"/><rect x="112" y="16" width="10" height="8" rx="1"/><rect x="126" y="16" width="10" height="8" rx="1"/>
+                <rect x="0" y="32" width="10" height="8" rx="1"/><rect x="14" y="32" width="10" height="8" rx="1"/><rect x="28" y="32" width="10" height="8" rx="1"/><rect x="42" y="32" width="10" height="8" rx="1"/><rect x="56" y="32" width="10" height="8" rx="1"/><rect x="70" y="32" width="10" height="8" rx="1"/><rect x="84" y="32" width="10" height="8" rx="1"/><rect x="98" y="32" width="10" height="8" rx="1"/><rect x="112" y="32" width="10" height="8" rx="1"/><rect x="126" y="32" width="10" height="8" rx="1"/>
+                <rect x="0" y="48" width="10" height="8" rx="1"/><rect x="14" y="48" width="10" height="8" rx="1"/><rect x="28" y="48" width="10" height="8" rx="1"/><rect x="42" y="48" width="10" height="8" rx="1"/><rect x="56" y="48" width="10" height="8" rx="1"/><rect x="70" y="48" width="10" height="8" rx="1"/><rect x="84" y="48" width="10" height="8" rx="1"/><rect x="98" y="48" width="10" height="8" rx="1"/><rect x="112" y="48" width="10" height="8" rx="1"/><rect x="126" y="48" width="10" height="8" rx="1"/>
+                <rect x="0" y="64" width="10" height="8" rx="1"/><rect x="14" y="64" width="10" height="8" rx="1"/><rect x="28" y="64" width="10" height="8" rx="1"/><rect x="42" y="64" width="10" height="8" rx="1"/><rect x="56" y="64" width="10" height="8" rx="1"/><rect x="70" y="64" width="10" height="8" rx="1"/><rect x="84" y="64" width="10" height="8" rx="1"/><rect x="98" y="64" width="10" height="8" rx="1"/><rect x="112" y="64" width="10" height="8" rx="1"/><rect x="126" y="64" width="10" height="8" rx="1"/>
+                <rect x="0" y="80" width="10" height="8" rx="1"/><rect x="14" y="80" width="10" height="8" rx="1"/><rect x="28" y="80" width="10" height="8" rx="1"/><rect x="42" y="80" width="10" height="8" rx="1"/><rect x="56" y="80" width="10" height="8" rx="1"/><rect x="70" y="80" width="10" height="8" rx="1"/><rect x="84" y="80" width="10" height="8" rx="1"/><rect x="98" y="80" width="10" height="8" rx="1"/><rect x="112" y="80" width="10" height="8" rx="1"/><rect x="126" y="80" width="10" height="8" rx="1"/>
+                <rect x="0" y="96" width="10" height="8" rx="1"/><rect x="14" y="96" width="10" height="8" rx="1"/><rect x="28" y="96" width="10" height="8" rx="1"/><rect x="42" y="96" width="10" height="8" rx="1"/><rect x="56" y="96" width="10" height="8" rx="1"/><rect x="70" y="96" width="10" height="8" rx="1"/><rect x="84" y="96" width="10" height="8" rx="1"/><rect x="98" y="96" width="10" height="8" rx="1"/>
+              </g>
+            </svg>
+            <p class="big">1,080</p>
+            <p>Mordred descriptors.</p>
+          </article>
+          <article class="quantum">
+            <div class="tag">Quantum</div>
+            <h3>A measured vector</h3>
+            <svg class="writing" viewBox="0 0 148 118" preserveAspectRatio="xMidYMax meet" aria-hidden="true">
+              <g fill="#0e7a72" transform="translate(21 0)">
+                <rect x="0" y="42" width="8" height="76" rx="2"/>
+                <rect x="14" y="22" width="8" height="96" rx="2"/>
+                <rect x="28" y="54" width="8" height="64" rx="2"/>
+                <rect x="42" y="10" width="8" height="108" rx="2"/>
+                <rect x="56" y="32" width="8" height="86" rx="2"/>
+                <rect x="70" y="48" width="8" height="70" rx="2"/>
+                <rect x="84" y="4" width="8" height="114" rx="2"/>
+                <rect x="98" y="36" width="8" height="82" rx="2"/>
+              </g>
+            </svg>
+            <p class="big">213</p>
+            <p>Pauli expectations from 71 qubits, read on the QPU.</p>
+          </article>
+        </div>
+      </section>
+      </div>
+      <p class="pg">page 9 of 19</p>
+    </article>
+
+    <!-- ============ PROCEDURE — EME, ansatz, readout, ibm_boston ============ -->
+    <article class="slide" id="slide-flow">
+      <header class="hero">
+        <div class="hero-top">
+          <div class="lockup">
+            <span class="globant">Globant<img class="globant-play" src="assets/globant-play.png" alt="" /></span>
+            <span class="plus">+</span>
+            <span class="haiqu"><img class="haiqu-mark" src="assets/haiqu-mark.png" alt="" />haiqu</span>
+            <span class="plus">+</span>
+            <img class="brand-mark ibm-mark" src="assets/ibm-logo.svg" alt="IBM" />
+            <span class="plus">+</span>
+            <span class="qnow"><img class="qnow-mark" src="assets/qnow-mark.png" alt="" />Qnow</span>
+          </div>
+        </div>
+        <div class="slide1-head">
+          <div>
+            <div class="pill"><i></i> 71 qubits · ibm_boston</div>
+            <h1>The procedure<span>Molecule, circuit, readout, then the same classifier.</span></h1>
+          </div>
+        </div>
+      </header>
+      <section class="body">
+        <ol class="pipe">
+          <li>
+            <div class="k">1 · In</div>
+            <h3>Molecule</h3>
+            <p>1,080 descriptors represented on 71 qubits.</p>
+          </li>
+          <li>
+            <div class="k">2 · Load</div>
+            <h3>EME</h3>
+            <p>Writes the molecule onto the qubits.</p>
+          </li>
+          <li>
+            <div class="k">3 · Circuit</div>
+            <h3>Ansatz</h3>
+            <p>Fixed brickwork. Angles set once and shared.</p>
+          </li>
+          <li>
+            <div class="k">4 · Read</div>
+            <h3>X, Y, Z</h3>
+            <p>213 one-qubit expectations.</p>
+          </li>
+          <li>
+            <div class="k">5 · Decide</div>
+            <h3>RBF-SVM</h3>
+            <p>List of predicted actives, made here.</p>
+          </li>
+        </ol>
+        <div class="figs">
+          <figure class="fig">
+            <h3>Embedding, then the ansatz, then the read</h3>
+            <svg class="ansatz" viewBox="0 0 1680 560" role="img" aria-label="The embedding loads the molecule at density D=4. Each ansatz link is RY, RZ, then CX, and that block again on the same pair, so the two CX are not adjacent. Even pairs, then odd pairs, then a final RY, RZ on every wire. The read is the expectation of X, Y, and Z on every qubit, 71 times 3 equals 213.">
+              <g class="embed" font-family="Segoe UI, sans-serif">
+                <rect x="16" y="16" width="500" height="528" rx="16" fill="#e7f4f1"/>
+                <text x="40" y="52" fill="#0f7a72" font-size="15" font-weight="700">1</text>
+                <text x="64" y="52" fill="#143844" font-size="22" font-weight="700">The embedding</text>
+                <text x="40" y="82" fill="#4f7380" font-size="16" font-weight="600">EME = Entangled Manifold Embedding</text>
+                <g class="numbers-to-qubits" transform="translate(0 56)">
+                  <g fill="#0f7a72">
+                    <rect x="48" y="128" width="96" height="14" rx="3"/>
+                    <rect x="48" y="150" width="78" height="14" rx="3" opacity="0.85"/>
+                    <rect x="48" y="172" width="96" height="14" rx="3" opacity="0.7"/>
+                    <rect x="48" y="194" width="64" height="14" rx="3" opacity="0.85"/>
+                    <rect x="48" y="216" width="88" height="14" rx="3"/>
+                    <rect x="48" y="238" width="72" height="14" rx="3" opacity="0.7"/>
+                    <rect x="48" y="260" width="96" height="14" rx="3" opacity="0.55"/>
+                  </g>
+                  <text x="48" y="298" fill="#4f7380" font-size="14" font-weight="700">real numbers</text>
+                  <path d="M160 196 h28" stroke="#0f7a72" stroke-width="2.5" fill="none"/>
+                  <path d="M180 188 L194 196 L180 204" fill="none" stroke="#0f7a72" stroke-width="2.5"/>
+                  <rect x="214" y="140" width="128" height="112" rx="14" fill="#143844"/>
+                  <text x="278" y="190" text-anchor="middle" fill="#fff" font-size="22" font-weight="700">EME</text>
+                  <text x="278" y="218" text-anchor="middle" fill="#5ee6c9" font-size="16" font-weight="700">D = 4</text>
+                  <path d="M358 196 h28" stroke="#0f7a72" stroke-width="2.5" fill="none"/>
+                  <path d="M378 188 L392 196 L378 204" fill="none" stroke="#0f7a72" stroke-width="2.5"/>
+                  <g fill="none" stroke="#7aada4" stroke-width="2.5">
+                    <line x1="412" y1="148" x2="492" y2="148"/>
+                    <line x1="412" y1="176" x2="492" y2="176"/>
+                    <line x1="412" y1="204" x2="492" y2="204"/>
+                    <line x1="412" y1="232" x2="492" y2="232"/>
+                    <line x1="412" y1="260" x2="492" y2="260"/>
+                  </g>
+                  <g fill="#143844">
+                    <circle cx="412" cy="148" r="5"/>
+                    <circle cx="412" cy="176" r="5"/>
+                    <circle cx="412" cy="204" r="5"/>
+                    <circle cx="412" cy="232" r="5"/>
+                    <circle cx="412" cy="260" r="5"/>
+                  </g>
+                  <text x="412" y="298" fill="#4f7380" font-size="14" font-weight="700">71 qubits</text>
+                </g>
+                <text x="40" y="470" fill="#143844" font-size="16" font-weight="600">D = 1 is a product state. Angle encoding.</text>
+                <text x="40" y="498" fill="#143844" font-size="16" font-weight="600">D = 4 entangles. The width stays 71.</text>
+              </g>
+              <g class="block" font-family="Segoe UI, sans-serif">
+                <rect x="532" y="16" width="640" height="528" rx="16" fill="#fbfefc" stroke="#d5ebe6"/>
+                <text x="556" y="52" fill="#0f7a72" font-size="15" font-weight="700">2</text>
+                <text x="580" y="52" fill="#143844" font-size="22" font-weight="700">The ansatz</text>
+                <text x="556" y="82" fill="#4f7380" font-size="16" font-weight="600">Each link is RY, RZ, then CX, and that block again.</text>
+                <g fill="none" stroke="#c5ddd7" stroke-width="2.5">
+                  <line x1="612" y1="128" x2="1136" y2="128"/>
+                  <line x1="612" y1="188" x2="1136" y2="188"/>
+                </g>
+                <g fill="#143844" font-size="16" font-weight="700">
+                  <text x="584" y="134">0</text>
+                  <text x="584" y="194">1</text>
+                </g>
+                <g>
+                  <rect x="624" y="106" width="44" height="44" rx="8" fill="#0f7a72"/>
+                  <text x="646" y="134" text-anchor="middle" fill="#fff" font-size="15" font-weight="700">RY</text>
+                  <rect x="674" y="106" width="44" height="44" rx="8" fill="#fbfefc" stroke="#0f7a72" stroke-width="2"/>
+                  <text x="696" y="134" text-anchor="middle" fill="#0f7a72" font-size="15" font-weight="700">RZ</text>
+                  <rect x="624" y="166" width="44" height="44" rx="8" fill="#0f7a72"/>
+                  <text x="646" y="194" text-anchor="middle" fill="#fff" font-size="15" font-weight="700">RY</text>
+                  <rect x="674" y="166" width="44" height="44" rx="8" fill="#fbfefc" stroke="#0f7a72" stroke-width="2"/>
+                  <text x="696" y="194" text-anchor="middle" fill="#0f7a72" font-size="15" font-weight="700">RZ</text>
+                  <line x1="752" y1="128" x2="752" y2="188" stroke="#143844" stroke-width="2.5"/>
+                  <circle cx="752" cy="128" r="6" fill="#143844"/>
+                  <circle cx="752" cy="188" r="11" fill="#fbfefc" stroke="#143844" stroke-width="2"/>
+                  <path d="M752 181 v14 M745 188 h14" stroke="#143844" stroke-width="2" fill="none"/>
+                  <text x="752" y="98" text-anchor="middle" fill="#143844" font-size="13" font-weight="700">CX</text>
+                  <rect x="792" y="106" width="44" height="44" rx="8" fill="#0f7a72"/>
+                  <text x="814" y="134" text-anchor="middle" fill="#fff" font-size="15" font-weight="700">RY</text>
+                  <rect x="842" y="106" width="44" height="44" rx="8" fill="#fbfefc" stroke="#0f7a72" stroke-width="2"/>
+                  <text x="864" y="134" text-anchor="middle" fill="#0f7a72" font-size="15" font-weight="700">RZ</text>
+                  <rect x="792" y="166" width="44" height="44" rx="8" fill="#0f7a72"/>
+                  <text x="814" y="194" text-anchor="middle" fill="#fff" font-size="15" font-weight="700">RY</text>
+                  <rect x="842" y="166" width="44" height="44" rx="8" fill="#fbfefc" stroke="#0f7a72" stroke-width="2"/>
+                  <text x="864" y="194" text-anchor="middle" fill="#0f7a72" font-size="15" font-weight="700">RZ</text>
+                  <line x1="922" y1="128" x2="922" y2="188" stroke="#143844" stroke-width="2.5"/>
+                  <circle cx="922" cy="128" r="6" fill="#143844"/>
+                  <circle cx="922" cy="188" r="11" fill="#fbfefc" stroke="#143844" stroke-width="2"/>
+                  <path d="M922 181 v14 M915 188 h14" stroke="#143844" stroke-width="2" fill="none"/>
+                  <text x="922" y="98" text-anchor="middle" fill="#143844" font-size="13" font-weight="700">CX</text>
+                </g>
+                <text x="1030" y="164" text-anchor="middle" fill="#0f7a72" font-size="15" font-weight="700">one link</text>
+                <text x="556" y="248" fill="#143844" font-size="18" font-weight="700">Even pairs, then odd pairs</text>
+                <text x="556" y="272" fill="#4f7380" font-size="15" font-weight="600">Five wires stand for 71. Each mark is the link above. Then RY, RZ.</text>
+                <g transform="translate(0 28)">
+                <g fill="none" stroke="#c5ddd7" stroke-width="2">
+                  <line x1="620" y1="310" x2="1140" y2="310"/>
+                  <line x1="620" y1="348" x2="1140" y2="348"/>
+                  <line x1="620" y1="386" x2="1140" y2="386"/>
+                  <line x1="620" y1="424" x2="1140" y2="424"/>
+                  <line x1="620" y1="462" x2="1140" y2="462"/>
+                </g>
+                <g fill="#143844" font-size="15" font-weight="700">
+                  <text x="590" y="315">0</text>
+                  <text x="590" y="353">1</text>
+                  <text x="590" y="391">2</text>
+                  <text x="590" y="429">3</text>
+                  <text x="590" y="467">4</text>
+                </g>
+                <g fill="#4f7380" font-size="13" font-weight="700">
+                  <text x="740" y="296" text-anchor="middle">Even</text>
+                  <text x="880" y="296" text-anchor="middle">Odd</text>
+                </g>
+                <g stroke="#143844" fill="none" stroke-width="2">
+                  <line x1="740" y1="310" x2="740" y2="348"/>
+                  <line x1="740" y1="386" x2="740" y2="424"/>
+                  <line x1="880" y1="348" x2="880" y2="386"/>
+                  <line x1="880" y1="424" x2="880" y2="462"/>
+                </g>
+                <g fill="#143844">
+                  <circle cx="740" cy="310" r="5"/>
+                  <circle cx="740" cy="386" r="5"/>
+                  <circle cx="880" cy="348" r="5"/>
+                  <circle cx="880" cy="424" r="5"/>
+                </g>
+                <g fill="#fbfefc" stroke="#143844" stroke-width="1.8">
+                  <circle cx="740" cy="348" r="9"/>
+                  <circle cx="740" cy="424" r="9"/>
+                  <circle cx="880" cy="386" r="9"/>
+                  <circle cx="880" cy="462" r="9"/>
+                </g>
+                <g stroke="#143844" stroke-width="1.6" fill="none">
+                  <path d="M740 342 v12 M734 348 h12"/>
+                  <path d="M740 418 v12 M734 424 h12"/>
+                  <path d="M880 380 v12 M874 386 h12"/>
+                  <path d="M880 456 v12 M874 462 h12"/>
+                </g>
+                <g>
+                  <rect x="980" y="298" width="34" height="24" rx="5" fill="#0f7a72"/>
+                  <rect x="980" y="336" width="34" height="24" rx="5" fill="#0f7a72"/>
+                  <rect x="980" y="374" width="34" height="24" rx="5" fill="#0f7a72"/>
+                  <rect x="980" y="412" width="34" height="24" rx="5" fill="#0f7a72"/>
+                  <rect x="980" y="450" width="34" height="24" rx="5" fill="#0f7a72"/>
+                  <rect x="1020" y="298" width="34" height="24" rx="5" fill="#fbfefc" stroke="#0f7a72" stroke-width="1.6"/>
+                  <rect x="1020" y="336" width="34" height="24" rx="5" fill="#fbfefc" stroke="#0f7a72" stroke-width="1.6"/>
+                  <rect x="1020" y="374" width="34" height="24" rx="5" fill="#fbfefc" stroke="#0f7a72" stroke-width="1.6"/>
+                  <rect x="1020" y="412" width="34" height="24" rx="5" fill="#fbfefc" stroke="#0f7a72" stroke-width="1.6"/>
+                  <rect x="1020" y="450" width="34" height="24" rx="5" fill="#fbfefc" stroke="#0f7a72" stroke-width="1.6"/>
+                </g>
+                <g fill="#fff" font-size="11" font-weight="700">
+                  <text x="997" y="314" text-anchor="middle">RY</text>
+                  <text x="997" y="352" text-anchor="middle">RY</text>
+                  <text x="997" y="390" text-anchor="middle">RY</text>
+                  <text x="997" y="428" text-anchor="middle">RY</text>
+                  <text x="997" y="466" text-anchor="middle">RY</text>
+                </g>
+                <g fill="#0f7a72" font-size="11" font-weight="700">
+                  <text x="1037" y="314" text-anchor="middle">RZ</text>
+                  <text x="1037" y="352" text-anchor="middle">RZ</text>
+                  <text x="1037" y="390" text-anchor="middle">RZ</text>
+                  <text x="1037" y="428" text-anchor="middle">RZ</text>
+                  <text x="1037" y="466" text-anchor="middle">RZ</text>
+                </g>
+                </g>
+              </g>
+              <g class="readout" font-family="Segoe UI, sans-serif">
+                <rect x="1188" y="16" width="476" height="528" rx="16" fill="#143844"/>
+                <text x="1426" y="52" text-anchor="middle" fill="#fff" font-size="22" font-weight="700"><tspan fill="#5ee6c9" font-size="15">3</tspan><tspan dx="12">The read</tspan></text>
+                <text x="1426" y="82" text-anchor="middle" fill="#9fd9cf" font-size="16" font-weight="600">Three numbers from each qubit</text>
+                <g class="read-rows" transform="translate(93 0)">
+                  <rect x="1216" y="116" width="72" height="64" rx="10" fill="#5ee6c9"/>
+                  <text x="1252" y="156" text-anchor="middle" fill="#143844" font-size="28" font-weight="700">X</text>
+                  <text x="1312" y="142" fill="#fff" font-size="18" font-weight="700">expectation of X</text>
+                  <text x="1312" y="166" fill="#9fd9cf" font-size="15" font-weight="600">one number, &#10216;X&#10217;</text>
+                  <rect x="1216" y="266" width="72" height="64" rx="10" fill="#5ee6c9"/>
+                  <text x="1252" y="306" text-anchor="middle" fill="#143844" font-size="28" font-weight="700">Y</text>
+                  <text x="1312" y="292" fill="#fff" font-size="18" font-weight="700">expectation of Y</text>
+                  <text x="1312" y="316" fill="#9fd9cf" font-size="15" font-weight="600">one number, &#10216;Y&#10217;</text>
+                  <rect x="1216" y="416" width="72" height="64" rx="10" fill="#5ee6c9"/>
+                  <text x="1252" y="456" text-anchor="middle" fill="#143844" font-size="28" font-weight="700">Z</text>
+                  <text x="1312" y="442" fill="#fff" font-size="18" font-weight="700">expectation of Z</text>
+                  <text x="1312" y="466" fill="#9fd9cf" font-size="15" font-weight="600">one number, &#10216;Z&#10217;</text>
+                </g>
+                <text x="1426" y="516" text-anchor="middle" fill="#5ee6c9" font-size="18" font-weight="700">71 &#215; 3 = 213. Not a single 0 or 1.</text>
+              </g>
+            </svg>
+          </figure>
+        </div>
+      </section>
+      <p class="pg">page 10 of 19</p>
+    </article>
+
+    <!-- ============ PAGE 2 — original PoC one-pager, verbatim ============ -->
+    <article class="slide" id="slide1">
+      <header class="hero">
+        <svg class="waves" viewBox="0 0 280 280" aria-hidden="true">
+          <g fill="none" stroke="#fff">
+            <path d="M0 260 A260 260 0 0 0 260 0" stroke-width="1.25" opacity="0.4"/>
+            <path d="M0 196 A196 196 0 0 0 196 0" stroke-width="1.25" opacity="0.3"/>
+            <path d="M0 132 A132 132 0 0 0 132 0" stroke-width="1.25" opacity="0.22"/>
+            <path d="M0 72 A72 72 0 0 0 72 0" stroke-width="1.25" opacity="0.14"/>
+          </g>
+        </svg>
+        <svg class="orb" viewBox="0 0 640 640" aria-hidden="true">
+          <circle cx="320" cy="320" r="250" fill="none" stroke="#fff" stroke-width="56" opacity="0.22"/>
+          <circle cx="320" cy="320" r="176" fill="#b8ffe8" opacity="0.28"/>
+        </svg>
+        <div class="hero-top">
+          <div>
+            <div class="lockup">
+              <span class="globant">Globant<img class="globant-play" src="assets/globant-play.png" alt="" /></span>
+              <span class="plus">+</span>
+              <span class="haiqu"><img class="haiqu-mark" src="assets/haiqu-mark.png" alt="" />haiqu</span>
+              <span class="plus">+</span>
+              <img class="brand-mark ibm-mark" src="assets/ibm-logo.svg" alt="IBM" />
+              <span class="plus">+</span>
+              <span class="qnow"><img class="qnow-mark" src="assets/qnow-mark.png" alt="" />Qnow</span>
+            </div>
+          </div>
+        </div>
+        <div class="slide1-head">
+          <div>
+            <div class="pill"><i></i> The results, one split</div>
+            <h1>DYRK1A<span>The table covers more labeled actives. Two published actives sit only on the quantum list.</span></h1>
+          </div>
+        </div>
+      </header>
+
+      <section class="body">
+        <div class="strip">
+          <div class="kpi"><div class="n">537 s</div><span>QPU time</span></div>
+          <div class="kpi"><div class="n">71</div><span>qubits on the processor</span></div>
+          <div class="kpi"><div class="n">~859 USD</div><span>An estimated price for all pipeline</span></div>
+        </div>
+        <div class="left">
+          <div class="membership" aria-label="Of the 90 test molecules, how many each list proposes and how many of those are labeled active">
+            <p class="mol-key"><b>Out of the 90.</b> The two lists do not propose the same molecules.</p>
+            <article class="qpu">
+              <div class="k">QPU<em>53 of 90</em></div>
+              <h3>42 <span>active</span></h3>
+            </article>
+            <article>
+              <div class="k">Table<em>56 of 90</em></div>
+              <h3>46 <span>active</span></h3>
+            </article>
+            <div class="lenses" role="img" aria-label="Only the QPU: six dots, two filled and four open, 2 active plus 4 inactive. Both lists: 47, 40 active plus 7 inactive. Only the table: nine dots, six filled and three open, 6 active plus 3 inactive.">
+              <div class="lens q">
+                <div class="cap">
+                  <div class="name">Only the QPU</div>
+                  <div class="vdots"><i></i><i></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i></div>
+                  <span class="eq">2 active + 4 inactive</span>
+                </div>
+              </div>
+              <div class="lens t">
+                <div class="cap">
+                  <div class="name">Only the table</div>
+                  <div class="vdots"><i></i><i></i><i></i><i></i><i></i><i></i><i class="off"></i><i class="off"></i><i class="off"></i></div>
+                  <span class="eq">6 active + 3 inactive</span>
+                </div>
+              </div>
+              <div class="overlap">
+                <div class="name">Both lists</div>
+                <b>47</b>
+                <span class="eq">40 active + 7 inactive</span>
+              </div>
+            </div>
+          </div>
+          <div class="hits">
+            <p class="sample">The 2 actives only the QPU proposes.</p>
+            <article class="hit">
+              <div class="k">Patented analogue · index 87</div>
+              <h4>8d · US 9,446,044</h4>
+              <div class="mol"><img src="assets/mol-8d.svg" alt="Structure 8d, compound 33 of US 9,446,044" /></div>
+              <p>Tanimoto to train 0.851. Table −0.24, QPU +0.32. Not an approved drug, and not the clinical-grade lead. DYRK1A: 1.05 μM in the paper, 431 nM in the patent.</p>
+            </article>
+            <article class="hit far">
+              <div class="k">Academic probe · index 62</div>
+              <h4>XMD14-124 · PDB 6EIQ</h4>
+              <div class="mol"><img src="assets/mol-xmd14124.svg" alt="Structure XMD14-124, ligand PDB 6EIQ" /></div>
+              <p>Tanimoto to train 0.754. Table −0.42, QPU +0.02. IC50 800 nM. Not a drug.</p>
+            </article>
+          </div>
+        </div>
+
+        <div class="right">
+          <div class="chart">
+            <h4>Ranking, same split</h4>
+            <p class="sub">Gray columns: PCA, on a simulator. Teal columns, and the two lists: 71 qubits, read on the QPU.</p>
+            <table class="annex7">
+              <thead>
+                <tr><th class="label" rowspan="2">Metric</th><th colspan="2" class="p1">Past Experiment<span>PCA reduction</span></th><th colspan="2" class="p2">Current Experiment<span>71 qubits</span></th><th class="delta" rowspan="2">Delta<span>Table − QPU</span></th></tr>
+                <tr><th class="p1">Classic</th><th class="p1">Quantum</th><th class="p2">Classic</th><th class="p2">Quantum</th></tr>
+              </thead>
+              <tbody>
+                <tr class="focus"><td>ROC-AUC</td><td class="p1">0.839</td><td class="q p1">0.875</td><td class="p2">0.879</td><td class="q p2">0.826</td><td class="delta">+0.053</td></tr>
+                <tr><td>PR-AUC</td><td class="p1">—</td><td class="q p1">0.892</td><td class="p2">0.903</td><td class="q p2">0.855</td><td class="delta">+0.048</td></tr>
+                <tr><td>F1</td><td class="p1">0.78</td><td class="q p1">0.860</td><td class="p2">0.868</td><td class="q p2">0.816</td><td class="delta">+0.052</td></tr>
+                <tr><td>Precision</td><td class="p1">0.82</td><td class="q p1">0.807</td><td class="p2">0.821</td><td class="q p2">0.793</td><td class="delta">+0.028</td></tr>
+                <tr><td>Recall</td><td class="p1">0.74</td><td class="q p1">0.920</td><td class="p2">0.920</td><td class="q p2">0.840</td><td class="delta">+0.080</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="foot">
+            <div class="cta">
+              <p>The table ranks higher. DeLong does not reject equal ranking. The lists still differ.</p>
+              <small>QPU-only: two labeled actives and four inactives. Table-only: six labeled actives of nine.</small>
+            </div>
+          </div>
+        </div>
+      </section>
+      <p class="pg">page 11 of 19</p>
+    </article>
+
+    <!-- ============ BRIDGE 2 ============ -->
+    <article class="slide" id="bridge2">
+      <div class="cover bridge">
+        <svg class="waves" viewBox="0 0 280 280" aria-hidden="true">
+          <g fill="none" stroke="#fff">
+            <path d="M0 260 A260 260 0 0 0 260 0" stroke-width="1.25" opacity="0.4"/>
+            <path d="M0 196 A196 196 0 0 0 196 0" stroke-width="1.25" opacity="0.3"/>
+            <path d="M0 132 A132 132 0 0 0 132 0" stroke-width="1.25" opacity="0.22"/>
+            <path d="M0 72 A72 72 0 0 0 72 0" stroke-width="1.25" opacity="0.14"/>
+          </g>
+        </svg>
+        <svg class="orb" viewBox="0 0 640 640" aria-hidden="true">
+          <circle cx="320" cy="320" r="250" fill="none" stroke="#fff" stroke-width="56" opacity="0.2"/>
+          <circle cx="320" cy="320" r="176" fill="#b8ffe8" opacity="0.25"/>
+        </svg>
+        <h2>Was that one split just luck?</h2>
+      </div>
+      <p class="pg">page 12 of 19</p>
+    </article>
+
+    <!-- ============ the score: combination and attribution ============ -->
+    <article class="slide" id="slide-score">
+      <header class="hero alt">
+        <div class="hero-top">
+          <div>
+            <div class="lockup">
+              <span class="globant">Globant<img class="globant-play" src="assets/globant-play.png" alt="" /></span>
+              <span class="plus">+</span>
+              <span class="haiqu"><img class="haiqu-mark" src="assets/haiqu-mark.png" alt="" />haiqu</span>
+              <span class="plus">+</span>
+              <img class="brand-mark ibm-mark" src="assets/ibm-logo.svg" alt="IBM" />
+              <span class="plus">+</span>
+              <span class="qnow"><img class="qnow-mark" src="assets/qnow-mark.png" alt="" />Qnow</span>
+            </div>
+          </div>
+        </div>
+        <div class="slide1-head">
+          <div>
+            <div class="pill"><i></i> score · list</div>
+            <h1>DYRK1A<span>kNN wins the ranking. Together it reaches 0.9022, and each join still drops one molecule.</span></h1>
+          </div>
+        </div>
+      </header>
+      <section class="body">
+        <article class="families">
+          <div class="fam-head">
+            <p class="qask">Why kNN?</p>
+            <p>Five families, same split. kNN has the highest ROC-AUC on both sides, so the join uses it. RBF-SVM stays the list pair. Bars start at 0.70.</p>
+          </div>
+          <div class="boards">
+            <div class="board table">
+              <h3>Table</h3>
+              <div class="row pick"><span class="name">kNN <em>selected</em></span><span class="track"><i style="width:90.9%"></i></span><span class="auc">0.8908</span></div>
+              <div class="row"><span class="name">Random forest</span><span class="track"><i style="width:85.6%"></i></span><span class="auc">0.8798</span></div>
+              <div class="row"><span class="name">RBF-SVM</span><span class="track"><i style="width:85.2%"></i></span><span class="auc">0.8790</span></div>
+              <div class="row"><span class="name">Gradient boosting</span><span class="track"><i style="width:76.0%"></i></span><span class="auc">0.8595</span></div>
+              <div class="row"><span class="name">Logistic regression</span><span class="track"><i style="width:64.8%"></i></span><span class="auc">0.8360</span></div>
+            </div>
+            <div class="board quantum">
+              <h3>Quantum vector</h3>
+              <div class="row pick"><span class="name">kNN <em>selected</em></span><span class="track"><i style="width:75.4%"></i></span><span class="auc">0.8583</span></div>
+              <div class="row"><span class="name">RBF-SVM</span><span class="track"><i style="width:59.8%"></i></span><span class="auc">0.8255</span></div>
+              <div class="row"><span class="name">Random forest</span><span class="track"><i style="width:59.3%"></i></span><span class="auc">0.8245</span></div>
+              <div class="row"><span class="name">Logistic regression</span><span class="track"><i style="width:43.8%"></i></span><span class="auc">0.7920</span></div>
+              <div class="row"><span class="name">Gradient boosting</span><span class="track"><i style="width:13.1%"></i></span><span class="auc">0.7275</span></div>
+            </div>
+          </div>
+        </article>
+        <div class="trio">
+          <article>
+            <div class="head">
+              <div class="tag">Table alone · kNN</div>
+              <div class="n">0.8908</div>
+            </div>
+            <ul class="mols">
+              <li><b>8d</b><span class="state off"><i></i>off the list</span></li>
+              <li><b>XMD14-124</b><span class="state off"><i></i>off the list</span></li>
+            </ul>
+          </article>
+          <article class="quantum">
+            <div class="head">
+              <div class="tag">Quantum alone · kNN</div>
+              <div class="n">0.8583</div>
+            </div>
+            <ul class="mols">
+              <li><b>8d</b><span class="state on"><i></i>on the list</span></li>
+              <li><b>XMD14-124</b><span class="state on"><i></i>on the list</span></li>
+            </ul>
+          </article>
+          <article class="both">
+            <div class="head">
+              <div class="tag">Together · kNN</div>
+              <div class="n">0.9022</div>
+            </div>
+            <div class="joins">
+              <div class="join">
+                <b>Concatenation</b>
+                <span class="pair-states"><span class="state off"><i></i>8d</span><span class="state on"><i></i>XMD14-124</span></span>
+              </div>
+              <div class="join">
+                <b>Stacking</b>
+                <span class="pair-states"><span class="state on"><i></i>8d</span><span class="state off"><i></i>XMD14-124</span></span>
+              </div>
+            </div>
+            <p>Higher ROC-AUC. Each join keeps one and drops the other.</p>
+          </article>
+        </div>
+        <article class="carry">
+          <p class="qask">Which representation carries the score?</p>
+          <div class="pair">
+            <div class="c"><b>54%</b><span>Table</span></div>
+            <div class="qv"><b>46%</b><span>Quantum vector</span></div>
+          </div>
+          <p>Of the ROC-AUC lift over chance, the table carries 54% and the quantum vector 46%.</p>
+        </article>
+        <article class="pool">
+          <div class="tree">
+            <div class="members">
+              <span class="studied">8d</span>
+              <span class="studied">XMD14-124</span>
+              <span>44 more</span>
+            </div>
+            <svg class="stem" viewBox="0 0 300 48" preserveAspectRatio="none" aria-hidden="true">
+              <path d="M50 0 V18 H150 V48 M150 0 V48 M250 0 V18 H150"/>
+            </svg>
+            <div class="tally">
+              <div class="n">46</div>
+              <div class="unit">distinct actives</div>
+            </div>
+          </div>
+          <p class="base">Quantum list only, at least once. Two of the 44 were studied. Forty-two were not identified. Nineteen appear only one to three times.</p>
+        </article>
+      </section>
+      <p class="pg">page 13 of 19</p>
+    </article>
+
+    <!-- ============ BRIDGE 3 ============ -->
+    <article class="slide" id="bridge3">
+      <div class="cover bridge">
+        <svg class="waves" viewBox="0 0 280 280" aria-hidden="true">
+          <g fill="none" stroke="#fff">
+            <path d="M0 260 A260 260 0 0 0 260 0" stroke-width="1.25" opacity="0.4"/>
+            <path d="M0 196 A196 196 0 0 0 196 0" stroke-width="1.25" opacity="0.3"/>
+            <path d="M0 132 A132 132 0 0 0 132 0" stroke-width="1.25" opacity="0.22"/>
+            <path d="M0 72 A72 72 0 0 0 72 0" stroke-width="1.25" opacity="0.14"/>
+          </g>
+        </svg>
+        <svg class="orb" viewBox="0 0 640 640" aria-hidden="true">
+          <circle cx="320" cy="320" r="250" fill="none" stroke="#fff" stroke-width="56" opacity="0.2"/>
+          <circle cx="320" cy="320" r="176" fill="#b8ffe8" opacity="0.25"/>
+        </svg>
+        <h2>What else returned on the quantum-only list?</h2>
+      </div>
+      <p class="pg">page 14 of 19</p>
+    </article>
+
+    <!-- ============ PAGE 3 — two candidates the classical table never finds ============ -->
+    <article class="slide" id="slide3">
+      <header class="hero dark2">
+        <svg class="waves" viewBox="0 0 280 280" aria-hidden="true">
+          <g fill="none" stroke="#fff">
+            <path d="M0 260 A260 260 0 0 0 260 0" stroke-width="1.25" opacity="0.4"/>
+            <path d="M0 196 A196 196 0 0 0 196 0" stroke-width="1.25" opacity="0.3"/>
+            <path d="M0 132 A132 132 0 0 0 132 0" stroke-width="1.25" opacity="0.22"/>
+            <path d="M0 72 A72 72 0 0 0 72 0" stroke-width="1.25" opacity="0.14"/>
+          </g>
+        </svg>
+        <svg class="orb" viewBox="0 0 640 640" aria-hidden="true">
+          <circle cx="320" cy="320" r="250" fill="none" stroke="#fff" stroke-width="56" opacity="0.22"/>
+          <circle cx="320" cy="320" r="176" fill="#b8ffe8" opacity="0.28"/>
+        </svg>
+        <div class="hero-top">
+          <div>
+            <div class="lockup">
+              <span class="globant">Globant<img class="globant-play" src="assets/globant-play.png" alt="" /></span>
+              <span class="plus">+</span>
+              <span class="haiqu"><img class="haiqu-mark" src="assets/haiqu-mark.png" alt="" />haiqu</span>
+              <span class="plus">+</span>
+              <img class="brand-mark ibm-mark" src="assets/ibm-logo.svg" alt="IBM" />
+              <span class="plus">+</span>
+              <span class="qnow"><img class="qnow-mark" src="assets/qnow-mark.png" alt="" />Qnow</span>
+            </div>
+          </div>
+        </div>
+        <div class="slide1-head">
+          <div>
+            <div class="pill"><i></i> 34/34 test appearances, 100% quantum-only</div>
+            <h1>DYRK1A<span>Two more candidates the classical table never proposes, in any of the 100 splits</span></h1>
+          </div>
+        </div>
+      </header>
+
+      <section class="body">
+        <div class="left">
+          <div class="candidates">
+            <article class="cand">
+              <div class="k">PubChem CID 97297 · kinome-profiled</div>
+              <h4>5-Iodotubercidin</h4>
+              <div class="mol"><img src="assets/mol-5-iodotubercidin.svg" alt="5-Iodotubercidin structure" /></div>
+              <p>A kinase inhibitor identified by kinome profiling against 253 human kinases. DYRK1A IC50 14 nM — more potent than harmine (80–300 nM), the reference inhibitor for this target.</p>
+              <p class="stat">34 / 34 test appearances · 100% quantum-only (Wilson CI [89.8%, 100%])</p>
+            </article>
+            <article class="cand">
+              <div class="k">PubChem CID 118715638 · bioassay-confirmed</div>
+              <h4>Second candidate</h4>
+              <div class="mol"><img src="assets/mol-candidate2.svg" alt="Second candidate structure" /></div>
+              <p>DYRK1A IC50 610 nM, confirmed in the PubChem bioassay against UniProt target Q13627. Structurally distinct from 8d and 5-Iodotubercidin.</p>
+              <p class="stat">34 / 34 test appearances · 100% quantum-only (Wilson CI [89.8%, 100%])</p>
+            </article>
+          </div>
+        </div>
+
+        <div class="right">
+          <div class="strip">
+            <div class="kpi"><div class="n">42</div><span>other recurrent actives catalogued, not yet investigated</span></div>
+          </div>
+          <div class="chart">
+            <h4>Why the classical table misses 5-Iodotubercidin specifically</h4>
+            <p class="sub">Applicability domain. The table sits past its threshold. The quantum vector still covers the molecule.</p>
+            <div class="ad">
+              <div class="ad-scale">
+                <span></span>
+                <div class="axis">
+                  <span class="in">Inside</span>
+                  <span class="th">Threshold</span>
+                  <span class="out">Outside</span>
+                </div>
+                <span></span>
+              </div>
+              <div class="ad-row">
+                <div class="who">Classical<span>applicability domain</span></div>
+                <div class="ruler">
+                  <div class="rail"><div class="near"></div></div>
+                  <div class="tick"><b>1</b></div>
+                  <div class="dot out" style="--end:90.6%"></div>
+                </div>
+                <div class="verdict out">Outside</div>
+              </div>
+              <div class="ad-row">
+                <div class="who">Quantum<span>applicability domain</span></div>
+                <div class="ruler">
+                  <div class="rail"><div class="near"></div></div>
+                  <div class="tick"><b>1</b></div>
+                  <div class="dot in" style="--end:60.6%"></div>
+                </div>
+                <div class="verdict in">Inside</div>
+              </div>
+              <div class="ad-mean">
+                <p><b>Inside.</b> At or before the threshold. The training neighborhood still covers the molecule.</p>
+                <p><b>Outside.</b> Past the threshold. No close training analogue.</p>
+              </div>
+            </div>
+            <p class="sub" style="margin-top:8px;">No close training analogue, so the table is outside its range. The quantum vector still places it inside.</p>
+          </div>
+          <div class="foot">
+            <div class="cta">
+              <div class="label-s">Reading this page</div>
+              <p>This is not a virtual screening exercise</p>
+              <small>These two molecules are already-published DYRK1A inhibitors the paper did not set out to "discover" — it set out to test whether the quantum vector's list differs from the classical one. It does, and these two never appear on the classical side.</small>
+            </div>
+          </div>
+        </div>
+      </section>
+      <p class="pg">page 15 of 19</p>
+    </article>
+
+    <!-- ============ BRIDGE 4 ============ -->
+    <article class="slide" id="bridge4">
+      <div class="cover bridge">
+        <svg class="waves" viewBox="0 0 280 280" aria-hidden="true">
+          <g fill="none" stroke="#fff">
+            <path d="M0 260 A260 260 0 0 0 260 0" stroke-width="1.25" opacity="0.4"/>
+            <path d="M0 196 A196 196 0 0 0 196 0" stroke-width="1.25" opacity="0.3"/>
+            <path d="M0 132 A132 132 0 0 0 132 0" stroke-width="1.25" opacity="0.22"/>
+            <path d="M0 72 A72 72 0 0 0 72 0" stroke-width="1.25" opacity="0.14"/>
+          </g>
+        </svg>
+        <svg class="orb" viewBox="0 0 640 640" aria-hidden="true">
+          <circle cx="320" cy="320" r="250" fill="none" stroke="#fff" stroke-width="56" opacity="0.2"/>
+          <circle cx="320" cy="320" r="176" fill="#b8ffe8" opacity="0.25"/>
+        </svg>
+        <h2>Does hardware noise explain the crossing?</h2>
+      </div>
+      <p class="pg">page 16 of 19</p>
+    </article>
+
+    <!-- ============ PAGE 4 — verdict of the three questions; the sheets show the cut ============ -->
+    <article class="slide" id="slide4">
+      <header class="hero alt">
+        <svg class="waves" viewBox="0 0 280 280" aria-hidden="true">
+          <g fill="none" stroke="#fff">
+            <path d="M0 260 A260 260 0 0 0 260 0" stroke-width="1.25" opacity="0.4"/>
+            <path d="M0 196 A196 196 0 0 0 196 0" stroke-width="1.25" opacity="0.3"/>
+            <path d="M0 132 A132 132 0 0 0 132 0" stroke-width="1.25" opacity="0.22"/>
+            <path d="M0 72 A72 72 0 0 0 72 0" stroke-width="1.25" opacity="0.14"/>
+          </g>
+        </svg>
+        <svg class="orb" viewBox="0 0 640 640" aria-hidden="true">
+          <circle cx="320" cy="320" r="250" fill="none" stroke="#fff" stroke-width="56" opacity="0.22"/>
+          <circle cx="320" cy="320" r="176" fill="#b8ffe8" opacity="0.28"/>
+        </svg>
+        <div class="hero-top">
+          <div>
+            <div class="lockup">
+              <span class="globant">Globant<img class="globant-play" src="assets/globant-play.png" alt="" /></span>
+              <span class="plus">+</span>
+              <span class="haiqu"><img class="haiqu-mark" src="assets/haiqu-mark.png" alt="" />haiqu</span>
+              <span class="plus">+</span>
+              <img class="brand-mark ibm-mark" src="assets/ibm-logo.svg" alt="IBM" />
+              <span class="plus">+</span>
+              <span class="qnow"><img class="qnow-mark" src="assets/qnow-mark.png" alt="" />Qnow</span>
+            </div>
+          </div>
+        </div>
+        <div class="slide1-head">
+          <div>
+            <div class="pill"><i></i> the verdict</div>
+            <h1>DYRK1A<span>Same two questions.</span></h1>
+          </div>
+        </div>
+      </header>
+
+      <section class="body">
+        <div class="left">
+          <aside class="ctx">
+            <h3>Where each boundary cuts</h3>
+            <p>8d and XMD14-124. Figure 8 is the pair's cut. Figure 9 is a PCA-3 refit.</p>
+          </aside>
+          <div class="planes">
+            <article class="plane">
+              <div class="k">Fig. 8 · table, the pair's cut</div>
+              <h4>1,080-D sheet leaves both out</h4>
+              <div class="img"><img src="assets/03d_pca_classical_svm.png" alt="Figure 8, the 1080-D pair cut through 8d, XMD14-124, and the training centroid" /></div>
+              <p>The pair's surface, not a refit. Both molecules on the inactive side.</p>
+            </article>
+            <article class="plane q">
+              <div class="k">Fig. 9 · QPU vector, PCA-3</div>
+              <h4>A PCA-3 refit. Not the 213-D surface.</h4>
+              <div class="img"><img src="assets/03d_pca_qpu_svm.png" alt="Figure 9, an RBF-SVM refit in PCA-3 of the QPU vector. Not the 213-D surface." /></div>
+              <p>Not the 213-D surface. On that surface, not drawn here, 8d is active and XMD14-124 sits on the line.</p>
+            </article>
+          </div>
+          <div class="note">
+            <p>At ε = 0.03 the table proposes neither molecule, 0/5. The QPU proposes 8d in 5/5 and XMD14-124 in 4/5. At ε = 0.01 three table classifiers remain, 0/3 and 0/3, and only the QPU random forest remains, 1/1 and 1/1. XMD14-124 on the QPU has margin 0.022, percentile 2.2 of 90.</p>
+          </div>
+        </div>
+
+        <div class="right">
+          <ol class="verdicts">
+            <li>
+              <span class="n">1</span>
+              <div>
+                <h3>Is the difference only the device?</h3>
+                <p class="say">No. Noise alone does not reproduce the crossing.</p>
+                <p class="fine">Noise crosses about 39% of the six QPU-only molecules, and 12% of controls far from the boundary. 8d and XMD14-124 cross only on the device.</p>
+              </div>
+            </li>
+            <li>
+              <span class="n">2</span>
+              <div>
+                <h3>Do the two rankings actually separate?</h3>
+                <p class="say">No. DeLong p = 0.117. The interval of the difference includes zero.</p>
+                <p class="fine">DeLong on the two AUCs. Interval [−0.012, 0.122]. Fisher p = 0.315.</p>
+              </div>
+            </li>
+          </ol>
+        </div>
+      </section>
+      <p class="pg">page 17 of 19</p>
+    </article>
+
+    <!-- ============ PAGE 7 — conclusions, full-bleed green ============ -->
+    <article class="slide" id="slide-conclusions">
+      <div class="cover">
+        <svg class="waves" viewBox="0 0 280 280" aria-hidden="true">
+          <g fill="none" stroke="#fff">
+            <path d="M0 260 A260 260 0 0 0 260 0" stroke-width="1.25" opacity="0.4"/>
+            <path d="M0 196 A196 196 0 0 0 196 0" stroke-width="1.25" opacity="0.3"/>
+            <path d="M0 132 A132 132 0 0 0 132 0" stroke-width="1.25" opacity="0.22"/>
+            <path d="M0 72 A72 72 0 0 0 72 0" stroke-width="1.25" opacity="0.14"/>
+          </g>
+        </svg>
+        <svg class="orb" viewBox="0 0 640 640" aria-hidden="true">
+          <circle cx="320" cy="320" r="250" fill="none" stroke="#fff" stroke-width="56" opacity="0.2"/>
+          <circle cx="320" cy="320" r="176" fill="#b8ffe8" opacity="0.25"/>
+        </svg>
+
+        <div class="hero-top">
+          <div class="lockup">
+            <span class="globant">Globant<img class="globant-play" src="assets/globant-play.png" alt="" /></span>
+            <span class="plus">+</span>
+            <span class="haiqu"><img class="haiqu-mark" src="assets/haiqu-mark.png" alt="" />haiqu</span>
+            <span class="plus">+</span>
+            <img class="brand-mark ibm-mark" src="assets/ibm-logo.svg" alt="IBM" />
+            <span class="plus">+</span>
+            <span class="qnow"><img class="qnow-mark" src="assets/qnow-mark.png" alt="" />Qnow</span>
+          </div>
+        </div>
+
+        <div class="cover-mid">
+          <h1>Same molecules, different lists</h1>
+          <div class="concl-body">
+          <ol class="concl-list">
+            <li>
+              <span class="n">1</span>
+              <div>
+                <h2>The two representations propose different compounds for assay.</h2>
+                <p>Only the measured vector assays 8d and XMD14-124, plus four inactives. The table would assay six actives the vector never would. Noise does not cause the split.</p>
+              </div>
+            </li>
+            <li>
+              <span class="n">2</span>
+              <div>
+                <h2>A higher ranking is not a better prediction.</h2>
+                <p>The table reaches 0.879 against 0.826, without conventional significance (DeLong, p = 0.117). What moves to assay is the label each model assigns.</p>
+              </div>
+            </li>
+            <li>
+              <span class="n">3</span>
+              <div>
+                <h2>Assay the disagreement. Do not merge it away.</h2>
+                <p>Trust the compounds both models call active. Spend wells on what only the vector sees, and on what only the table sees. A quantum QSAR earns its place there: chemistry the table never proposes. One higher score erases it.</p>
+              </div>
+            </li>
+          </ol>
+          <div class="concl-mols">
+            <figure><img src="assets/mol-8d.svg" alt="8d" /><figcaption>8d</figcaption></figure>
+            <figure><img src="assets/mol-xmd14124.svg" alt="XMD14-124" /><figcaption>XMD14-124</figcaption></figure>
+            <figure><img src="assets/mol-5-iodotubercidin.svg" alt="5-Iodotubercidin" /><figcaption>5-Iodotubercidin</figcaption></figure>
+            <figure><img src="assets/mol-candidate2.svg" alt="Second candidate" /><figcaption>Second candidate</figcaption></figure>
+          </div>
+          </div>
+        </div>
+
+        <p class="concl-scope">Outside this work's scope: clinical benefit, a general quantum advantage in drug discovery, a dossier-grade QSAR model. Neither recovered structure is an approved drug.</p>
+      </div>
+      <p class="pg">page 18 of 19</p>
+    </article>
+
+    <!-- ============ CLOSING — thanks, contact, QR ============ -->
+    <article class="slide" id="slide-thanks">
+      <div class="cover">
+        <svg class="waves" viewBox="0 0 280 280" aria-hidden="true">
+          <g fill="none" stroke="#fff">
+            <path d="M0 260 A260 260 0 0 0 260 0" stroke-width="1.25" opacity="0.4"/>
+            <path d="M0 196 A196 196 0 0 0 196 0" stroke-width="1.25" opacity="0.3"/>
+            <path d="M0 132 A132 132 0 0 0 132 0" stroke-width="1.25" opacity="0.22"/>
+            <path d="M0 72 A72 72 0 0 0 72 0" stroke-width="1.25" opacity="0.14"/>
+          </g>
+        </svg>
+        <svg class="orb" viewBox="0 0 640 640" aria-hidden="true">
+          <circle cx="320" cy="320" r="250" fill="none" stroke="#fff" stroke-width="56" opacity="0.2"/>
+          <circle cx="320" cy="320" r="176" fill="#b8ffe8" opacity="0.25"/>
+        </svg>
+
+        <div class="cover-mid">
+          <h1>| Thank you ⟩</h1>
+          <p class="lede">Questions, collaborations, and candid pushback on any of this are all welcome.</p>
+          <div class="thanks-card">
+            <img class="avatar" src="assets/team-giraldo.jpg" alt="Alejandro Giraldo" />
+            <div class="thanks-info">
+              <h2>Alejandro Giraldo</h2>
+              <ul class="thanks-roles">
+                <li>Quantum Engineer &amp; Researcher · Chemist · Data Architect. <b><a href="https://www.instagram.com/reel/DU0w81OAAjT/" target="_blank" rel="noopener noreferrer">At Globant Quantum Computing Studio</a></b></li>
+                <li>Co-founder, <b><a href="https://qnow.tech/" target="_blank" rel="noopener noreferrer">QNOW Technologies</a></b><br>Knowledge mining, Quantum &amp; AI research.</li>
+              </ul>
+            </div>
+            <div class="thanks-divider"></div>
+            <div class="thanks-qr">
+              <img src="assets/qr-linkedin.png" alt="QR code linking to Alejandro Giraldo's LinkedIn profile" />
+              <span>Scan to connect — linkedin.com/in/alejandrosin</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="pg">page 19 of 19</p>
+    </article>
+
+  </div>
+  <script>
+    (function fit() {
+      const stage = document.getElementById("stage");
+      const slides = document.querySelectorAll(".slide");
+      function resize() {
+        if (document.body.classList.contains("presenting")) return;
+        if (window.matchMedia("print").matches) { stage.style.transform = "none"; return; }
+        const s = Math.min(1, Math.max(0.5, (window.innerWidth - 28) / 1920));
+        stage.style.transform = "scale(" + s + ")";
+        stage.style.transformOrigin = "top left";
+        let totalH = 0;
+        slides.forEach((sl) => { totalH += Math.max(1080, sl.scrollHeight) + 28; });
+        stage.style.height = totalH * s + "px";
+        stage.style.width = 1920 * s + "px";
+      }
+      window.addEventListener("resize", resize);
+      window.addEventListener("beforeprint", () => { stage.style.transform = "none"; stage.style.width = "1920px"; stage.style.height = "auto"; });
+      window.addEventListener("afterprint", resize);
+      resize();
+      window.__fitFromScroll = resize;
+    })();
+  </script>
+  <script>
+    (function presentation() {
+      const stage = document.getElementById("stage");
+      const slides = Array.from(document.querySelectorAll(".slide"));
+      let idx = 0;
+
+      const toggle = document.createElement("button");
+      toggle.type = "button";
+      toggle.className = "present-toggle";
+      toggle.textContent = "Presentar";
+      document.body.appendChild(toggle);
+
+      const bar = document.createElement("div");
+      bar.className = "present-bar";
+      bar.innerHTML =
+        '<button type="button" class="present-btn" data-act="prev">‹</button>' +
+        '<span class="present-counter"></span>' +
+        '<button type="button" class="present-btn" data-act="next">›</button>' +
+        '<button type="button" class="present-btn" data-act="exit">Salir</button>';
+      document.body.appendChild(bar);
+      const counter = bar.querySelector(".present-counter");
+
+      const edgeLeft = document.createElement("div");
+      edgeLeft.className = "present-edge left";
+      const edgeRight = document.createElement("div");
+      edgeRight.className = "present-edge right";
+      document.body.appendChild(edgeLeft);
+      document.body.appendChild(edgeRight);
+
+      function applyScale() {
+        const s = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+        stage.style.transformOrigin = "center center";
+        stage.style.transform = "translate(-50%, -50%) scale(" + s + ")";
+      }
+
+      function showSlide(i) {
+        idx = Math.max(0, Math.min(slides.length - 1, i));
+        slides.forEach((el, n) => el.classList.toggle("is-current", n === idx));
+        counter.textContent = (idx + 1) + " / " + slides.length;
+      }
+
+      let idleTimer = null;
+      function wakeBar() {
+        bar.classList.remove("idle");
+        clearTimeout(idleTimer);
+        if (document.body.classList.contains("presenting")) {
+          idleTimer = setTimeout(() => bar.classList.add("idle"), 2200);
+        }
+      }
+
+      function enter() {
+        document.body.classList.add("presenting");
+        stage.style.width = "1920px";
+        stage.style.height = "1080px";
+        showSlide(idx);
+        applyScale();
+        wakeBar();
+        const root = document.documentElement;
+        if (root.requestFullscreen) root.requestFullscreen().catch(() => {});
+      }
+      function exit() {
+        document.body.classList.remove("presenting");
+        bar.classList.remove("idle");
+        clearTimeout(idleTimer);
+        if (document.fullscreenElement && document.exitFullscreen) document.exitFullscreen().catch(() => {});
+        if (window.__fitFromScroll) window.__fitFromScroll();
+      }
+
+      document.addEventListener("fullscreenchange", () => {
+        if (!document.fullscreenElement && document.body.classList.contains("presenting")) exit();
+      });
+
+      toggle.addEventListener("click", enter);
+      bar.addEventListener("click", (e) => {
+        const act = e.target.getAttribute("data-act");
+        if (act === "prev") showSlide(idx - 1);
+        if (act === "next") showSlide(idx + 1);
+        if (act === "exit") exit();
+      });
+      document.addEventListener("click", (e) => {
+        if (!document.body.classList.contains("presenting")) return;
+        if (e.target.closest(".present-bar") || e.target.closest(".present-toggle")) return;
+        if (e.target.closest("a") || e.target.closest(".viewer3d")) return;
+        if (e.target.closest(".present-edge.left")) { showSlide(idx - 1); return; }
+        showSlide(idx + 1);
+      });
+
+      window.addEventListener("keydown", (e) => {
+        const presenting = document.body.classList.contains("presenting");
+        if (e.key === "p" || e.key === "P") { presenting ? exit() : enter(); return; }
+        if (!presenting) return;
+        if (e.key === "ArrowRight" || e.key === " ") { showSlide(idx + 1); e.preventDefault(); }
+        if (e.key === "ArrowLeft") { showSlide(idx - 1); e.preventDefault(); }
+        if (e.key === "Escape") exit();
+      });
+      window.addEventListener("resize", () => { if (document.body.classList.contains("presenting")) applyScale(); });
+      window.addEventListener("beforeprint", exit);
+      document.addEventListener("mousemove", () => { if (document.body.classList.contains("presenting")) wakeBar(); });
+      document.addEventListener("keydown", () => { if (document.body.classList.contains("presenting")) wakeBar(); });
+      document.addEventListener("click", () => { if (document.body.classList.contains("presenting")) wakeBar(); });
+    })();
+  </script>
+  <script src="assets/3Dmol-min.js"></script>
+  <script>
+    (function initDyrk() {
+      var card = document.getElementById("protein-card");
+      var el = document.getElementById("dyrk-viewer");
+      var img = card && card.querySelector("img");
+      if (!card || !el || !img || !window.$3Dmol) return;
+
+      function stageScale() {
+        var stage = document.getElementById("stage");
+        var tr = stage ? getComputedStyle(stage).transform : "none";
+        if (!tr || tr === "none") return 1;
+        var m = tr.match(/matrix\(([^)]+)\)/);
+        if (!m) return 1;
+        var a = parseFloat(m[1].split(",")[0]);
+        return a > 0 ? a : 1;
+      }
+
+      var viewer = null;
+      var booted = false;
+
+      function boot() {
+        if (booted) return;
+        if (el.offsetWidth < 40 || el.offsetHeight < 40) {
+          requestAnimationFrame(boot);
+          return;
+        }
+        booted = true;
+        viewer = $3Dmol.createViewer(el, {
+          id: "dyrk-canvas",
+          backgroundColor: "white",
+          antialias: true
+        });
+        if (!viewer) { useStill(); return; }
+        var canvas = el.querySelector("canvas");
+        if (canvas) {
+          canvas.addEventListener("webglcontextlost", function (ev) {
+            ev.preventDefault();
+            useStill();
+          });
+        }
+        if (typeof viewer.getX === "function") {
+          var ox = viewer.getX.bind(viewer);
+          var oy = viewer.getY.bind(viewer);
+          viewer.getX = function (ev) { var x = ox(ev); return x == null ? x : x / stageScale(); };
+          viewer.getY = function (ev) { var y = oy(ev); return y == null ? y : y / stageScale(); };
+        }
+        fetch("assets/6eiq.pdb")
+          .then(function (r) { if (!r.ok) throw new Error("pdb"); return r.text(); })
+          .then(function (pdb) {
+            viewer.addModel(pdb, "pdb");
+            viewer.setStyle({}, {});
+            viewer.setStyle({ chain: "A" }, { cartoon: { color: "spectrum" } });
+            viewer.setStyle({ chain: "A", resn: "B6Z" }, { stick: { radius: 0.18, colorscheme: "Jmol" } });
+            viewer.zoomTo({ chain: "A" });
+            viewer.render();
+            confirmOrStill(6);
+          })
+          .catch(useStill);
+      }
+
+      function useStill() {
+        card.classList.remove("is-3d");
+        card.classList.add("is-fallback");
+        el.setAttribute("aria-hidden", "true");
+      }
+
+      function canvasShowsTarget() {
+        var canvas = el.querySelector("canvas");
+        if (!canvas || canvas.width < 8 || canvas.height < 8) return false;
+        var side = 24;
+        var probe = document.createElement("canvas");
+        probe.width = side;
+        probe.height = side;
+        var ctx = probe.getContext("2d", { willReadFrequently: true });
+        if (!ctx) return false;
+        var data;
+        try {
+          ctx.drawImage(canvas, 0, 0, side, side);
+          data = ctx.getImageData(0, 0, side, side).data;
+        } catch (e) {
+          return false;
+        }
+        for (var i = 0; i < data.length; i += 4) {
+          var empty = data[i + 3] === 0;
+          var white = data[i] > 245 && data[i + 1] > 245 && data[i + 2] > 245;
+          if (!empty && !white) return true;
+        }
+        return false;
+      }
+
+      function confirmOrStill(tries) {
+        if (canvasShowsTarget()) {
+          card.classList.remove("is-fallback");
+          card.classList.add("is-3d");
+          el.removeAttribute("aria-hidden");
+          return;
+        }
+        if (tries > 0) {
+          setTimeout(function () {
+            try { if (viewer) viewer.render(); } catch (e) { /* still image covers a blank canvas */ }
+            confirmOrStill(tries - 1);
+          }, 200);
+          return;
+        }
+        useStill();
+      }
+
+      if (img.complete) boot();
+      else {
+        img.addEventListener("load", boot);
+        img.addEventListener("error", boot);
+      }
+    })();
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js"></script>
+  <script>
+    (function () {
+      var el = document.querySelector("#slide-thanks h1");
+      if (!el || !window.katex) return;
+      katex.render("\\left|\\,\\text{Thank you}\\,\\right\\rangle", el, { throwOnError: false, displayMode: false });
+    })();
+  </script>
+</body>
+</html>

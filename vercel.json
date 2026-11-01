@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/", "destination": "/one-pager-for-researchers.html" }
+  ]
+}
