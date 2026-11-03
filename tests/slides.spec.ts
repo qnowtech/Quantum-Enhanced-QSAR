@@ -113,9 +113,9 @@ async function auditSlides(page: Page): Promise<Audit> {
     }
 
     const marks: Array<[string, number, number]> = [
-      ["#slide3 .ad .rail", 60, 12],
-      ["#slide3 .ad .dot", 10, 10],
-      ["#slide3 .ad .tick", 1, 12],
+      ["#slide3 .domain .rail", 60, 12],
+      ["#slide3 .domain .dot", 10, 10],
+      ["#slide3 .domain .tick", 1, 12],
     ];
     marks.forEach(([selector, minW, minH]) => {
       const boxes = boxOf(selector);
@@ -131,8 +131,8 @@ async function auditSlides(page: Page): Promise<Audit> {
     });
 
     const chart = document.querySelector("#slide3 .chart");
-    const outside = document.querySelector("#slide3 .ad .dot.out");
-    const rail = document.querySelector("#slide3 .ad .rail");
+    const outside = document.querySelector("#slide3 .domain .dot.out");
+    const rail = document.querySelector("#slide3 .domain .rail");
     if (outside && rail) {
       const edge = getComputedStyle(outside).borderTopColor;
       const fill = getComputedStyle(rail).backgroundColor;
@@ -145,7 +145,7 @@ async function auditSlides(page: Page): Promise<Audit> {
       document.getElementById("slide3")?.scrollIntoView({ block: "center" });
       const paper = getComputedStyle(chart).backgroundColor;
       const host = chart.getBoundingClientRect();
-      document.querySelectorAll("#slide3 .ad .rail").forEach((node, index) => {
+      document.querySelectorAll("#slide3 .domain .rail").forEach((node, index) => {
         const bar = node as HTMLElement;
         const box = bar.getBoundingClientRect();
         if (!paintedInside(box, host, 0.9)) {
@@ -162,7 +162,7 @@ async function auditSlides(page: Page): Promise<Audit> {
           problems.push(`applicability rail ${index + 1} is covered by ${name}`);
         }
       });
-      document.querySelectorAll("#slide3 .ad .who, #slide3 .ad .verdict").forEach((node) => {
+      document.querySelectorAll("#slide3 .domain .who, #slide3 .domain .verdict").forEach((node) => {
         const el = node as HTMLElement;
         const box = el.getBoundingClientRect();
         const text = (el.innerText || "").replace(/\s+/g, " ").trim();
@@ -171,7 +171,7 @@ async function auditSlides(page: Page): Promise<Audit> {
         }
         if (!paintedInside(box, host, 0.9)) problems.push(`applicability label “${text}” is clipped by the chart`);
       });
-      const labels = [...document.querySelectorAll("#slide3 .ad .who, #slide3 .ad .verdict")]
+      const labels = [...document.querySelectorAll("#slide3 .domain .who, #slide3 .domain .verdict")]
         .map((node) => (node as HTMLElement).innerText || "")
         .join(" ");
       ["Classical", "Quantum", "Outside", "Inside"].forEach((word) => {

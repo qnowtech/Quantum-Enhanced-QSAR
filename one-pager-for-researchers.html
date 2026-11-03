@@ -925,36 +925,36 @@
     #slide3 .candidates { height: 100%; }
     #slide3 .cand { height: 100%; }
     #slide3 { overflow: visible; }
-    #slide3 .right, #slide3 .chart, #slide3 .ad { overflow: visible; }
+    #slide3 .right, #slide3 .chart, #slide3 .domain { overflow: visible; }
     #slide3 .chart { overflow: visible; }
-    #slide3 .ad { flex: 1 0 auto; display: flex; flex-direction: column; justify-content: center; margin-top: 4px; }
-    #slide3 .ad-scale, #slide3 .ad-row, #slide3 .ad-mean { flex: 0 0 auto; position: relative; z-index: 1; }
-    #slide3 .ad-scale, #slide3 .ad-row { display: flex; align-items: center; gap: 14px; }
-    #slide3 .ad-scale { height: auto; min-height: 28px; font-size: 16px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
-    #slide3 .ad-scale .axis { position: relative; flex: 1 1 auto; min-width: 0; height: 18px; }
-    #slide3 .ad-scale .in { position: absolute; left: 0; }
-    #slide3 .ad-scale .out { position: absolute; right: 0; }
-    #slide3 .ad-scale .th { position: absolute; left: 64.5%; transform: translateX(-50%); color: var(--ink); }
-    #slide3 .ad-scale > span:empty { flex: 0 0 200px; }
-    #slide3 .ad-scale > span:last-child:empty { flex-basis: 140px; }
-    #slide3 .ad-row { margin-top: 6px; min-height: 64px; }
-    #slide3 .ad .who { flex: 0 0 200px; font-family: "Montserrat", sans-serif; font-weight: 800; font-size: 26px; letter-spacing: -0.03em; line-height: 1.1; color: var(--ink); }
-    #slide3 .ad .who span { display: block; margin-top: 3px; font-family: "DM Sans", sans-serif; font-weight: 600; font-size: 16px; letter-spacing: 0; color: var(--muted); }
-    #slide3 .ad .ruler { position: relative; flex: 1 1 auto; min-width: 80px; height: 64px; }
-    #slide3 .ad .rail { position: absolute; left: 0; right: 0; top: 14px; height: 36px; border-radius: 999px; background: #5f8f88; }
-    #slide3 .ad .near { position: absolute; left: 0; top: 0; bottom: 0; width: 64.5%; border-radius: 999px 0 0 999px; background: #0d5c56; }
-    #slide3 .ad .tick { position: absolute; left: 64.5%; top: 6px; width: 4px; height: 52px; background: var(--ink); }
-    #slide3 .ad .tick b { position: absolute; top: 54px; left: 50%; transform: translateX(-50%); font-size: 16px; font-weight: 700; color: var(--ink); }
-    #slide3 .ad .dot { position: absolute; top: 16px; left: var(--end); width: 32px; height: 32px; border-radius: 50%; transform: translateX(-50%); }
-    #slide3 .ad .dot.in { background: var(--ibm); border: 4px solid #fff; }
-    #slide3 .ad .dot.out { background: #fff; border: 4px solid #143844; }
-    #slide3 .ad .verdict { flex: 0 0 140px; font-family: "Montserrat", sans-serif; font-weight: 800; font-size: 28px; letter-spacing: -0.03em; line-height: 1; color: var(--ink); }
-    #slide3 .ad .verdict small { display: block; margin-top: 5px; font-family: "DM Sans", sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 0; color: var(--muted); }
-    #slide3 .ad .verdict.in { color: var(--ibm); }
-    #slide3 .ad .verdict.out { color: var(--classic); }
-    #slide3 .ad-mean { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
-    #slide3 .ad-mean p { margin: 0; padding: 10px 12px; border-radius: 12px; background: #f3faf8; font-size: 15px; line-height: 1.35; color: #24564f; }
-    #slide3 .ad-mean b { font-family: "Montserrat", sans-serif; letter-spacing: -0.02em; color: var(--ink); }
+    #slide3 .domain { flex: 1 0 auto; display: flex; flex-direction: column; justify-content: center; margin-top: 4px; }
+    #slide3 .domain-scale, #slide3 .domain-row, #slide3 .domain-mean { flex: 0 0 auto; position: relative; z-index: 1; }
+    #slide3 .domain-scale, #slide3 .domain-row { display: flex; align-items: center; gap: 14px; }
+    #slide3 .domain-scale { height: auto; min-height: 28px; font-size: 16px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+    #slide3 .domain-scale .axis { position: relative; flex: 1 1 auto; min-width: 0; height: 18px; }
+    #slide3 .domain-scale .in { position: absolute; left: 0; }
+    #slide3 .domain-scale .out { position: absolute; right: 0; }
+    #slide3 .domain-scale .th { position: absolute; left: 64.5%; transform: translateX(-50%); color: var(--ink); }
+    #slide3 .domain-scale > span:empty { flex: 0 0 200px; }
+    #slide3 .domain-scale > span:last-child:empty { flex-basis: 140px; }
+    #slide3 .domain-row { margin-top: 6px; min-height: 64px; }
+    #slide3 .domain .who { flex: 0 0 200px; font-family: "Montserrat", sans-serif; font-weight: 800; font-size: 26px; letter-spacing: -0.03em; line-height: 1.1; color: var(--ink); }
+    #slide3 .domain .who span { display: block; margin-top: 3px; font-family: "DM Sans", sans-serif; font-weight: 600; font-size: 16px; letter-spacing: 0; color: var(--muted); }
+    #slide3 .domain .ruler { position: relative; flex: 1 1 auto; min-width: 80px; height: 64px; }
+    #slide3 .domain .rail { position: absolute; left: 0; right: 0; top: 14px; height: 36px; border-radius: 999px; background: #5f8f88; }
+    #slide3 .domain .near { position: absolute; left: 0; top: 0; bottom: 0; width: 64.5%; border-radius: 999px 0 0 999px; background: #0d5c56; }
+    #slide3 .domain .tick { position: absolute; left: 64.5%; top: 6px; width: 4px; height: 52px; background: var(--ink); }
+    #slide3 .domain .tick b { position: absolute; top: 54px; left: 50%; transform: translateX(-50%); font-size: 16px; font-weight: 700; color: var(--ink); }
+    #slide3 .domain .dot { position: absolute; top: 16px; left: var(--end); width: 32px; height: 32px; border-radius: 50%; transform: translateX(-50%); }
+    #slide3 .domain .dot.in { background: var(--ibm); border: 4px solid #fff; }
+    #slide3 .domain .dot.out { background: #fff; border: 4px solid #143844; }
+    #slide3 .domain .verdict { flex: 0 0 140px; font-family: "Montserrat", sans-serif; font-weight: 800; font-size: 28px; letter-spacing: -0.03em; line-height: 1; color: var(--ink); }
+    #slide3 .domain .verdict small { display: block; margin-top: 5px; font-family: "DM Sans", sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 0; color: var(--muted); }
+    #slide3 .domain .verdict.in { color: var(--ibm); }
+    #slide3 .domain .verdict.out { color: var(--classic); }
+    #slide3 .domain-mean { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
+    #slide3 .domain-mean p { margin: 0; padding: 10px 12px; border-radius: 12px; background: #f3faf8; font-size: 15px; line-height: 1.35; color: #24564f; }
+    #slide3 .domain-mean b { font-family: "Montserrat", sans-serif; letter-spacing: -0.02em; color: var(--ink); }
     #slide-flow { height: 1080px; min-height: 1080px; overflow: hidden; grid-template-rows: auto 1fr; }
     #slide-flow .body { grid-template-columns: 1fr; grid-template-rows: auto 1fr; padding: 16px 48px 48px; gap: 14px; min-height: 0; }
     #slide-flow .pipe { list-style: none; display: grid; grid-template-columns: repeat(5, 1fr); gap: 22px; margin: 0; padding: 0; }
@@ -1169,13 +1169,13 @@
     body.presenting #slide-score.slide.is-current .share span { animation: share-in 0.5s ease-out forwards; }
 
     /* One continuous move at constant speed. Durations scale with distance, so the inside dot stops first and the outside dot keeps going. */
-    @keyframes ad-dot {
+    @keyframes domain-dot {
       from { left: 0%; }
       to { left: var(--end); }
     }
-    body.presenting #slide3 .ad .dot { left: 0%; animation: none; }
-    body.presenting #slide3.slide.is-current .ad .dot.in { animation: ad-dot 1.05s linear 0.2s both; }
-    body.presenting #slide3.slide.is-current .ad .dot.out { animation: ad-dot 1.57s linear 0.2s both; }
+    body.presenting #slide3 .domain .dot { left: 0%; animation: none; }
+    body.presenting #slide3.slide.is-current .domain .dot.in { animation: domain-dot 1.05s linear 0.2s both; }
+    body.presenting #slide3.slide.is-current .domain .dot.out { animation: domain-dot 1.57s linear 0.2s both; }
 
     @keyframes mark-in { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
     html.js-motion #slide1:not(.is-revealing) .membership .vdots i { transform: scale(0); opacity: 0; }
@@ -1273,7 +1273,7 @@
       .stage { width: 1920px !important; height: auto !important; margin: 0 !important; zoom: 1 !important; transform: none !important; }
       .slide { page-break-after: always; overflow: visible; height: auto; min-height: 1080px; margin-bottom: 0; }
       .slide:last-child { page-break-after: avoid; }
-      #slide3 .ad .dot { left: var(--end) !important; animation: none !important; }
+      #slide3 .domain .dot { left: var(--end) !important; animation: none !important; }
       #slide-score .board .track i { animation: none !important; width: var(--end) !important; }
       #slide1 .membership .vdots i,
       #slide-funnel .funnel-stages .glyph :is(circle, rect) { animation: none !important; transform: none !important; opacity: 1 !important; }
@@ -2081,7 +2081,7 @@
                 <rect x="1188" y="16" width="476" height="528" rx="16" fill="#143844"/>
                 <text x="1426" y="52" text-anchor="middle" fill="#fff" font-size="22" font-weight="700"><tspan fill="#5ee6c9" font-size="15">3</tspan><tspan dx="12">The read</tspan></text>
                 <text x="1426" y="82" text-anchor="middle" fill="#9fd9cf" font-size="16" font-weight="600">Three numbers from each qubit</text>
-                <g class="read-rows" transform="translate(93 0)">
+                <g class="redomain-rows" transform="translate(93 0)">
                   <rect x="1216" y="116" width="72" height="64" rx="10" fill="#5ee6c9"/>
                   <text x="1252" y="156" text-anchor="middle" fill="#143844" font-size="28" font-weight="700">X</text>
                   <text x="1312" y="142" fill="#fff" font-size="18" font-weight="700">expectation of X</text>
@@ -2444,8 +2444,8 @@
           <div class="chart">
             <h4>Why the classical table misses 5-Iodotubercidin specifically</h4>
             <p class="sub">Applicability domain. The table sits past its threshold. The quantum vector still covers the molecule.</p>
-            <div class="ad">
-              <div class="ad-scale">
+            <div class="domain">
+              <div class="domain-scale">
                 <span></span>
                 <div class="axis">
                   <span class="in">Inside</span>
@@ -2454,7 +2454,7 @@
                 </div>
                 <span></span>
               </div>
-              <div class="ad-row">
+              <div class="domain-row">
                 <div class="who">Classical<span>applicability domain</span></div>
                 <div class="ruler">
                   <div class="rail"><div class="near"></div></div>
@@ -2463,7 +2463,7 @@
                 </div>
                 <div class="verdict out">Outside</div>
               </div>
-              <div class="ad-row">
+              <div class="domain-row">
                 <div class="who">Quantum<span>applicability domain</span></div>
                 <div class="ruler">
                   <div class="rail"><div class="near"></div></div>
@@ -2472,7 +2472,7 @@
                 </div>
                 <div class="verdict in">Inside</div>
               </div>
-              <div class="ad-mean">
+              <div class="domain-mean">
                 <p><b>Inside.</b> At or before the threshold. The training neighborhood still covers the molecule.</p>
                 <p><b>Outside.</b> Past the threshold. No close training analogue.</p>
               </div>
