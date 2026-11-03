@@ -443,8 +443,8 @@
     #slide0 .industry-legend .ico.c2 { background: #14968c; }
     #slide0 .industry-legend .ico.c3 { background: #2a9a86; }
     #slide0 .industry-legend .ico.c4 { background: #0e7a72; color: #fff; }
-    #slide0 .industry-legend b { display: block; font-family: "Montserrat", sans-serif; font-weight: 800; font-size: 28px; letter-spacing: -0.02em; line-height: 1.15; }
-    #slide0 .industry-legend span { display: block; margin-top: 6px; font-size: 18px; line-height: 1.35; color: #2d5a5c; }
+    #slide0 .industry-legend b { display: block; font-family: "Montserrat", sans-serif; font-weight: 800; font-size: 30px; letter-spacing: -0.02em; line-height: 1.15; }
+    #slide0 .industry-legend span { display: block; margin-top: 6px; font-size: 20px; line-height: 1.35; color: #2d5a5c; }
     #slide-joint {
       height: 1080px;
       min-height: 1080px;
@@ -641,13 +641,12 @@
     .funnel-stages li { display: flex; flex-direction: column; justify-content: center; padding: 0 26px 0 34px; min-width: 0; }
     .funnel-stages .k { font-size: 13px; font-weight: 700; letter-spacing: 0.01em; color: var(--muted); margin-bottom: 10px; }
     .funnel-stages h3 { font-family: "Montserrat", sans-serif; font-size: 30px; letter-spacing: -0.03em; line-height: 1.05; margin-bottom: 8px; color: var(--ink); }
-    .funnel-stages p { font-size: 18px; line-height: 1.35; color: #2d5a5c; }
+    .funnel-stages p { font-size: 22px; line-height: 1.35; color: #2d5a5c; }
     .funnel-stages li.here h3,
     .funnel-stages li.here { color: #fff; }
     .funnel-stages li.here .k,
     .funnel-stages li.here p { color: rgba(255,255,255,0.92); }
     .funnel-stages .mark { margin-top: 16px; align-self: flex-start; font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; border: 1px solid rgba(255,255,255,0.6); border-radius: 999px; padding: 5px 12px; }
-    .funnel-stages li.here p.sit { margin-top: 12px; font-size: 15px; line-height: 1.3; }
     .funnel-stages .glyph { display: block; margin-bottom: 14px; }
     .funnel-caption { font-size: 32px; line-height: 1.35; color: #2d5a5c; max-width: none; width: 100%; margin-left: 0; align-self: stretch; list-style: none; display: grid; gap: 12px; }
     .funnel-caption li { padding-left: 28px; position: relative; }
@@ -680,6 +679,9 @@
     .qwhy .tag { font-size: var(--label); font-weight: 700; letter-spacing: 0.01em; color: var(--muted); margin-bottom: 6px; }
     .qwhy h3 { font-family: "Montserrat", sans-serif; font-size: 24px; letter-spacing: -0.02em; margin-bottom: 8px; color: var(--ink); }
     .qwhy p { font-size: 19px; line-height: 1.45; color: #2d5a5c; }
+    #slide-target .qwhy .tag { font-size: 14px; }
+    #slide-target .qwhy h3 { font-size: 25px; }
+    #slide-target .qwhy p { font-size: 20px; }
     .qwhy strong { color: var(--ink); font-weight: 700; }
 
     /* Pre-slide — green description | cream setup, classic beside quantum */
@@ -921,25 +923,27 @@
     #slide3 .left { grid-template-rows: 1fr; }
     #slide3 .candidates { height: 100%; }
     #slide3 .cand { height: 100%; }
-    #slide3 .ad { flex: 1; display: flex; flex-direction: column; justify-content: center; min-height: 0; margin-top: 4px; }
-    #slide3 .ad-scale, #slide3 .ad-row { display: grid; grid-template-columns: 168px 1fr 148px; gap: 14px; align-items: center; }
-    #slide3 .ad-scale { height: 24px; font-size: 14px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
-    #slide3 .ad-scale .axis { position: relative; height: 16px; }
+    #slide3 .chart { overflow: visible; }
+    #slide3 .ad { flex: 1 0 auto; display: flex; flex-direction: column; justify-content: center; min-height: 0; margin-top: 4px; }
+    #slide3 .ad-scale, #slide3 .ad-row, #slide3 .ad-mean { flex: 0 0 auto; }
+    #slide3 .ad-scale, #slide3 .ad-row { display: grid; grid-template-columns: 200px minmax(0, 1fr) 160px; gap: 14px; align-items: center; }
+    #slide3 .ad-scale { height: 28px; font-size: 16px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+    #slide3 .ad-scale .axis { position: relative; height: 18px; }
     #slide3 .ad-scale .in { position: absolute; left: 0; }
     #slide3 .ad-scale .out { position: absolute; right: 0; }
     #slide3 .ad-scale .th { position: absolute; left: 64.5%; transform: translateX(-50%); color: var(--ink); }
-    #slide3 .ad-row { margin-top: 8px; }
-    #slide3 .ad .who { font-family: "Montserrat", sans-serif; font-weight: 800; font-size: 16px; letter-spacing: -0.03em; line-height: 1.15; }
-    #slide3 .ad .who span { display: block; margin-top: 3px; font-family: "DM Sans", sans-serif; font-weight: 600; font-size: 13px; letter-spacing: 0; color: var(--muted); }
-    #slide3 .ad .ruler { position: relative; height: 72px; }
-    #slide3 .ad .rail { position: absolute; left: 0; right: 0; top: 22px; height: 18px; border-radius: 999px; background: #d5e6e1; }
-    #slide3 .ad .near { position: absolute; left: 0; top: 0; bottom: 0; width: 64.5%; border-radius: 999px 0 0 999px; background: #9fd4cb; }
-    #slide3 .ad .tick { position: absolute; left: 64.5%; top: 10px; width: 4px; height: 42px; background: var(--ink); }
-    #slide3 .ad .tick b { position: absolute; top: 44px; left: 50%; transform: translateX(-50%); font-size: 15px; font-weight: 700; color: var(--ink); }
-    #slide3 .ad .dot { position: absolute; top: 18px; left: var(--end); width: 26px; height: 26px; border-radius: 50%; transform: translateX(-50%); }
-    #slide3 .ad .dot.in { background: var(--ibm); border: 3px solid #fff; }
-    #slide3 .ad .dot.out { background: #fff; border: 3.5px solid #143844; }
-    #slide3 .ad .verdict { font-family: "Montserrat", sans-serif; font-weight: 800; font-size: 22px; letter-spacing: -0.03em; line-height: 1; }
+    #slide3 .ad-row { margin-top: 6px; }
+    #slide3 .ad .who { font-family: "Montserrat", sans-serif; font-weight: 800; font-size: 26px; letter-spacing: -0.03em; line-height: 1.1; color: var(--ink); }
+    #slide3 .ad .who span { display: block; margin-top: 3px; font-family: "DM Sans", sans-serif; font-weight: 600; font-size: 16px; letter-spacing: 0; color: var(--muted); }
+    #slide3 .ad .ruler { position: relative; height: 84px; }
+    #slide3 .ad .rail { position: absolute; left: 0; right: 0; top: 18px; height: 36px; border-radius: 999px; background: #5f8f88; }
+    #slide3 .ad .near { position: absolute; left: 0; top: 0; bottom: 0; width: 64.5%; border-radius: 999px 0 0 999px; background: #0d5c56; }
+    #slide3 .ad .tick { position: absolute; left: 64.5%; top: 8px; width: 4px; height: 56px; background: var(--ink); }
+    #slide3 .ad .tick b { position: absolute; top: 58px; left: 50%; transform: translateX(-50%); font-size: 16px; font-weight: 700; color: var(--ink); }
+    #slide3 .ad .dot { position: absolute; top: 21px; left: var(--end); width: 32px; height: 32px; border-radius: 50%; transform: translateX(-50%); }
+    #slide3 .ad .dot.in { background: var(--ibm); border: 4px solid #fff; }
+    #slide3 .ad .dot.out { background: #fff; border: 4px solid #143844; }
+    #slide3 .ad .verdict { font-family: "Montserrat", sans-serif; font-weight: 800; font-size: 28px; letter-spacing: -0.03em; line-height: 1; color: var(--ink); }
     #slide3 .ad .verdict small { display: block; margin-top: 5px; font-family: "DM Sans", sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 0; color: var(--muted); }
     #slide3 .ad .verdict.in { color: var(--ibm); }
     #slide3 .ad .verdict.out { color: var(--classic); }
@@ -1065,24 +1069,24 @@
     .membership article.qpu .k { color: var(--teal-0); }
     .membership h3 { font-family: "Montserrat", sans-serif; font-size: 40px; font-weight: 800; letter-spacing: -0.04em; margin: 0; line-height: 0.95; color: var(--ink); white-space: nowrap; }
     .membership h3 span { font-size: 18px; font-weight: 700; letter-spacing: -0.02em; color: #3d6a66; }
-    .membership .lenses { grid-column: 1 / -1; position: relative; height: 150px; margin-top: 8px; }
-    .membership .lens { position: absolute; top: 16px; height: 118px; border-radius: 59px; display: flex; align-items: center; }
+    .membership .lenses { grid-column: 1 / -1; position: relative; height: 172px; margin-top: 8px; }
+    .membership .lens { position: absolute; top: 12px; height: 144px; border-radius: 72px; display: flex; align-items: center; }
     .membership .lens.q { left: 0; width: 62%; background: rgba(14,122,114,0.16); border: 2px solid #0e7a72; }
     .membership .lens.t { right: 0; width: 62%; background: rgba(20,56,68,0.08); border: 2px solid var(--ink); justify-content: flex-end; }
-    .membership .lens .cap { width: 38%; text-align: center; padding: 0 8px; }
-    .membership .lens .name, .membership .overlap .name { font-size: 12px; font-weight: 800; line-height: 1.2; }
+    .membership .lens .cap { width: 46%; text-align: center; padding: 0 4px; }
+    .membership .lens .name, .membership .overlap .name { font-size: 15px; font-weight: 800; line-height: 1.15; }
     .membership .lens.q .name { color: #0e7a72; }
     .membership .lens.t .name { color: var(--ink); }
-    .membership .vdots { display: flex; flex-wrap: nowrap; gap: 4px; justify-content: center; margin-top: 6px; }
-    .membership .vdots i { width: 12px; height: 12px; border-radius: 50%; background: #0e7a72; display: block; flex: 0 0 auto; }
+    .membership .vdots { display: flex; flex-wrap: nowrap; gap: 5px; justify-content: center; margin-top: 7px; }
+    .membership .vdots i { width: 14px; height: 14px; border-radius: 50%; background: #0e7a72; display: block; flex: 0 0 auto; }
     .membership .vdots i.off { background: #fff; box-shadow: inset 0 0 0 1.6px #8fafa9; }
     .membership .lens.t .vdots i { background: var(--ink); }
     .membership .lens.t .vdots i.off { background: #fff; box-shadow: inset 0 0 0 1.6px var(--ink); }
-    .membership .lens .eq { display: block; margin-top: 5px; font-size: 12px; font-weight: 800; line-height: 1.2; color: #2d5a5c; white-space: nowrap; }
-    .membership .overlap { position: absolute; left: 50%; top: 38px; transform: translateX(-50%); width: 168px; text-align: center; }
+    .membership .lens .eq { display: block; margin-top: 5px; font-size: 15px; font-weight: 800; line-height: 1.15; letter-spacing: -0.02em; color: #2d5a5c; white-space: nowrap; }
+    .membership .overlap { position: absolute; left: 50%; top: 46px; transform: translateX(-50%); width: 214px; text-align: center; }
     .membership .overlap .name { color: var(--ink); }
-    .membership .overlap b { display: block; font-family: "Montserrat", sans-serif; font-size: 28px; font-weight: 800; letter-spacing: -0.04em; line-height: 1; color: var(--ink); }
-    .membership .overlap .eq { display: block; margin-top: 3px; font-size: 12px; font-weight: 800; color: #2d5a5c; white-space: nowrap; }
+    .membership .overlap b { display: block; font-family: "Montserrat", sans-serif; font-size: 32px; font-weight: 800; letter-spacing: -0.04em; line-height: 1; color: var(--ink); }
+    .membership .overlap .eq { display: block; margin-top: 3px; font-size: 15px; font-weight: 800; letter-spacing: -0.02em; color: #2d5a5c; white-space: nowrap; }
     #slide1 .hits { grid-template-rows: auto 1fr; }
     #slide1 .hits .sample { grid-column: 1 / -1; margin: 0; font-size: 14px; font-weight: 700; line-height: 1.3; color: var(--ink); }
 
@@ -1181,29 +1185,62 @@
     #slide1.is-revealing .membership .vdots i:nth-child(8) { animation-delay: 0.42s; }
     #slide1.is-revealing .membership .vdots i:nth-child(9) { animation-delay: 0.48s; }
 
-    .funnel-stages li.here .glyph circle { transform-box: fill-box; transform-origin: center; }
-    html.js-motion #slide-funnel:not(.is-revealing) li.here .glyph circle { transform: scale(0); opacity: 0; }
-    #slide-funnel.is-revealing li.here .glyph circle {
-      animation: mark-in 1.05s cubic-bezier(0.22, 0.8, 0.28, 1) both;
+    /* One stage at a time, left to right. Dots inside a stage use the same pop as QSAR. --pace scales the whole sequence. */
+    #slide-funnel .funnel-stages { --pace: 0.85; }
+    #slide-funnel .funnel-stages > li:nth-child(1) { --stage: 0s; }
+    #slide-funnel .funnel-stages > li:nth-child(2) { --stage: 1.05s; }
+    #slide-funnel .funnel-stages > li:nth-child(3) { --stage: 2.2s; }
+    #slide-funnel .funnel-stages > li:nth-child(4) { --stage: 3.35s; }
+    #slide-funnel .funnel-stages > li:nth-child(5) { --stage: 4.2s; }
+    .funnel-stages .glyph :is(circle, rect) { transform-box: fill-box; transform-origin: center; }
+    html.js-motion #slide-funnel:not(.is-revealing) .funnel-stages .glyph :is(circle, rect) { transform: scale(0); opacity: 0; }
+    #slide-funnel.is-revealing .funnel-stages .glyph :is(circle, rect) {
+      animation: mark-in calc(1.05s * var(--pace)) cubic-bezier(0.22, 0.8, 0.28, 1) both;
+      animation-delay: calc(var(--stage) * var(--pace));
     }
-    #slide-funnel.is-revealing li.here .glyph g:first-of-type circle:nth-child(2) { animation-delay: 0.04s; }
-    #slide-funnel.is-revealing li.here .glyph g:first-of-type circle:nth-child(3) { animation-delay: 0.08s; }
-    #slide-funnel.is-revealing li.here .glyph g:first-of-type circle:nth-child(4) { animation-delay: 0.12s; }
-    #slide-funnel.is-revealing li.here .glyph g:first-of-type circle:nth-child(5) { animation-delay: 0.16s; }
-    #slide-funnel.is-revealing li.here .glyph g:first-of-type circle:nth-child(6) { animation-delay: 0.2s; }
-    #slide-funnel.is-revealing li.here .glyph g:first-of-type circle:nth-child(7) { animation-delay: 0.24s; }
-    #slide-funnel.is-revealing li.here .glyph g:first-of-type circle:nth-child(8) { animation-delay: 0.28s; }
-    #slide-funnel.is-revealing li.here .glyph g:first-of-type circle:nth-child(9) { animation-delay: 0.32s; }
-    #slide-funnel.is-revealing li.here .glyph g:first-of-type circle:nth-child(10) { animation-delay: 0.36s; }
-    #slide-funnel.is-revealing li.here .glyph g:first-of-type circle:nth-child(11) { animation-delay: 0.4s; }
-    #slide-funnel.is-revealing li.here .glyph g:first-of-type circle:nth-child(12) { animation-delay: 0.44s; }
-    #slide-funnel.is-revealing li.here .glyph g:first-of-type circle:nth-child(13) { animation-delay: 0.48s; }
-    #slide-funnel.is-revealing li.here .glyph g:first-of-type circle:nth-child(14) { animation-delay: 0.52s; }
-    #slide-funnel.is-revealing li.here .glyph g:last-of-type circle:nth-child(1) { animation-delay: 0.28s; }
-    #slide-funnel.is-revealing li.here .glyph g:last-of-type circle:nth-child(2) { animation-delay: 0.36s; }
-    #slide-funnel.is-revealing li.here .glyph g:last-of-type circle:nth-child(3) { animation-delay: 0.44s; }
-    #slide-funnel.is-revealing li.here .glyph g:last-of-type circle:nth-child(4) { animation-delay: 0.52s; }
-    #slide-funnel.is-revealing li.here .glyph g:last-of-type circle:nth-child(5) { animation-delay: 0.6s; }
+    #slide-funnel.is-revealing .funnel-stages > li:nth-child(1) .glyph circle:nth-child(2) { animation-delay: calc((var(--stage) + 0.04s) * var(--pace)); }
+    #slide-funnel.is-revealing .funnel-stages > li:nth-child(1) .glyph circle:nth-child(3) { animation-delay: calc((var(--stage) + 0.08s) * var(--pace)); }
+    #slide-funnel.is-revealing .funnel-stages > li:nth-child(1) .glyph circle:nth-child(4) { animation-delay: calc((var(--stage) + 0.12s) * var(--pace)); }
+    #slide-funnel.is-revealing .funnel-stages > li:nth-child(1) .glyph circle:nth-child(5) { animation-delay: calc((var(--stage) + 0.16s) * var(--pace)); }
+    #slide-funnel.is-revealing .funnel-stages > li:nth-child(1) .glyph circle:nth-child(6) { animation-delay: calc((var(--stage) + 0.2s) * var(--pace)); }
+    #slide-funnel.is-revealing .funnel-stages > li:nth-child(1) .glyph circle:nth-child(7) { animation-delay: calc((var(--stage) + 0.24s) * var(--pace)); }
+    #slide-funnel.is-revealing .funnel-stages > li:nth-child(1) .glyph circle:nth-child(8) { animation-delay: calc((var(--stage) + 0.28s) * var(--pace)); }
+    #slide-funnel.is-revealing .funnel-stages > li:nth-child(1) .glyph circle:nth-child(9) { animation-delay: calc((var(--stage) + 0.32s) * var(--pace)); }
+    #slide-funnel.is-revealing .funnel-stages > li:nth-child(1) .glyph circle:nth-child(10) { animation-delay: calc((var(--stage) + 0.36s) * var(--pace)); }
+    #slide-funnel.is-revealing .funnel-stages > li:nth-child(1) .glyph circle:nth-child(11) { animation-delay: calc((var(--stage) + 0.4s) * var(--pace)); }
+    #slide-funnel.is-revealing .funnel-stages > li:nth-child(1) .glyph circle:nth-child(12) { animation-delay: calc((var(--stage) + 0.44s) * var(--pace)); }
+    #slide-funnel.is-revealing .funnel-stages > li:nth-child(1) .glyph circle:nth-child(13) { animation-delay: calc((var(--stage) + 0.48s) * var(--pace)); }
+    #slide-funnel.is-revealing .funnel-stages > li:nth-child(1) .glyph circle:nth-child(14) { animation-delay: calc((var(--stage) + 0.52s) * var(--pace)); }
+    #slide-funnel.is-revealing li.here .glyph g:first-of-type circle:nth-child(2) { animation-delay: calc((var(--stage) + 0.04s) * var(--pace)); }
+    #slide-funnel.is-revealing li.here .glyph g:first-of-type circle:nth-child(3) { animation-delay: calc((var(--stage) + 0.08s) * var(--pace)); }
+    #slide-funnel.is-revealing li.here .glyph g:first-of-type circle:nth-child(4) { animation-delay: calc((var(--stage) + 0.12s) * var(--pace)); }
+    #slide-funnel.is-revealing li.here .glyph g:first-of-type circle:nth-child(5) { animation-delay: calc((var(--stage) + 0.16s) * var(--pace)); }
+    #slide-funnel.is-revealing li.here .glyph g:first-of-type circle:nth-child(6) { animation-delay: calc((var(--stage) + 0.2s) * var(--pace)); }
+    #slide-funnel.is-revealing li.here .glyph g:first-of-type circle:nth-child(7) { animation-delay: calc((var(--stage) + 0.24s) * var(--pace)); }
+    #slide-funnel.is-revealing li.here .glyph g:first-of-type circle:nth-child(8) { animation-delay: calc((var(--stage) + 0.28s) * var(--pace)); }
+    #slide-funnel.is-revealing li.here .glyph g:first-of-type circle:nth-child(9) { animation-delay: calc((var(--stage) + 0.32s) * var(--pace)); }
+    #slide-funnel.is-revealing li.here .glyph g:first-of-type circle:nth-child(10) { animation-delay: calc((var(--stage) + 0.36s) * var(--pace)); }
+    #slide-funnel.is-revealing li.here .glyph g:first-of-type circle:nth-child(11) { animation-delay: calc((var(--stage) + 0.4s) * var(--pace)); }
+    #slide-funnel.is-revealing li.here .glyph g:first-of-type circle:nth-child(12) { animation-delay: calc((var(--stage) + 0.44s) * var(--pace)); }
+    #slide-funnel.is-revealing li.here .glyph g:first-of-type circle:nth-child(13) { animation-delay: calc((var(--stage) + 0.48s) * var(--pace)); }
+    #slide-funnel.is-revealing li.here .glyph g:first-of-type circle:nth-child(14) { animation-delay: calc((var(--stage) + 0.52s) * var(--pace)); }
+    #slide-funnel.is-revealing li.here .glyph g:last-of-type circle:nth-child(1) { animation-delay: calc((var(--stage) + 0.28s) * var(--pace)); }
+    #slide-funnel.is-revealing li.here .glyph g:last-of-type circle:nth-child(2) { animation-delay: calc((var(--stage) + 0.36s) * var(--pace)); }
+    #slide-funnel.is-revealing li.here .glyph g:last-of-type circle:nth-child(3) { animation-delay: calc((var(--stage) + 0.44s) * var(--pace)); }
+    #slide-funnel.is-revealing li.here .glyph g:last-of-type circle:nth-child(4) { animation-delay: calc((var(--stage) + 0.52s) * var(--pace)); }
+    #slide-funnel.is-revealing li.here .glyph g:last-of-type circle:nth-child(5) { animation-delay: calc((var(--stage) + 0.6s) * var(--pace)); }
+    #slide-funnel.is-revealing .funnel-stages > li:nth-child(3) .glyph circle:nth-child(1) { animation-delay: calc((var(--stage) + 0.14s) * var(--pace)); }
+    #slide-funnel.is-revealing .funnel-stages > li:nth-child(3) .glyph circle:nth-child(2) { animation-delay: calc((var(--stage) + 0.19s) * var(--pace)); }
+    #slide-funnel.is-revealing .funnel-stages > li:nth-child(3) .glyph circle:nth-child(3) { animation-delay: calc((var(--stage) + 0.24s) * var(--pace)); }
+    #slide-funnel.is-revealing .funnel-stages > li:nth-child(3) .glyph circle:nth-child(4) { animation-delay: calc((var(--stage) + 0.29s) * var(--pace)); }
+    #slide-funnel.is-revealing .funnel-stages > li:nth-child(3) .glyph circle:nth-child(5) { animation-delay: calc((var(--stage) + 0.34s) * var(--pace)); }
+    #slide-funnel.is-revealing .funnel-stages > li:nth-child(3) .glyph circle:nth-child(6) { animation-delay: calc((var(--stage) + 0.39s) * var(--pace)); }
+    #slide-funnel.is-revealing .funnel-stages > li:nth-child(3) .glyph circle:nth-child(7) { animation-delay: calc((var(--stage) + 0.44s) * var(--pace)); }
+    #slide-funnel.is-revealing .funnel-stages > li:nth-child(3) .glyph circle:nth-child(8) { animation-delay: calc((var(--stage) + 0.49s) * var(--pace)); }
+    #slide-funnel.is-revealing .funnel-stages > li:nth-child(3) .glyph circle:nth-child(9) { animation-delay: calc((var(--stage) + 0.54s) * var(--pace)); }
+    #slide-funnel.is-revealing .funnel-stages > li:nth-child(3) .glyph circle:nth-child(10) { animation-delay: calc((var(--stage) + 0.59s) * var(--pace)); }
+    #slide-funnel.is-revealing .funnel-stages > li:nth-child(4) .glyph circle:nth-child(2) { animation-delay: calc((var(--stage) + 0.16s) * var(--pace)); }
+    #slide-funnel.is-revealing .funnel-stages > li:nth-child(4) .glyph circle:nth-child(3) { animation-delay: calc((var(--stage) + 0.32s) * var(--pace)); }
 
     @keyframes orb-core { from { transform: scale(0.84); opacity: 0; } to { transform: scale(1); opacity: 0.25; } }
     @keyframes orb-ring { from { transform: scale(0.92); opacity: 0; } to { transform: scale(1); opacity: 0.2; } }
@@ -1214,8 +1251,8 @@
     @media (prefers-reduced-motion: reduce) {
       html.js-motion #slide1 .membership .vdots i,
       #slide1.is-revealing .membership .vdots i,
-      html.js-motion #slide-funnel li.here .glyph circle,
-      #slide-funnel.is-revealing li.here .glyph circle { animation: none !important; transform: none !important; opacity: 1 !important; }
+      html.js-motion #slide-funnel .funnel-stages .glyph :is(circle, rect),
+      #slide-funnel.is-revealing .funnel-stages .glyph :is(circle, rect) { animation: none !important; transform: none !important; opacity: 1 !important; }
       html.js-motion #slide-thanks .orb circle,
       #slide-thanks.is-revealing .orb circle { animation: none !important; transform: none !important; }
       #slide-thanks .orb circle:first-child { opacity: 0.2 !important; }
@@ -1233,7 +1270,7 @@
       #slide3 .ad .dot { left: var(--end) !important; animation: none !important; }
       #slide-score .board .track i { animation: none !important; width: var(--end) !important; }
       #slide1 .membership .vdots i,
-      #slide-funnel li.here .glyph circle { animation: none !important; transform: none !important; opacity: 1 !important; }
+      #slide-funnel .funnel-stages .glyph :is(circle, rect) { animation: none !important; transform: none !important; opacity: 1 !important; }
       #slide-thanks .orb circle { animation: none !important; transform: none !important; }
       #slide-thanks .orb circle:first-child { opacity: 0.2 !important; }
       #slide-thanks .orb circle:last-child { opacity: 0.25 !important; }
@@ -1581,12 +1618,12 @@
         </div>
         <div class="qwhy">
           <article class="card q1">
-            <div class="tag">What — the target</div>
+            <div class="tag">What the target</div>
             <h3>DYRK1A, a kinase</h3>
             <p>Its gene sits in the Down syndrome critical region, and the kinase is tied to Tau and amyloid pathology in early-onset Alzheimer's. That is why this assay exists.</p>
           </article>
           <article class="card q2">
-            <div class="tag">Why — the bottleneck</div>
+            <div class="tag">Why the bottleneck</div>
             <h3>Lab capacity, not accuracy</h3>
             <p>An assay spends one well. An active left off the list never opens its series.</p>
           </article>
@@ -1664,8 +1701,7 @@
               </svg>
               <div class="k">The list</div>
               <h3>QSAR</h3>
-              <p>It proposes who is worth a well.</p>
-              <p class="sit">The question sits at the list. Two writings of an already-labeled set. Not a screen of a library.</p>
+              <p>It learns activity from structure, then predicts who is active.</p>
             </li>
             <li>
               <svg class="glyph" viewBox="0 0 92 40" width="92" height="40" aria-hidden="true">
@@ -1683,7 +1719,7 @@
               <svg class="glyph" viewBox="0 0 56 28" width="56" height="28" aria-hidden="true">
                 <circle cx="12" cy="14" r="7" fill="none" stroke="#0e7a72" stroke-width="2"/>
                 <circle cx="32" cy="14" r="7" fill="none" stroke="#0e7a72" stroke-width="2"/>
-                <circle cx="48" cy="14" r="5" fill="none" stroke="#0e7a72" stroke-width="1.6" opacity="0.55"/>
+                <circle cx="48" cy="14" r="5" fill="none" stroke="#0e7a72" stroke-width="1.6" stroke-opacity="0.55"/>
               </svg>
               <div class="k">Confirmation</div>
               <h3>The series</h3>
@@ -2222,7 +2258,7 @@
         <div class="slide1-head">
           <div>
             <div class="pill"><i></i> score · list</div>
-            <h1>DYRK1A<span>kNN wins the ranking. Together it reaches 0.9022, and each join still drops one molecule.</span></h1>
+            <h1>DYRK1A<span>Evaluating five classifiers and combinations of them.</span></h1>
           </div>
         </div>
       </header>
@@ -2500,7 +2536,7 @@
         <div class="slide1-head">
           <div>
             <div class="pill"><i></i> the verdict</div>
-            <h1>DYRK1A<span>Same two questions.</span></h1>
+            <h1>DYRK1A<span>The separation plane, a visual approximation.</span></h1>
           </div>
         </div>
       </header>

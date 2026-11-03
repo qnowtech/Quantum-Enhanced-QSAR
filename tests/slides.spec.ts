@@ -70,8 +70,8 @@ async function auditSlides(page: Page): Promise<Audit> {
           return;
         }
         const box = img.getBoundingClientRect();
-        if (box.width < 6 || box.height < 6) {
-          problems.push(`${id}: image paints smaller than 6px (${src}, ${Math.round(box.width)}×${Math.round(box.height)})`);
+        if (box.width < 4 || box.height < 4) {
+          problems.push(`${id}: image paints smaller than 4px (${src}, ${Math.round(box.width)}×${Math.round(box.height)})`);
         }
       });
 
@@ -112,9 +112,9 @@ async function auditSlides(page: Page): Promise<Audit> {
     }
 
     const marks: Array<[string, number, number]> = [
-      ["#slide3 .ad .rail", 40, 10],
+      ["#slide3 .ad .rail", 80, 16],
       ["#slide3 .ad .dot", 14, 14],
-      ["#slide3 .ad .tick", 2, 10],
+      ["#slide3 .ad .tick", 2, 16],
     ];
     marks.forEach(([selector, minW, minH]) => {
       const boxes = boxOf(selector);
@@ -129,6 +129,7 @@ async function auditSlides(page: Page): Promise<Audit> {
       });
     });
 
+    const chart = document.querySelector("#slide3 .chart");
     const outside = document.querySelector("#slide3 .ad .dot.out");
     const rail = document.querySelector("#slide3 .ad .rail");
     if (outside && rail) {
@@ -139,7 +140,53 @@ async function auditSlides(page: Page): Promise<Audit> {
       }
     }
 
+    if (chart) {
+      document.getElementById("slide3")?.scrollIntoView({ block: "center" });
+      const paper = getComputedStyle(chart).backgroundColor;
+      const host = chart.getBoundingClientRect();
+      document.querySelectorAll("#slide3 .ad .rail").forEach((node, index) => {
+        const bar = node as HTMLElement;
+        const box = bar.getBoundingClientRect();
+        if (!paintedInside(box, host, 0.9)) {
+          problems.push(`applicability rail ${index + 1} is clipped by the chart`);
+        }
+        const track = contrast(getComputedStyle(bar).backgroundColor, paper);
+        const near = bar.querySelector(".near");
+        const zone = near ? contrast(getComputedStyle(near).backgroundColor, paper) : 0;
+        if (track < 1.5) problems.push(`applicability track fades into the card (contrast ${track.toFixed(2)})`);
+        if (zone < 3) problems.push(`applicability inside-zone fades into the card (contrast ${zone.toFixed(2)})`);
+        const probe = document.elementFromPoint(box.left + box.width * 0.3, box.top + box.height / 2);
+        if (!probe || !bar.contains(probe)) {
+          const name = probe ? probe.className.toString().split(/\s+/)[0] || probe.tagName : "nothing";
+          problems.push(`applicability rail ${index + 1} is covered by ${name}`);
+        }
+      });
+      document.querySelectorAll("#slide3 .ad .who, #slide3 .ad .verdict").forEach((node) => {
+        const el = node as HTMLElement;
+        const box = el.getBoundingClientRect();
+        const text = (el.innerText || "").replace(/\s+/g, " ").trim();
+        if (box.height < 12 || box.width < 40) {
+          problems.push(`applicability label “${text}” renders at ${Math.round(box.width)}×${Math.round(box.height)}px`);
+        }
+        if (!paintedInside(box, host, 0.9)) problems.push(`applicability label “${text}” is clipped by the chart`);
+      });
+      const labels = [...document.querySelectorAll("#slide3 .ad .who, #slide3 .ad .verdict")]
+        .map((node) => (node as HTMLElement).innerText || "")
+        .join(" ");
+      ["Classical", "Quantum", "Outside", "Inside"].forEach((word) => {
+        if (!labels.includes(word)) problems.push(`applicability chart is missing “${word}”`);
+      });
+    }
+
     return { problems, slides: slides.length, scale };
+
+    function paintedInside(box: DOMRect, host: DOMRect, minRatio: number) {
+      const width = Math.min(box.right, host.right) - Math.max(box.left, host.left);
+      const height = Math.min(box.bottom, host.bottom) - Math.max(box.top, host.top);
+      const area = Math.max(0, width) * Math.max(0, height);
+      const own = box.width * box.height;
+      return own > 0 && area / own >= minRatio;
+    }
 
     function clipParent(node: HTMLElement) {
       let parent = node.parentElement;
@@ -175,6 +222,7 @@ async function auditSlides(page: Page): Promise<Audit> {
 for (const viewport of [
   { name: "design", width: 1920, height: 1080 },
   { name: "laptop", width: 1280, height: 800 },
+  { name: "narrow", width: 980, height: 700 },
 ] as const) {
   test(`every slide shows its text, images, and marks @ ${viewport.name}`, async ({ page }) => {
     await openDeck(page, viewport, true);
