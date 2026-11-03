@@ -83,6 +83,7 @@
         radial-gradient(ellipse 80% 100% at 8% 80%, #0e8e86 0%, transparent 55%),
         linear-gradient(118deg, #0d6e68 0%, #14a497 42%, #1fccc0 70%, #6eebc8 100%);
     }
+    /* Test  */
     .hero.dark2 {
       background:
         radial-gradient(ellipse 90% 120% at 88% 110%, rgba(255,255,255,0.18) 0%, transparent 55%),
@@ -1149,6 +1150,7 @@
     body.presenting { overflow: hidden; background: #0b1f24; }
     body.presenting .stage {
       position: fixed; top: 50%; left: 50%; width: 1920px; height: 1080px; margin: 0;
+      zoom: 1 !important;
       transform-origin: center center;
     }
     body.presenting .slide {
@@ -1268,7 +1270,7 @@
       @page { size: 1920px 1080px; margin: 0; }
       html, body { background: #fff; width: 1920px; height: auto; overflow: visible; }
       body { display: block; place-items: unset; }
-      .stage { width: 1920px !important; height: auto !important; margin: 0 !important; transform: none !important; }
+      .stage { width: 1920px !important; height: auto !important; margin: 0 !important; zoom: 1 !important; transform: none !important; }
       .slide { page-break-after: always; overflow: visible; height: auto; min-height: 1080px; margin-bottom: 0; }
       .slide:last-child { page-break-after: avoid; }
       #slide3 .ad .dot { left: var(--end) !important; animation: none !important; }
@@ -2708,17 +2710,21 @@
       const slides = document.querySelectorAll(".slide");
       function resize() {
         if (document.body.classList.contains("presenting")) return;
-        if (window.matchMedia("print").matches) { stage.style.transform = "none"; return; }
-        const s = Math.min(1, Math.max(0.5, (window.innerWidth - 28) / 1920));
-        stage.style.transform = "scale(" + s + ")";
-        stage.style.transformOrigin = "top left";
-        let totalH = 0;
-        slides.forEach((sl) => { totalH += Math.max(1080, sl.scrollHeight) + 28; });
-        stage.style.height = totalH * s + "px";
+        if (window.matchMedia("print").matches) {
+          stage.style.zoom = "1";
+          stage.style.transform = "none";
+          return;
+        }
+        // zoom shrinks the layout box itself. transform:scale left a 1920px box
+        // under overflow-x:hidden, and Chrome clipped the chart on the right.
+        const s = Math.min(1, Math.max(0.3, (window.innerWidth - 28) / 1920));
+        stage.style.transform = "none";
+        stage.style.zoom = String(s);
         stage.style.width = "1920px";
+        stage.style.height = "auto";
       }
       window.addEventListener("resize", resize);
-      window.addEventListener("beforeprint", () => { stage.style.transform = "none"; stage.style.width = "1920px"; stage.style.height = "auto"; });
+      window.addEventListener("beforeprint", () => { stage.style.zoom = "1"; stage.style.transform = "none"; stage.style.width = "1920px"; stage.style.height = "auto"; });
       window.addEventListener("afterprint", resize);
       resize();
       window.__fitFromScroll = resize;
@@ -2755,6 +2761,7 @@
 
       function applyScale() {
         const s = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+        stage.style.zoom = "1";
         stage.style.transformOrigin = "center center";
         stage.style.transform = "translate(-50%, -50%) scale(" + s + ")";
       }
@@ -2776,6 +2783,7 @@
 
       function enter() {
         document.body.classList.add("presenting");
+        stage.style.zoom = "1";
         stage.style.width = "1920px";
         stage.style.height = "1080px";
         showSlide(idx);

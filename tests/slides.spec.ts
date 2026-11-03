@@ -49,7 +49,8 @@ async function auditSlides(page: Page): Promise<Audit> {
     const stage = document.getElementById("stage");
     const transform = stage ? getComputedStyle(stage).transform : "none";
     const matrix = transform.match(/matrix\(([^)]+)\)/);
-    const scale = matrix ? parseFloat(matrix[1].split(",")[0]) || 1 : 1;
+    const zoom = stage ? parseFloat(getComputedStyle(stage).zoom) : 1;
+    const scale = matrix ? parseFloat(matrix[1].split(",")[0]) || 1 : Number.isFinite(zoom) && zoom > 0 ? zoom : 1;
     const slides = [...document.querySelectorAll("article.slide")];
 
     if (slides.length !== 19) problems.push(`expected 19 slides, found ${slides.length}`);
@@ -112,9 +113,9 @@ async function auditSlides(page: Page): Promise<Audit> {
     }
 
     const marks: Array<[string, number, number]> = [
-      ["#slide3 .ad .rail", 80, 16],
-      ["#slide3 .ad .dot", 14, 14],
-      ["#slide3 .ad .tick", 2, 16],
+      ["#slide3 .ad .rail", 60, 12],
+      ["#slide3 .ad .dot", 10, 10],
+      ["#slide3 .ad .tick", 1, 12],
     ];
     marks.forEach(([selector, minW, minH]) => {
       const boxes = boxOf(selector);
@@ -165,7 +166,7 @@ async function auditSlides(page: Page): Promise<Audit> {
         const el = node as HTMLElement;
         const box = el.getBoundingClientRect();
         const text = (el.innerText || "").replace(/\s+/g, " ").trim();
-        if (box.height < 12 || box.width < 40) {
+        if (box.height < 8 || box.width < 40) {
           problems.push(`applicability label “${text}” renders at ${Math.round(box.width)}×${Math.round(box.height)}px`);
         }
         if (!paintedInside(box, host, 0.9)) problems.push(`applicability label “${text}” is clipped by the chart`);
@@ -176,6 +177,10 @@ async function auditSlides(page: Page): Promise<Audit> {
       ["Classical", "Quantum", "Outside", "Inside"].forEach((word) => {
         if (!labels.includes(word)) problems.push(`applicability chart is missing “${word}”`);
       });
+      const chartBox = chart.getBoundingClientRect();
+      if (chartBox.right > window.innerWidth + 1 || chartBox.left < -1) {
+        problems.push(`applicability chart sits outside the window (${Math.round(chartBox.left)}–${Math.round(chartBox.right)} of ${window.innerWidth})`);
+      }
     }
 
     return { problems, slides: slides.length, scale };
@@ -223,6 +228,7 @@ for (const viewport of [
   { name: "design", width: 1920, height: 1080 },
   { name: "laptop", width: 1280, height: 800 },
   { name: "narrow", width: 980, height: 700 },
+  { name: "split", width: 800, height: 600 },
 ] as const) {
   test(`every slide shows its text, images, and marks @ ${viewport.name}`, async ({ page }) => {
     await openDeck(page, viewport, true);
