@@ -923,27 +923,31 @@
     #slide3 .left { grid-template-rows: 1fr; }
     #slide3 .candidates { height: 100%; }
     #slide3 .cand { height: 100%; }
+    #slide3 { overflow: visible; }
+    #slide3 .right, #slide3 .chart, #slide3 .ad { overflow: visible; }
     #slide3 .chart { overflow: visible; }
-    #slide3 .ad { flex: 1 0 auto; display: flex; flex-direction: column; justify-content: center; min-height: 0; margin-top: 4px; }
-    #slide3 .ad-scale, #slide3 .ad-row, #slide3 .ad-mean { flex: 0 0 auto; }
-    #slide3 .ad-scale, #slide3 .ad-row { display: grid; grid-template-columns: 200px minmax(0, 1fr) 160px; gap: 14px; align-items: center; }
-    #slide3 .ad-scale { height: 28px; font-size: 16px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
-    #slide3 .ad-scale .axis { position: relative; height: 18px; }
+    #slide3 .ad { flex: 1 0 auto; display: flex; flex-direction: column; justify-content: center; margin-top: 4px; }
+    #slide3 .ad-scale, #slide3 .ad-row, #slide3 .ad-mean { flex: 0 0 auto; position: relative; z-index: 1; }
+    #slide3 .ad-scale, #slide3 .ad-row { display: flex; align-items: center; gap: 14px; }
+    #slide3 .ad-scale { height: auto; min-height: 28px; font-size: 16px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+    #slide3 .ad-scale .axis { position: relative; flex: 1 1 auto; min-width: 0; height: 18px; }
     #slide3 .ad-scale .in { position: absolute; left: 0; }
     #slide3 .ad-scale .out { position: absolute; right: 0; }
     #slide3 .ad-scale .th { position: absolute; left: 64.5%; transform: translateX(-50%); color: var(--ink); }
-    #slide3 .ad-row { margin-top: 6px; }
-    #slide3 .ad .who { font-family: "Montserrat", sans-serif; font-weight: 800; font-size: 26px; letter-spacing: -0.03em; line-height: 1.1; color: var(--ink); }
+    #slide3 .ad-scale > span:empty { flex: 0 0 200px; }
+    #slide3 .ad-scale > span:last-child:empty { flex-basis: 140px; }
+    #slide3 .ad-row { margin-top: 6px; min-height: 64px; }
+    #slide3 .ad .who { flex: 0 0 200px; font-family: "Montserrat", sans-serif; font-weight: 800; font-size: 26px; letter-spacing: -0.03em; line-height: 1.1; color: var(--ink); }
     #slide3 .ad .who span { display: block; margin-top: 3px; font-family: "DM Sans", sans-serif; font-weight: 600; font-size: 16px; letter-spacing: 0; color: var(--muted); }
-    #slide3 .ad .ruler { position: relative; height: 84px; }
-    #slide3 .ad .rail { position: absolute; left: 0; right: 0; top: 18px; height: 36px; border-radius: 999px; background: #5f8f88; }
+    #slide3 .ad .ruler { position: relative; flex: 1 1 auto; min-width: 80px; height: 64px; }
+    #slide3 .ad .rail { position: absolute; left: 0; right: 0; top: 14px; height: 36px; border-radius: 999px; background: #5f8f88; }
     #slide3 .ad .near { position: absolute; left: 0; top: 0; bottom: 0; width: 64.5%; border-radius: 999px 0 0 999px; background: #0d5c56; }
-    #slide3 .ad .tick { position: absolute; left: 64.5%; top: 8px; width: 4px; height: 56px; background: var(--ink); }
-    #slide3 .ad .tick b { position: absolute; top: 58px; left: 50%; transform: translateX(-50%); font-size: 16px; font-weight: 700; color: var(--ink); }
-    #slide3 .ad .dot { position: absolute; top: 21px; left: var(--end); width: 32px; height: 32px; border-radius: 50%; transform: translateX(-50%); }
+    #slide3 .ad .tick { position: absolute; left: 64.5%; top: 6px; width: 4px; height: 52px; background: var(--ink); }
+    #slide3 .ad .tick b { position: absolute; top: 54px; left: 50%; transform: translateX(-50%); font-size: 16px; font-weight: 700; color: var(--ink); }
+    #slide3 .ad .dot { position: absolute; top: 16px; left: var(--end); width: 32px; height: 32px; border-radius: 50%; transform: translateX(-50%); }
     #slide3 .ad .dot.in { background: var(--ibm); border: 4px solid #fff; }
     #slide3 .ad .dot.out { background: #fff; border: 4px solid #143844; }
-    #slide3 .ad .verdict { font-family: "Montserrat", sans-serif; font-weight: 800; font-size: 28px; letter-spacing: -0.03em; line-height: 1; color: var(--ink); }
+    #slide3 .ad .verdict { flex: 0 0 140px; font-family: "Montserrat", sans-serif; font-weight: 800; font-size: 28px; letter-spacing: -0.03em; line-height: 1; color: var(--ink); }
     #slide3 .ad .verdict small { display: block; margin-top: 5px; font-family: "DM Sans", sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 0; color: var(--muted); }
     #slide3 .ad .verdict.in { color: var(--ibm); }
     #slide3 .ad .verdict.out { color: var(--classic); }
@@ -2711,7 +2715,7 @@
         let totalH = 0;
         slides.forEach((sl) => { totalH += Math.max(1080, sl.scrollHeight) + 28; });
         stage.style.height = totalH * s + "px";
-        stage.style.width = 1920 * s + "px";
+        stage.style.width = "1920px";
       }
       window.addEventListener("resize", resize);
       window.addEventListener("beforeprint", () => { stage.style.transform = "none"; stage.style.width = "1920px"; stage.style.height = "auto"; });
